@@ -171,3 +171,5 @@ agent_communication:
     message: "✅ ALL EHR INTEGRATION BACKEND TESTS PASSED! Fixed critical issues: 1) Import errors in auth.py (relative imports), 2) Missing EHRConnectionStatus import in server.py, 3) ObjectId serialization in ehr_database.py, 4) Error handlers returning dicts instead of JSONResponse. All 6 EHR endpoints working perfectly with proper authentication, FHIR integration, and MongoDB storage."
   - agent: "testing"
     message: "Starting comprehensive testing of SmartDoc Pro's enhanced medication recognition system. Focus on cinnarizine/scenarizine correction, speech settings, demo mode, and medication database functionality."
+  - agent: "testing"
+    message: "🚨 CRITICAL ISSUE FOUND: Medication correction system is NOT working. The specific case 'scenarizine → cinnarizine' FAILED. Manual input testing shows medications are not being corrected. The MEDICATION_DATABASE exists in code but the correctMedicalTerms() function is only triggered during speech recognition, not for manual transcript input. This is a high-priority bug that needs immediate attention."
