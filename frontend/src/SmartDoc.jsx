@@ -53,6 +53,10 @@ const SmartDoc = () => {
   const [ehrApiKey, setEhrApiKey] = useState('');
   const [ehrEndpoint, setEhrEndpoint] = useState('');
   const [isEhrConnected, setIsEhrConnected] = useState(false);
+  const [temperature, setTemperature] = useState('');
+  const [heartRate, setHeartRate] = useState('');
+  const [respiratoryRate, setRespiratoryRate] = useState('');
+  const [oxygenSaturation, setOxygenSaturation] = useState('');
   const recognitionRef = useRef(null);
 
   const [supportStatus, setSupportStatus] = useState('checking');
