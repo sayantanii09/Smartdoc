@@ -2184,10 +2184,19 @@ const SmartDoc = () => {
                       ? 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white' 
                       : 'bg-slate-600 text-slate-400 cursor-not-allowed'
                   }`}
-                  disabled={!isEhrConnected}
+                  disabled={!isEhrConnected || isSubmittingToEHR}
                 >
-                  <Send className="w-5 h-5" />
-                  Submit to EHR
+                  {isSubmittingToEHR ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" />
+                      Submit to EHR
+                    </>
+                  )}
                 </button>
               </div>
               
