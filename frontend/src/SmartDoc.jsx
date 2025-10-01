@@ -1430,7 +1430,7 @@ const SmartDoc = () => {
   // Comprehensive medical terminology database with phonetic matching
   const MEDICATION_DATABASE = {
     // Cardiovascular medications
-    'cinnarizine': ['scenarizine', 'cinarizine', 'sinarizine', 'cinnarizon', 'scenarizon', 'stugeron'],
+    'cinnarizine': ['scenarizine', 'cinarizine', 'sinarizine', 'cinnarizon', 'scenarizon', 'stugeron', 'innerism', 'inerism', 'cinarism', 'cinerizin', 'sinnarizin'],
     'amlodipine': ['amlodapine', 'amladipine', 'norvasc', 'amlodippin'],
     'atorvastatin': ['atorvastin', 'atorvastaten', 'lipitor', 'atorvastat'],
     'lisinopril': ['lysinopril', 'lisinoprel', 'prinivil', 'zestril', 'lysine april'],
