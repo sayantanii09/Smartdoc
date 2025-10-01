@@ -1617,6 +1617,27 @@ const SmartDoc = () => {
     return matrix[str2.length][str1.length];
   };
 
+  // Find medication corrections for user feedback
+  const findMedicationCorrections = (original, corrected) => {
+    const originalWords = original.toLowerCase().split(' ');
+    const correctedWords = corrected.toLowerCase().split(' ');
+    const corrections = [];
+    
+    for (let i = 0; i < Math.min(originalWords.length, correctedWords.length); i++) {
+      if (originalWords[i] !== correctedWords[i] && 
+          Object.keys(MEDICATION_DATABASE).includes(correctedWords[i])) {
+        corrections.push({
+          original: originalWords[i],
+          corrected: correctedWords[i],
+          timestamp: new Date().toLocaleTimeString(),
+          confidence: calculateSimilarity(originalWords[i], correctedWords[i])
+        });
+      }
+    }
+    
+    return corrections;
+  };
+
   const handleEHRImport = () => {
     if (!patientId.trim()) {
       alert('Please enter a Patient ID');
