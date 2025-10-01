@@ -1689,7 +1689,6 @@ const SmartDoc = () => {
                   <button 
                     onClick={handleEHRImport} 
                     className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold transition-all"
-                    title="Fetch patient data from connected EHR system"
                   >
                     Fetch Data
                   </button>
