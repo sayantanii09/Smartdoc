@@ -2641,6 +2641,20 @@ const SmartDoc = () => {
                 }
               </p>
               
+              {/* Speech Quality Indicator */}
+              <div className="mb-6 p-3 bg-slate-800/30 rounded-lg">
+                <div className="flex items-center justify-center gap-4 text-sm">
+                  <span className="text-slate-400">Language:</span>
+                  <span className="text-blue-300 font-medium">{speechLanguage}</span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-slate-400">Quality:</span>
+                  <span className="text-emerald-300 font-medium">{speechQuality}</span>
+                  <span className="text-slate-500">|</span>
+                  <span className="text-slate-400">Confidence:</span>
+                  <span className="text-purple-300 font-medium">{(confidenceThreshold * 100).toFixed(0)}%</span>
+                </div>
+              </div>
+              
               {supportStatus === 'not-supported' && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-3 text-yellow-200 text-sm">
                   ⚠️ Voice not available in this browser. Use Demo Mode or Chrome/Edge.
