@@ -458,10 +458,32 @@ const SmartDoc = () => {
   // EHR integration
   const [showEHRImport, setShowEHRImport] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showEHRConfig, setShowEHRConfig] = useState(false);
   const [ehrSystem, setEhrSystem] = useState('');
   const [ehrApiKey, setEhrApiKey] = useState('');
   const [ehrEndpoint, setEhrEndpoint] = useState('');
   const [isEhrConnected, setIsEhrConnected] = useState(false);
+  const [ehrProviders, setEhrProviders] = useState([]);
+  const [ehrConfigurations, setEhrConfigurations] = useState([]);
+  const [selectedEhrProvider, setSelectedEhrProvider] = useState('');
+  const [ehrConnectionStatus, setEhrConnectionStatus] = useState('disconnected');
+  const [ehrSubmissions, setEhrSubmissions] = useState([]);
+  const [isSubmittingToEHR, setIsSubmittingToEHR] = useState(false);
+  const [ehrConfigData, setEhrConfigData] = useState({
+    provider: '',
+    baseUrl: '',
+    clientId: '',
+    clientSecret: '',
+    authUrl: '',
+    tokenUrl: '',
+    scope: 'patient/*.read patient/*.write',
+    useOauth: true,
+    apiKey: '',
+    organizationId: '',
+    facilityId: '',
+    timeout: 30,
+    verifySsl: true
+  });
   
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
