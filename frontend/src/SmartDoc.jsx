@@ -1582,14 +1582,12 @@ const SmartDoc = () => {
                 <button 
                   onClick={() => setCurrentView('input')} 
                   className="py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all border border-slate-600"
-                  title="Go back to edit patient information and prescriptions"
                 >
                   ← Back to Edit
                 </button>
                 <button 
                   onClick={handlePrintPDF} 
                   className="py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
-                  title="Generate and download professional prescription PDF"
                 >
                   <Download className="w-5 h-5" />
                   Print PDF
@@ -1602,7 +1600,6 @@ const SmartDoc = () => {
                       : 'bg-slate-600 text-slate-400 cursor-not-allowed'
                   }`}
                   disabled={!isEhrConnected}
-                  title={isEhrConnected ? "Submit prescription to connected EHR system" : "EHR connection required - configure in Settings"}
                 >
                   <Send className="w-5 h-5" />
                   Submit to EHR
@@ -1614,7 +1611,6 @@ const SmartDoc = () => {
                 onClick={handleBothActions} 
                 className="w-full mt-4 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg"
                 style={{ boxShadow: '0 10px 40px rgba(147, 51, 234, 0.4)' }}
-                title="Generate PDF and submit to EHR system simultaneously"
               >
                 🎯 Print PDF & Submit to EHR (Both Actions)
               </button>
