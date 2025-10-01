@@ -910,11 +910,22 @@ const SmartDoc = () => {
       }
     });
 
-    // Enhanced fallback using comprehensive medication database
+    // Enhanced fallback using comprehensive medication database with proper filtering
     if (medications.length === 0) {
-      Object.keys(MEDICATION_DATABASE).forEach(medName => {
-        if (lowerText.includes(medName)) {
-          console.log(`Found medication: ${medName} in text`);
+      // Define words that should NOT be considered medication names
+      const excludeWords = [
+        'milligrams', 'mg', 'mcg', 'grams', 'ml', 'units', 'iu',
+        'once', 'twice', 'daily', 'od', 'bd', 'tds', 'qds', 
+        'tablet', 'capsule', 'injection', 'syrup', 'drops',
+        'oral', 'before', 'after', 'with', 'without', 'food',
+        'morning', 'evening', 'night', 'bedtime', 'meals',
+        'prescribed', 'prescribe', 'give', 'take', 'patient',
+        'suffering', 'migraine', 'headache', 'pain', 'fever'
+      ];
+      
+      Object.keys(dynamicMedicationDB).forEach(medName => {
+        if (lowerText.includes(medName) && !excludeWords.includes(medName.toLowerCase())) {
+          console.log(`Found valid medication: ${medName} in text`);
           
           // Look for dosage, frequency, and route patterns
           const dosagePattern = new RegExp(`${medName}\\s+(\\d+\\.?\\d*)\\s?(mg|mcg|g|ml|units?)`, 'i');
