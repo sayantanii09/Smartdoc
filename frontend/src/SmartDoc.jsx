@@ -1041,6 +1041,7 @@ const SmartDoc = () => {
         const data = await response.json();
         alert('✅ EHR configuration saved successfully!');
         setShowEHRConfig(false);
+        setShowSettings(true);
         await fetchEhrConfigurations();
         
         // Reset form
