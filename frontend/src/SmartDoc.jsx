@@ -3121,6 +3121,114 @@ const SmartDoc = () => {
                   ))}
                 </div>
               )}
+
+              {/* Live Transcript & Manual Correction Panel */}
+              <div className="mb-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                    <span className="text-purple-300 text-sm font-medium">AI Learning System</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowLiveTranscript(!showLiveTranscript)}
+                      className={`px-3 py-1 text-xs rounded-lg transition-all ${
+                        showLiveTranscript 
+                          ? 'bg-purple-600 text-white' 
+                          : 'bg-purple-600/20 text-purple-300 hover:bg-purple-600/30'
+                      }`}
+                    >
+                      {showLiveTranscript ? '🔴 Live Mode ON' : '⚪ Live Mode OFF'}
+                    </button>
+                    <button
+                      onClick={() => setShowTrainingPanel(!showTrainingPanel)}
+                      className="px-3 py-1 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30 text-xs rounded-lg transition-all"
+                    >
+                      📚 Training History ({trainingHistory.length})
+                    </button>
+                  </div>
+                </div>
+                
+                {showLiveTranscript && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs text-purple-300 mb-1">Live Transcript (Auto-captured)</label>
+                      <textarea
+                        value={liveTranscript}
+                        onChange={(e) => setLiveTranscript(e.target.value)}
+                        placeholder="Live transcript will appear here as you speak..."
+                        className="w-full h-24 p-3 bg-slate-900/50 border border-purple-500/30 rounded-lg text-white text-sm placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs text-purple-300 mb-1">Manual Correction (Edit above text)</label>
+                      <textarea
+                        value={correctedTranscript}
+                        onChange={(e) => setCorrectedTranscript(e.target.value)}
+                        placeholder="Make corrections here (e.g., change 'innerism' to 'cinnarizine')..."
+                        className="w-full h-24 p-3 bg-slate-900/50 border border-emerald-500/30 rounded-lg text-white text-sm placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={processManualCorrection}
+                        disabled={!liveTranscript || !correctedTranscript}
+                        className="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-slate-600 disabled:to-slate-600 text-white text-sm rounded-lg transition-all disabled:cursor-not-allowed"
+                      >
+                        🧠 Train App with Corrections
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLiveTranscript('');
+                          setCorrectedTranscript('');
+                        }}
+                        className="px-3 py-2 bg-slate-600 hover:bg-slate-700 text-white text-sm rounded-lg transition-all"
+                      >
+                        🗑️ Clear
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
+                {showTrainingPanel && (
+                  <div className="mt-4 p-3 bg-slate-800/30 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-medium text-white">Training History</h4>
+                      <button
+                        onClick={clearTrainingHistory}
+                        className="px-2 py-1 bg-red-600/20 text-red-300 hover:bg-red-600/30 text-xs rounded transition-all"
+                      >
+                        Clear All
+                      </button>
+                    </div>
+                    
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {trainingHistory.length > 0 ? (
+                        trainingHistory.slice(0, 10).map(entry => (
+                          <div key={entry.id} className="p-2 bg-slate-700/30 rounded text-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="text-blue-300 font-medium">{entry.action}</span>
+                              <span className="text-slate-500">{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                            </div>
+                            <div className="text-slate-300 mt-1">{entry.details}</div>
+                            <div className="text-emerald-400 mt-1">{entry.improvement}</div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="text-slate-500 text-center py-4">
+                          No training history yet. Make corrections to start training the app!
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mt-3 p-2 bg-blue-500/10 rounded text-xs text-blue-300">
+                      <strong>💡 How it works:</strong> When you correct transcripts, the app learns and adds your corrections to its database. Future recognition will use your corrections automatically!
+                    </div>
+                  </div>
+                )}
+              </div>
               
               {supportStatus === 'not-supported' && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-3 text-yellow-200 text-sm">
