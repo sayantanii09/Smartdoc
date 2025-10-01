@@ -91,7 +91,7 @@ def get_current_username(credentials: HTTPAuthorizationCredentials = Depends(sec
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Dependency to get current user object"""
-    from .database import user_db
+    from database import user_db
     
     user_id = auth_handler.get_current_user_id(credentials)
     user = await user_db.get_user_by_id(user_id)
