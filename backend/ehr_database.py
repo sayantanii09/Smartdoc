@@ -24,7 +24,7 @@ class EHRDatabase:
     
     async def init_db(self):
         """Initialize database connection"""
-        self.db = MongoDB.get_db()
+        self.db = MongoDB.database
         await self._create_indexes()
     
     async def _create_indexes(self):
