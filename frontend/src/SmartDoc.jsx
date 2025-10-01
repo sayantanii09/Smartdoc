@@ -321,6 +321,7 @@ const SmartDoc = () => {
     password: '',
     confirmPassword: ''
   });
+  const [authToken, setAuthToken] = useState(localStorage.getItem('smartdoc_token'));
   
   // Doctor profile state
   const [doctorProfile, setDoctorProfile] = useState({
