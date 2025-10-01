@@ -915,7 +915,21 @@ const SmartDoc = () => {
   const processTranscript = (text) => {
     if (!text.trim()) return;
 
-    const lowerText = text.toLowerCase();
+    // Apply medication corrections first
+    const cleanedText = cleanTranscript(text);
+    const correctedText = correctMedicalTerms(cleanedText);
+    
+    // Show medication corrections if any were made
+    if (cleanedText !== correctedText) {
+      const corrections = findMedicationCorrections(cleanedText, correctedText);
+      if (corrections.length > 0) {
+        setLastCorrectedMeds(corrections);
+        setMedicationSuggestions(prev => [...corrections, ...prev.slice(0, 4)]);
+        console.log('Medication corrections applied during processing:', corrections);
+      }
+    }
+
+    const lowerText = correctedText.toLowerCase();
     
     // Extract diagnosis
     let extractedDiagnosis = '';
