@@ -506,22 +506,50 @@ const SmartDoc = () => {
     }
   }, [isListening]);
 
-  const handleLogin = () => {
-    const doctor = registeredDoctors.find(
-      d => d.username === loginCredentials.username && d.password === loginCredentials.password
-    );
-    
-    if (doctor) {
-      setCurrentDoctor(doctor);
+  // Check for existing token on component mount
+  useEffect(() => {
+    if (authToken) {
+      // Verify token and get user info
+      apiCall('/api/auth/me')
+        .then(user => {
+          setCurrentDoctor(user);
+          setIsLoggedIn(true);
+          setCurrentView('input');
+        })
+        .catch(error => {
+          console.error('Token verification failed:', error);
+          localStorage.removeItem('smartdoc_token');
+          setAuthToken(null);
+        });
+    }
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      const response = await apiCall('/api/auth/login', 'POST', {
+        username: loginCredentials.username,
+        password: loginCredentials.password
+      });
+
+      // Store token and user data
+      localStorage.setItem('smartdoc_token', response.access_token);
+      setAuthToken(response.access_token);
+      setCurrentDoctor(response.user);
       setIsLoggedIn(true);
       setCurrentView('input');
-      alert(`Welcome, ${doctor.name}!`);
-    } else {
-      alert('Invalid credentials. Try: drsmith/password123 or drjohnson/password123\nOr create a new account.');
+      
+      alert(`Welcome, ${response.user.name}!`);
+      
+      // Clear login form
+      setLoginCredentials({ username: '', password: '' });
+      
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert(`Login failed: ${error.message}\n\nTry demo accounts:\n• drsmith / password123\n• drjohnson / password123\n\nOr create a new account.`);
     }
   };
 
-  const handleRegistration = () => {
+  const handleRegistration = async () => {
     // Validation
     if (!registrationData.name || !registrationData.degree || !registrationData.registrationNumber || 
         !registrationData.organization || !registrationData.username || !registrationData.password) {
@@ -534,40 +562,40 @@ const SmartDoc = () => {
       return;
     }
 
-    if (registeredDoctors.find(d => d.username === registrationData.username)) {
-      alert('Username already exists. Please choose a different username.');
+    if (registrationData.password.length < 6) {
+      alert('Password must be at least 6 characters long.');
       return;
     }
 
-    if (registeredDoctors.find(d => d.registrationNumber === registrationData.registrationNumber)) {
-      alert('Registration number already exists in the system.');
-      return;
+    try {
+      // Prepare registration data for API
+      const registrationPayload = {
+        name: registrationData.name,
+        degree: registrationData.degree,
+        registration_number: registrationData.registrationNumber,
+        organization: registrationData.organization,
+        email: registrationData.email || null,
+        phone: registrationData.phone || null,
+        specialization: registrationData.specialization || null,
+        username: registrationData.username,
+        password: registrationData.password
+      };
+
+      const response = await apiCall('/api/auth/register', 'POST', registrationPayload);
+      
+      alert(`Account created successfully!\n\nWelcome to SmartDoc Pro!\nYou can now login with your credentials.`);
+      setShowRegistration(false);
+      
+      // Reset registration form
+      setRegistrationData({
+        name: '', degree: '', registrationNumber: '', organization: '', 
+        email: '', phone: '', specialization: '', username: '', password: '', confirmPassword: ''
+      });
+      
+    } catch (error) {
+      console.error('Registration failed:', error);
+      alert(`Registration failed: ${error.message}`);
     }
-
-    // Create new doctor account
-    const newDoctor = {
-      username: registrationData.username,
-      password: registrationData.password,
-      name: registrationData.name,
-      degree: registrationData.degree,
-      registrationNumber: registrationData.registrationNumber,
-      organization: registrationData.organization,
-      email: registrationData.email,
-      phone: registrationData.phone,
-      specialization: registrationData.specialization
-    };
-
-    // Add to registered doctors (In production, this would be saved to database)
-    setRegisteredDoctors([...registeredDoctors, newDoctor]);
-    
-    alert(`Account created successfully!\n\nWelcome, ${newDoctor.name}!\nYou can now login with your credentials.`);
-    setShowRegistration(false);
-    
-    // Reset registration form
-    setRegistrationData({
-      name: '', degree: '', registrationNumber: '', organization: '', 
-      email: '', phone: '', specialization: '', username: '', password: '', confirmPassword: ''
-    });
   };
 
   const handleLogout = () => {
