@@ -1007,20 +1007,21 @@ const SmartDoc = () => {
                 value={registrationData.specialization}
                 onChange={(e) => setRegistrationData({...registrationData, specialization: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                style={{color: 'white'}}
               >
-                <option value="">Select Specialization</option>
-                <option value="Internal Medicine">Internal Medicine</option>
-                <option value="General Surgery">General Surgery</option>
-                <option value="Cardiology">Cardiology</option>
-                <option value="Neurology">Neurology</option>
-                <option value="Orthopedics">Orthopedics</option>
-                <option value="Pediatrics">Pediatrics</option>
-                <option value="Gynecology">Gynecology</option>
-                <option value="Dermatology">Dermatology</option>
-                <option value="Psychiatry">Psychiatry</option>
-                <option value="Emergency Medicine">Emergency Medicine</option>
-                <option value="Family Medicine">Family Medicine</option>
-                <option value="Other">Other</option>
+                <option value="" style={{color: 'black', backgroundColor: 'white'}}>Select Specialization</option>
+                <option value="Internal Medicine" style={{color: 'black', backgroundColor: 'white'}}>Internal Medicine</option>
+                <option value="General Surgery" style={{color: 'black', backgroundColor: 'white'}}>General Surgery</option>
+                <option value="Cardiology" style={{color: 'black', backgroundColor: 'white'}}>Cardiology</option>
+                <option value="Neurology" style={{color: 'black', backgroundColor: 'white'}}>Neurology</option>
+                <option value="Orthopedics" style={{color: 'black', backgroundColor: 'white'}}>Orthopedics</option>
+                <option value="Pediatrics" style={{color: 'black', backgroundColor: 'white'}}>Pediatrics</option>
+                <option value="Gynecology" style={{color: 'black', backgroundColor: 'white'}}>Gynecology</option>
+                <option value="Dermatology" style={{color: 'black', backgroundColor: 'white'}}>Dermatology</option>
+                <option value="Psychiatry" style={{color: 'black', backgroundColor: 'white'}}>Psychiatry</option>
+                <option value="Emergency Medicine" style={{color: 'black', backgroundColor: 'white'}}>Emergency Medicine</option>
+                <option value="Family Medicine" style={{color: 'black', backgroundColor: 'white'}}>Family Medicine</option>
+                <option value="Other" style={{color: 'black', backgroundColor: 'white'}}>Other</option>
               </select>
             </div>
 
