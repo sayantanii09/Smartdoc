@@ -79,7 +79,7 @@ class EHRBackendTester:
             "organization": "SmartDoc Test Hospital",
             "email": f"{test_username}@testdomain.com",
             "phone": "+1-555-0123",
-            "specialization": "INTERNAL_MEDICINE",
+            "specialization": "Internal Medicine",
             "username": test_username,
             "password": test_password
         }
