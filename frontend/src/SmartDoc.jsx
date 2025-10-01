@@ -968,6 +968,287 @@ const SmartDoc = () => {
     }]);
   };
 
+  // EHR API Functions
+  const fetchEhrProviders = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/providers`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEhrProviders(data.data.providers);
+      } else {
+        console.error('Failed to fetch EHR providers');
+      }
+    } catch (error) {
+      console.error('Error fetching EHR providers:', error);
+    }
+  };
+
+  const fetchEhrConfigurations = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/configurations`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEhrConfigurations(data.data.configurations);
+        setIsEhrConnected(data.data.configurations.length > 0);
+      } else {
+        console.error('Failed to fetch EHR configurations');
+      }
+    } catch (error) {
+      console.error('Error fetching EHR configurations:', error);
+    }
+  };
+
+  const saveEhrConfiguration = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/configure`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: ehrConfigData.provider,
+          base_url: ehrConfigData.baseUrl,
+          client_id: ehrConfigData.clientId,
+          client_secret: ehrConfigData.clientSecret,
+          auth_url: ehrConfigData.authUrl,
+          token_url: ehrConfigData.tokenUrl,
+          scope: ehrConfigData.scope,
+          use_oauth: ehrConfigData.useOauth,
+          api_key: ehrConfigData.apiKey,
+          organization_id: ehrConfigData.organizationId,
+          facility_id: ehrConfigData.facilityId,
+          timeout: ehrConfigData.timeout,
+          verify_ssl: ehrConfigData.verifySsl
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert('✅ EHR configuration saved successfully!');
+        setShowEHRConfig(false);
+        await fetchEhrConfigurations();
+        
+        // Reset form
+        setEhrConfigData({
+          provider: '',
+          baseUrl: '',
+          clientId: '',
+          clientSecret: '',
+          authUrl: '',
+          tokenUrl: '',
+          scope: 'patient/*.read patient/*.write',
+          useOauth: true,
+          apiKey: '',
+          organizationId: '',
+          facilityId: '',
+          timeout: 30,
+          verifySsl: true
+        });
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to save EHR configuration: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error saving EHR configuration:', error);
+      alert('❌ Error saving EHR configuration. Please try again.');
+    }
+  };
+
+  const testEhrConnection = async (config = null) => {
+    try {
+      const testConfig = config || ehrConfigData;
+      
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/test-connection`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          provider: testConfig.provider,
+          base_url: testConfig.baseUrl,
+          client_id: testConfig.clientId,
+          client_secret: testConfig.clientSecret,
+          auth_url: testConfig.authUrl,
+          token_url: testConfig.tokenUrl,
+          scope: testConfig.scope,
+          use_oauth: testConfig.useOauth,
+          api_key: testConfig.apiKey,
+          organization_id: testConfig.organizationId,
+          facility_id: testConfig.facilityId,
+          timeout: testConfig.timeout,
+          verify_ssl: testConfig.verifySsl
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        alert(`✅ EHR Connection Test Successful!\n\nProvider: ${testConfig.provider}\nStatus: ${data.data.status}\nResponse Time: ${data.data.response_time?.toFixed(2)}s\nFHIR Version: ${data.data.fhir_version || 'Unknown'}\nCapabilities: ${data.data.capabilities?.length || 0} resources supported`);
+        setEhrConnectionStatus('connected');
+      } else {
+        alert(`❌ EHR Connection Test Failed!\n\nError: ${data.message}`);
+        setEhrConnectionStatus('error');
+      }
+      
+      return data.success;
+    } catch (error) {
+      console.error('Error testing EHR connection:', error);
+      alert('❌ Error testing EHR connection. Please check your configuration and try again.');
+      setEhrConnectionStatus('error');
+      return false;
+    }
+  };
+
+  const submitPrescriptionToEHR = async (prescriptionId = null) => {
+    if (!selectedEhrProvider) {
+      alert('⚠️ Please select an EHR provider first.');
+      return;
+    }
+
+    setIsSubmittingToEHR(true);
+    
+    try {
+      // First, save the prescription if it doesn't exist
+      let currentPrescriptionId = prescriptionId;
+      
+      if (!currentPrescriptionId) {
+        const prescriptionData = {
+          patient_info: {
+            name: patientName,
+            age: patientAge,
+            gender: patientGender,
+            height: patientHeight,
+            weight: patientWeight,
+            bp: patientBP,
+            heart_rate: heartRate,
+            temperature: temperature,
+            oxygen_saturation: oxygenSaturation
+          },
+          medical_history: {
+            past_conditions: pastConditions,
+            past_surgeries: pastSurgeries,
+            family_history: familyHistory,
+            social_history: {
+              smoking: smokingStatus,
+              alcohol: alcoholConsumption,
+              exercise: exerciseFrequency
+            },
+            allergies: allergies
+          },
+          diagnosis: diagnosis,
+          medications: medications.map(med => ({
+            name: med.name,
+            dosage: med.dosage,
+            formulation: med.formulation,
+            route: med.route,
+            frequency: med.frequency,
+            duration: med.duration,
+            food_instruction: med.foodInstruction
+          })),
+          prognosis: prognosis,
+          doctor_notes: transcript
+        };
+
+        const prescriptionResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/prescriptions`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(prescriptionData),
+        });
+
+        if (prescriptionResponse.ok) {
+          const prescriptionResult = await prescriptionResponse.json();
+          currentPrescriptionId = prescriptionResult.data.prescription_id;
+        } else {
+          throw new Error('Failed to save prescription');
+        }
+      }
+
+      // Submit to EHR
+      const ehrResponse = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/submit-prescription`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prescription_id: currentPrescriptionId,
+          provider: selectedEhrProvider
+        }),
+      });
+
+      const ehrResult = await ehrResponse.json();
+      
+      if (ehrResult.success) {
+        alert(`✅ Prescription submitted to EHR successfully!\n\nProvider: ${selectedEhrProvider}\nSubmission ID: ${ehrResult.data.submission_id}\nPatient FHIR ID: ${ehrResult.data.patient_fhir_id || 'N/A'}`);
+        
+        setCurrentView('submitted');
+        setTimeout(() => {
+          setCurrentView('input');
+          resetAllFields();
+        }, 3000);
+        
+        await fetchEhrSubmissions();
+      } else {
+        throw new Error(ehrResult.detail || 'EHR submission failed');
+      }
+      
+    } catch (error) {
+      console.error('Error submitting to EHR:', error);
+      alert(`❌ Failed to submit prescription to EHR!\n\nError: ${error.message}`);
+    } finally {
+      setIsSubmittingToEHR(false);
+    }
+  };
+
+  const fetchEhrSubmissions = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/ehr/submissions`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setEhrSubmissions(data.data.submissions);
+      } else {
+        console.error('Failed to fetch EHR submissions');
+      }
+    } catch (error) {
+      console.error('Error fetching EHR submissions:', error);
+    }
+  };
+
+  // Load EHR data on authentication
+  useEffect(() => {
+    if (authToken && isLoggedIn) {
+      fetchEhrProviders();
+      fetchEhrConfigurations();
+      fetchEhrSubmissions();
+    }
+  }, [authToken, isLoggedIn]);
+
   const handleEHRImport = () => {
     if (!patientId.trim()) {
       alert('Please enter a Patient ID');
