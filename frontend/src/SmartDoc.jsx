@@ -1566,11 +1566,12 @@ const SmartDoc = () => {
                     value={patientGender} 
                     onChange={(e) => setPatientGender(e.target.value)} 
                     className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+                    style={{color: 'white'}}
                   >
-                    <option value="">Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                    <option value="" style={{color: 'black', backgroundColor: 'white'}}>Gender</option>
+                    <option value="Male" style={{color: 'black', backgroundColor: 'white'}}>Male</option>
+                    <option value="Female" style={{color: 'black', backgroundColor: 'white'}}>Female</option>
+                    <option value="Other" style={{color: 'black', backgroundColor: 'white'}}>Other</option>
                   </select>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
