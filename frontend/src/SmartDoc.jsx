@@ -130,6 +130,19 @@ const SmartDoc = () => {
   const [currentDoctor, setCurrentDoctor] = useState(null);
   const [loginCredentials, setLoginCredentials] = useState({ username: '', password: '' });
   const [showDoctorProfile, setShowDoctorProfile] = useState(false);
+  const [showRegistration, setShowRegistration] = useState(false);
+  const [registrationData, setRegistrationData] = useState({
+    name: '',
+    degree: '',
+    registrationNumber: '',
+    organization: '',
+    email: '',
+    phone: '',
+    specialization: '',
+    username: '',
+    password: '',
+    confirmPassword: ''
+  });
   
   // Doctor profile state
   const [doctorProfile, setDoctorProfile] = useState({
