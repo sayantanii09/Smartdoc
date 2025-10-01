@@ -628,8 +628,8 @@ const SmartDoc = () => {
               </button>
             </div>
             <div className="mt-6">
-              <p className="text-xl md:text-2xl font-bold text-white mb-2">{isListening ? 'Listening to consultation...' : 'Start Voice Documentation'}</p>
-              <p className="text-slate-400 mb-3">{isListening ? 'Speak naturally - AI is capturing everything' : 'Click the microphone to begin'}</p>
+              <p className="text-xl md:text-2xl font-bold text-white mb-2">{isListening ? 'Recording Consultation...' : 'Start Voice Documentation'}</p>
+              <p className="text-slate-400 mb-3">{isListening ? 'Click microphone again to STOP recording and process' : 'Click the microphone to begin recording'}</p>
               
               {supportStatus === 'not-supported' && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-3 text-yellow-200 text-sm">
@@ -637,10 +637,31 @@ const SmartDoc = () => {
                 </div>
               )}
               
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
                 <button onClick={runDemo} className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-bold transition-all shadow-lg">
                   🎬 Run Demo Consultation
                 </button>
+                {isListening && (
+                  <button onClick={toggleListening} className="px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-bold transition-all shadow-lg">
+                    ⏹️ Stop & Process Recording
+                  </button>
+                )}
+              </div>
+
+              {/* Additional Vitals Section */}
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-xl p-6 border border-indigo-500/30">
+                  <h3 className="text-indigo-300 font-semibold mb-4 flex items-center gap-2">
+                    <Stethoscope className="w-5 h-5" />
+                    Additional Vitals & Assessment
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <input type="text" placeholder="Temperature (°F)" className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
+                    <input type="text" placeholder="Heart Rate (bpm)" className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
+                    <input type="text" placeholder="Respiratory Rate" className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
+                    <input type="text" placeholder="O2 Saturation (%)" className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
