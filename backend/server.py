@@ -1,0 +1,465 @@
+import os
+import logging
+from datetime import datetime
+from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials
+from contextlib import asynccontextmanager
+from typing import List, Optional
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+
+# Import local modules
+from models import (
+    DoctorRegistration, UserLogin, UserResponse, TokenResponse,
+    Prescription, PrescriptionResponse, StandardResponse, ErrorResponse,
+    Medication, PatientInfo, MedicalHistory
+)
+from database import MongoDB, user_db, prescription_db, drug_db
+from auth import auth_handler, get_current_user, get_current_user_id, validate_password_strength
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Database lifecycle management
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("Starting SmartDoc Pro Backend Server...")
+    try:
+        # Connect to MongoDB
+        await MongoDB.connect_db()
+        
+        # Initialize database instances
+        await user_db.init_db()
+        await prescription_db.init_db() 
+        await drug_db.init_db()
+        
+        logger.info("✅ Database connections established successfully")
+        logger.info("✅ SmartDoc Pro Backend Server started successfully")
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to start server: {e}")
+        raise e
+    
+    yield
+    
+    # Shutdown
+    logger.info("Shutting down SmartDoc Pro Backend Server...")
+    await MongoDB.close_db()
+    logger.info("✅ SmartDoc Pro Backend Server shut down successfully")
+
+# Create FastAPI app
+app = FastAPI(
+    title="SmartDoc Pro API",
+    description="Professional Medical Documentation System - Backend API",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+    lifespan=lifespan
+)
+
+# CORS configuration
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Health check endpoint
+@app.get("/api/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "service": "SmartDoc Pro Backend",
+        "version": "1.0.0",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+# Authentication Endpoints
+@app.post("/api/auth/register", response_model=StandardResponse)
+async def register_doctor(registration: DoctorRegistration):
+    """Register a new doctor account"""
+    try:
+        # Validate password strength
+        if not validate_password_strength(registration.password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password must be at least 6 characters long"
+            )
+        
+        # Hash password
+        password_hash = auth_handler.get_password_hash(registration.password)
+        
+        # Prepare user data
+        user_data = {
+            "username": registration.username,
+            "password_hash": password_hash,
+            "name": registration.name,
+            "degree": registration.degree,
+            "registration_number": registration.registration_number,
+            "organization": registration.organization,
+            "email": registration.email,
+            "phone": registration.phone,
+            "specialization": registration.specialization.value if registration.specialization else None
+        }
+        
+        # Create user in database
+        user = await user_db.create_user(user_data)
+        
+        logger.info(f"New doctor registered: {registration.username}")
+        
+        return StandardResponse(
+            success=True,
+            message="Account created successfully! You can now login with your credentials.",
+            data={"user_id": user["id"], "username": user["username"]}
+        )
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Registration error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during registration"
+        )
+
+@app.post("/api/auth/login", response_model=TokenResponse)
+async def login_doctor(login_data: UserLogin):
+    """Login doctor and return JWT token"""
+    try:
+        # Get user from database
+        user = await user_db.get_user_by_username(login_data.username)
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials"
+            )
+        
+        # Verify password
+        if not auth_handler.verify_password(login_data.password, user["password_hash"]):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid credentials"
+            )
+        
+        # Check if user is active
+        if not user.get("is_active", False):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Account is deactivated. Please contact administrator."
+            )
+        
+        # Update last login
+        await user_db.update_last_login(login_data.username)
+        
+        # Create access token
+        access_token = auth_handler.encode_token(user["id"], user["username"])
+        
+        # Remove password hash from response
+        user_response = {k: v for k, v in user.items() if k != "password_hash"}
+        
+        logger.info(f"Doctor logged in: {login_data.username}")
+        
+        return TokenResponse(
+            access_token=access_token,
+            token_type="bearer",
+            user=UserResponse(**user_response)
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Login error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during login"
+        )
+
+@app.get("/api/auth/me", response_model=UserResponse)
+async def get_current_user_info(current_user: dict = Depends(get_current_user)):
+    """Get current authenticated user information"""
+    return UserResponse(**current_user)
+
+@app.post("/api/auth/logout", response_model=StandardResponse)
+async def logout_doctor(current_user: dict = Depends(get_current_user)):
+    """Logout doctor (invalidate token - handled on frontend)"""
+    logger.info(f"Doctor logged out: {current_user['username']}")
+    return StandardResponse(
+        success=True,
+        message="Successfully logged out"
+    )
+
+# Prescription Endpoints
+@app.post("/api/prescriptions", response_model=StandardResponse)
+async def create_prescription(
+    prescription: Prescription,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Create a new prescription"""
+    try:
+        # Set doctor ID
+        prescription.doctor_id = current_user_id
+        
+        # Convert to dict for database storage
+        prescription_data = prescription.model_dump()
+        
+        # Create prescription in database
+        created_prescription = await prescription_db.create_prescription(prescription_data)
+        
+        logger.info(f"Prescription created by doctor: {current_user_id}")
+        
+        return StandardResponse(
+            success=True,
+            message="Prescription created successfully",
+            data={
+                "prescription_id": created_prescription["id"],
+                "created_at": created_prescription["created_at"].isoformat()
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error creating prescription: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error creating prescription"
+        )
+
+@app.get("/api/prescriptions", response_model=List[PrescriptionResponse])
+async def get_doctor_prescriptions(
+    skip: int = 0,
+    limit: int = 50,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Get prescriptions for current doctor"""
+    try:
+        prescriptions = await prescription_db.get_prescriptions_by_doctor(
+            current_user_id, skip, limit
+        )
+        
+        response = []
+        for prescription in prescriptions:
+            response.append(PrescriptionResponse(
+                id=prescription["id"],
+                prescription=Prescription(**prescription),
+                created_at=prescription["created_at"],
+                updated_at=prescription["updated_at"]
+            ))
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error getting prescriptions: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving prescriptions"
+        )
+
+@app.get("/api/prescriptions/{prescription_id}")
+async def get_prescription(
+    prescription_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Get specific prescription by ID"""
+    try:
+        prescription = await prescription_db.get_prescription_by_id(prescription_id)
+        
+        if not prescription:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Prescription not found"
+            )
+        
+        # Verify ownership
+        if prescription["doctor_id"] != current_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
+        
+        return PrescriptionResponse(
+            id=prescription["id"],
+            prescription=Prescription(**prescription),
+            created_at=prescription["created_at"],
+            updated_at=prescription["updated_at"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting prescription: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving prescription"
+        )
+
+# Drug Database Endpoints
+@app.get("/api/drugs/search")
+async def search_drugs(
+    query: str,
+    limit: int = 20,
+    current_user: dict = Depends(get_current_user)
+):
+    """Search drugs in database"""
+    try:
+        drugs = await drug_db.search_drugs(query, limit)
+        return {
+            "success": True,
+            "data": drugs,
+            "count": len(drugs)
+        }
+    except Exception as e:
+        logger.error(f"Error searching drugs: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error searching drugs"
+        )
+
+@app.get("/api/drugs/{drug_name}")
+async def get_drug_info(
+    drug_name: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Get detailed drug information"""
+    try:
+        drug_info = await drug_db.get_drug_info(drug_name)
+        
+        if not drug_info:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Drug not found in database"
+            )
+        
+        return {
+            "success": True,
+            "data": drug_info
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting drug info: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving drug information"
+        )
+
+@app.post("/api/drugs/check-interactions")
+async def check_drug_interactions(
+    drug_names: List[str],
+    current_user: dict = Depends(get_current_user)
+):
+    """Check for drug interactions"""
+    try:
+        interactions = await drug_db.check_interactions(drug_names)
+        
+        return {
+            "success": True,
+            "data": {
+                "drugs_checked": drug_names,
+                "interactions": interactions,
+                "interaction_count": len(interactions)
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error checking interactions: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error checking drug interactions"
+        )
+
+# Medical Database Stats
+@app.get("/api/stats/database")
+async def get_database_stats(current_user: dict = Depends(get_current_user)):
+    """Get medical database statistics"""
+    try:
+        # Get drug count
+        drug_count = await drug_db.db.drug_database.count_documents({})
+        
+        # Get prescription count for current doctor
+        prescription_count = await prescription_db.db.prescriptions.count_documents(
+            {"doctor_id": current_user["id"]}
+        )
+        
+        # Get total users count (for admin users)
+        total_doctors = await user_db.db.users.count_documents({"role": "doctor"})
+        
+        return {
+            "success": True,
+            "data": {
+                "total_drugs": drug_count,
+                "my_prescriptions": prescription_count,
+                "total_doctors": total_doctors,
+                "database_status": "operational",
+                "last_updated": datetime.utcnow().isoformat()
+            }
+        }
+    except Exception as e:
+        logger.error(f"Error getting database stats: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving database statistics"
+        )
+
+# Error handlers
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    """Handle HTTP exceptions"""
+    return {
+        "success": False,
+        "error": exc.detail,
+        "status_code": exc.status_code
+    }
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc):
+    """Handle general exceptions"""
+    logger.error(f"Unhandled exception: {exc}")
+    return {
+        "success": False,
+        "error": "Internal server error",
+        "status_code": 500
+    }
+
+# Development endpoints (remove in production)
+if os.getenv("ENVIRONMENT") == "development":
+    @app.get("/api/dev/reset-database")
+    async def reset_database():
+        """Reset database - DEVELOPMENT ONLY"""
+        try:
+            # Clear all collections
+            await user_db.db.users.delete_many({})
+            await prescription_db.db.prescriptions.delete_many({})
+            await drug_db.db.drug_database.delete_many({})
+            
+            # Reinitialize drug database
+            await drug_db.initialize_drug_database()
+            
+            return {"success": True, "message": "Database reset successfully"}
+        except Exception as e:
+            logger.error(f"Error resetting database: {e}")
+            raise HTTPException(status_code=500, detail="Error resetting database")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(
+        "server:app",
+        host="0.0.0.0",
+        port=8001,
+        reload=True if os.getenv("ENVIRONMENT") == "development" else False,
+        log_level="info"
+    )
