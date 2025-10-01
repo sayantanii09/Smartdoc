@@ -2860,6 +2860,24 @@ const SmartDoc = () => {
                   <span className="text-purple-300 font-medium">{(confidenceThreshold * 100).toFixed(0)}%</span>
                 </div>
               </div>
+
+              {/* Medication Correction Feedback */}
+              {lastCorrectedMeds.length > 0 && (
+                <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-emerald-300 text-sm font-medium">Medication Auto-Corrected</span>
+                  </div>
+                  {lastCorrectedMeds.slice(0, 3).map((correction, index) => (
+                    <div key={index} className="flex items-center gap-2 text-xs text-emerald-200">
+                      <span className="text-slate-400">"{correction.original}"</span>
+                      <span className="text-emerald-400">→</span>
+                      <span className="font-medium">"{correction.corrected}"</span>
+                      <span className="text-slate-500">({(correction.confidence * 100).toFixed(0)}%)</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               
               {supportStatus === 'not-supported' && (
                 <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-3 mb-3 text-yellow-200 text-sm">
