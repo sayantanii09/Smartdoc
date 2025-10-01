@@ -1778,10 +1778,14 @@ const SmartDoc = () => {
 
   // Enhanced medical terminology correction with phonetic matching
   const correctMedicalTerms = (text) => {
+    return correctMedicalTermsWithDynamicDB(text);
+  };
+
+  const correctMedicalTermsWithDynamicDB = (text) => {
     let corrected = text.toLowerCase();
     
-    // First pass: Direct replacements
-    Object.entries(MEDICATION_DATABASE).forEach(([correct, variants]) => {
+    // First pass: Direct replacements using dynamic database (includes user corrections)
+    Object.entries(dynamicMedicationDB).forEach(([correct, variants]) => {
       variants.forEach(variant => {
         const regex = new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
         corrected = corrected.replace(regex, correct);
@@ -1798,7 +1802,7 @@ const SmartDoc = () => {
       let bestMatch = null;
       let bestScore = 0.6; // Minimum similarity threshold
       
-      Object.keys(MEDICATION_DATABASE).forEach(medication => {
+      Object.keys(dynamicMedicationDB).forEach(medication => {
         const similarity = calculateSimilarity(cleanWord, medication);
         if (similarity > bestScore) {
           bestScore = similarity;
@@ -1806,7 +1810,7 @@ const SmartDoc = () => {
         }
         
         // Also check variants
-        MEDICATION_DATABASE[medication].forEach(variant => {
+        dynamicMedicationDB[medication].forEach(variant => {
           const variantSimilarity = calculateSimilarity(cleanWord, variant);
           if (variantSimilarity > bestScore) {
             bestScore = variantSimilarity;
