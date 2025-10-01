@@ -680,14 +680,58 @@ const SmartDoc = () => {
                   value={allergies} 
                   onChange={(e) => setAllergies(e.target.value)} 
                   className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
-                  placeholder="Known Allergies (e.g., Penicillin, Latex, Foods)" 
+                  placeholder="⚠️ Known Allergies (e.g., Penicillin, Latex, Shellfish)" 
                   rows="2"
                 />
                 <textarea 
-                  value={medicalHistory} 
-                  onChange={(e) => setMedicalHistory(e.target.value)} 
+                  value={pastMedicalHistory} 
+                  onChange={(e) => setPastMedicalHistory(e.target.value)} 
                   className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
-                  placeholder="Medical History" 
+                  placeholder="📋 Past Medical History (Previous diagnoses, surgeries, hospitalizations)" 
+                  rows="2"
+                />
+                <textarea 
+                  value={pastMedications} 
+                  onChange={(e) => setPastMedications(e.target.value)} 
+                  className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
+                  placeholder="💊 Current Medications (Name, dosage, frequency)" 
+                  rows="2"
+                />
+                
+                {/* Social History Section */}
+                <div className="bg-white/10 rounded-lg p-3 border border-white/30">
+                  <p className="text-blue-200 font-semibold text-xs mb-2 uppercase tracking-wide">Social History</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <select value={smokingStatus} onChange={(e) => setSmokingStatus(e.target.value)} className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-sm">
+                      <option value="">Smoking Status</option>
+                      <option value="Never smoker">Never smoker</option>
+                      <option value="Current smoker">Current smoker</option>
+                      <option value="Former smoker">Former smoker</option>
+                      <option value="Social smoker">Social smoker</option>
+                    </select>
+                    <select value={alcoholUse} onChange={(e) => setAlcoholUse(e.target.value)} className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-sm">
+                      <option value="">Alcohol Use</option>
+                      <option value="None">None</option>
+                      <option value="Occasional">Occasional</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Heavy">Heavy</option>
+                    </select>
+                    <select value={exerciseLevel} onChange={(e) => setExerciseLevel(e.target.value)} className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 text-sm">
+                      <option value="">Exercise Level</option>
+                      <option value="Sedentary">Sedentary</option>
+                      <option value="Light">Light activity</option>
+                      <option value="Moderate">Moderate activity</option>
+                      <option value="Active">Very active</option>
+                    </select>
+                    <input type="text" value={drugUse} onChange={(e) => setDrugUse(e.target.value)} className="px-3 py-2 bg-white/20 border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm" placeholder="Recreational drugs" />
+                  </div>
+                </div>
+                
+                <textarea 
+                  value={familyHistory} 
+                  onChange={(e) => setFamilyHistory(e.target.value)} 
+                  className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
+                  placeholder="👥 Family History (Hereditary conditions, family medical history)" 
                   rows="2"
                 />
               </div>
