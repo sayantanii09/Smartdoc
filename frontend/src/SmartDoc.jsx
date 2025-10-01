@@ -1933,6 +1933,84 @@ const SmartDoc = () => {
                   </div>
                 )}
 
+                {/* Speech Recognition Settings */}
+                <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6">
+                  <h3 className="text-purple-300 font-semibold mb-4 flex items-center gap-2">
+                    <Mic className="w-5 h-5" />
+                    Speech Recognition Settings
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-purple-300 mb-2">Language & Accent</label>
+                      <select 
+                        value={speechLanguage}
+                        onChange={(e) => setSpeechLanguage(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="en-AU">English (Australia)</option>
+                        <option value="en-IN">English (India)</option>
+                        <option value="es-ES">Spanish (Spain)</option>
+                        <option value="es-MX">Spanish (Mexico)</option>
+                        <option value="fr-FR">French (France)</option>
+                        <option value="de-DE">German</option>
+                        <option value="pt-BR">Portuguese (Brazil)</option>
+                        <option value="hi-IN">Hindi (India)</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-purple-300 mb-2">Recognition Quality</label>
+                      <select 
+                        value={speechQuality}
+                        onChange={(e) => setSpeechQuality(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="high">High Quality (Recommended)</option>
+                        <option value="balanced">Balanced</option>
+                        <option value="fast">Fast (Lower Quality)</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-purple-300 mb-2">Confidence Threshold</label>
+                      <select 
+                        value={confidenceThreshold}
+                        onChange={(e) => setConfidenceThreshold(parseFloat(e.target.value))}
+                        className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      >
+                        <option value="0.5">50% - Very Permissive</option>
+                        <option value="0.6">60% - Permissive</option>
+                        <option value="0.7">70% - Balanced (Recommended)</option>
+                        <option value="0.8">80% - Strict</option>
+                        <option value="0.9">90% - Very Strict</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="noiseReduction"
+                        checked={enableNoiseReduction}
+                        onChange={(e) => setEnableNoiseReduction(e.target.checked)}
+                        className="w-4 h-4 text-purple-500 rounded focus:ring-purple-500"
+                      />
+                      <label htmlFor="noiseReduction" className="ml-2 text-sm text-purple-300">
+                        Enable Noise Reduction
+                      </label>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-3 bg-slate-800/30 rounded-lg">
+                    <p className="text-slate-400 text-xs">
+                      <strong>Tips for better recognition:</strong> Speak clearly, use a quiet environment, 
+                      and pause between sentences. Medical terms are automatically corrected.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
                   <h3 className="text-blue-300 font-semibold mb-3 flex items-center gap-2">
                     <FileText className="w-5 h-5" />
