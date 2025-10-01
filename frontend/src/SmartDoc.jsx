@@ -1320,6 +1320,41 @@ const SmartDoc = () => {
     }
   }, [authToken, isLoggedIn]);
 
+  // Update speech recognition settings when changed
+  useEffect(() => {
+    if (recognitionRef.current) {
+      recognitionRef.current.lang = speechLanguage;
+      console.log(`Speech language updated to: ${speechLanguage}`);
+    }
+  }, [speechLanguage]);
+
+  // Save speech settings to localStorage
+  useEffect(() => {
+    const speechSettings = {
+      language: speechLanguage,
+      quality: speechQuality,
+      noiseReduction: enableNoiseReduction,
+      confidenceThreshold: confidenceThreshold
+    };
+    localStorage.setItem('smartdoc_speech_settings', JSON.stringify(speechSettings));
+  }, [speechLanguage, speechQuality, enableNoiseReduction, confidenceThreshold]);
+
+  // Load speech settings from localStorage on component mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('smartdoc_speech_settings');
+    if (savedSettings) {
+      try {
+        const settings = JSON.parse(savedSettings);
+        setSpeechLanguage(settings.language || 'en-US');
+        setSpeechQuality(settings.quality || 'high');
+        setEnableNoiseReduction(settings.noiseReduction !== false);
+        setConfidenceThreshold(settings.confidenceThreshold || 0.7);
+      } catch (error) {
+        console.error('Error loading speech settings:', error);
+      }
+    }
+  }, []);
+
   // Enhanced transcript cleaning function
   const cleanTranscript = (text) => {
     if (!text) return '';
