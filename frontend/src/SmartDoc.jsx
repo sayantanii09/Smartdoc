@@ -568,37 +568,72 @@ const SmartDoc = () => {
       if (SpeechRecognition) {
         setSupportStatus('supported');
         recognitionRef.current = new SpeechRecognition();
+        
+        // Enhanced speech recognition configuration
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
-        recognitionRef.current.lang = 'en-US';
+        recognitionRef.current.lang = speechLanguage;
+        recognitionRef.current.maxAlternatives = 3; // Get multiple alternatives for better accuracy
+        
+        // Improve recognition quality based on settings
+        if (speechQuality === 'high') {
+          recognitionRef.current.serviceURI = undefined; // Use default high-quality service
+        }
 
         recognitionRef.current.onstart = () => {
-          console.log('Speech recognition started');
+          console.log('Enhanced speech recognition started');
+          setTranscript(''); // Clear previous transcript when starting new session
         };
 
         recognitionRef.current.onresult = (event) => {
           let finalTranscript = '';
           let interimTranscript = '';
+          let bestConfidence = 0;
           
           for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcriptPiece = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-              finalTranscript += transcriptPiece + ' ';
-            } else {
-              interimTranscript += transcriptPiece + ' ';
+            const result = event.results[i];
+            let bestTranscript = '';
+            let bestAlternativeConfidence = 0;
+            
+            // Check all alternatives and pick the one with highest confidence
+            for (let j = 0; j < result.length; j++) {
+              const alternative = result[j];
+              if (alternative.confidence > bestAlternativeConfidence) {
+                bestAlternativeConfidence = alternative.confidence;
+                bestTranscript = alternative.transcript;
+              }
+            }
+            
+            // Only use transcripts above confidence threshold
+            if (bestAlternativeConfidence >= confidenceThreshold) {
+              if (result.isFinal) {
+                finalTranscript += bestTranscript + ' ';
+                bestConfidence = bestAlternativeConfidence;
+              } else {
+                interimTranscript += bestTranscript + ' ';
+              }
             }
           }
           
           if (finalTranscript) {
+            // Clean and correct the transcript
+            const cleanedTranscript = cleanTranscript(finalTranscript);
+            const correctedTranscript = correctMedicalTerms(cleanedTranscript);
+            
             setTranscript(prev => {
-              const newTranscript = prev + finalTranscript;
+              const newTranscript = prev + correctedTranscript + ' ';
               // Process in real-time for continuous updates
               processTranscript(newTranscript);
               return newTranscript;
             });
-          } else if (interimTranscript) {
-            // Show interim results for better UX
-            setTranscript(prev => prev + interimTranscript);
+            
+            console.log(`Speech processed with confidence: ${(bestConfidence * 100).toFixed(1)}%`);
+          }
+          
+          // Show interim results for better user feedback
+          if (interimTranscript && !finalTranscript) {
+            // You could show interim results in a different color or style
+            console.log('Interim:', cleanTranscript(interimTranscript));
           }
         };
 
