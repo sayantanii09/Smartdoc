@@ -2273,9 +2273,12 @@ const SmartDoc = () => {
                   </div>
                   
                   <div className="mt-4 p-3 bg-slate-800/30 rounded-lg">
-                    <p className="text-slate-400 text-xs">
+                    <p className="text-slate-400 text-xs mb-2">
                       <strong>Tips for better recognition:</strong> Speak clearly, use a quiet environment, 
                       and pause between sentences. Medical terms are automatically corrected.
+                    </p>
+                    <p className="text-emerald-400 text-xs">
+                      <strong>✅ Medication Database:</strong> {Object.keys(MEDICATION_DATABASE).length}+ medications supported including generic and brand names
                     </p>
                   </div>
                 </div>
