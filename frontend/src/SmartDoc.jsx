@@ -504,7 +504,7 @@ const SmartDoc = () => {
   const [isLearningMode, setIsLearningMode] = useState(false);
   const [trainingHistory, setTrainingHistory] = useState([]);
   const [showTrainingPanel, setShowTrainingPanel] = useState(false);
-  const [dynamicMedicationDB, setDynamicMedicationDB] = useState({...MEDICATION_DATABASE});
+  const [dynamicMedicationDB, setDynamicMedicationDB] = useState({});
   
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
