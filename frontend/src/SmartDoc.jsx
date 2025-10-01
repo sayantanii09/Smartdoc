@@ -898,15 +898,38 @@ const SmartDoc = () => {
       while ((match = pattern.exec(text)) !== null) {
         const [fullMatch, drugName, dosage, unit, formulation, route, frequency, foodInstruction] = match;
         
-        medications.push({
-          name: drugName.charAt(0).toUpperCase() + drugName.slice(1).toLowerCase(),
-          dosage: `${dosage}${unit}`,
-          formulation: formulation ? (formulation.charAt(0).toUpperCase() + formulation.slice(1).toLowerCase()) : 'Tablet',
-          route: expandAbbreviation(route || 'oral'),
-          frequency: expandAbbreviation(frequency),
-          foodInstruction: expandAbbreviation(foodInstruction || 'with food'),
-          duration: '30 days' // Default duration
-        });
+        // Validate that drugName is actually a medication, not a unit or frequency
+        const excludeWords = [
+          'milligrams', 'mg', 'mcg', 'grams', 'ml', 'units', 'iu',
+          'once', 'twice', 'daily', 'od', 'bd', 'tds', 'qds',
+          'tablet', 'capsule', 'injection', 'syrup', 'drops',
+          'oral', 'before', 'after', 'with', 'without', 'food',
+          'prescribed', 'prescribe', 'give', 'take', 'patient'
+        ];
+        
+        if (drugName && !excludeWords.includes(drugName.toLowerCase())) {
+          // Check if it's a real medication name
+          const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
+            medName.toLowerCase() === drugName.toLowerCase() || 
+            calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.8
+          );
+          
+          if (isValidMedication || drugName.length > 6) { // Allow longer words that might be medications
+            medications.push({
+              name: drugName.charAt(0).toUpperCase() + drugName.slice(1).toLowerCase(),
+              dosage: `${dosage}${unit}`,
+              formulation: formulation ? (formulation.charAt(0).toUpperCase() + formulation.slice(1).toLowerCase()) : 'Tablet',
+              route: expandAbbreviation(route || 'oral'),
+              frequency: expandAbbreviation(frequency),
+              foodInstruction: expandAbbreviation(foodInstruction || 'with food'),
+              duration: '30 days' // Default duration
+            });
+            
+            console.log(`Valid medication extracted: ${drugName}`);
+          } else {
+            console.log(`Rejected non-medication word: ${drugName}`);
+          }
+        }
       }
     });
 
