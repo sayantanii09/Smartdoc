@@ -2537,7 +2537,7 @@ const SmartDoc = () => {
                         <strong>✅ Base Database:</strong> {Object.keys(MEDICATION_DATABASE).length} medications supported including generic and brand names
                       </p>
                       <p className="text-purple-400 text-xs">
-                        <strong>🧠 User Trained:</strong> {userCorrections.length} custom corrections | {Object.keys(dynamicMedicationDB).length - Object.keys(MEDICATION_DATABASE).length} new medications learned
+                        <strong>🧠 User Trained:</strong> {userCorrections.length} custom corrections | {Math.max(0, Object.keys(dynamicMedicationDB).length - Object.keys(MEDICATION_DATABASE).length)} new medications learned
                       </p>
                       <p className="text-blue-400 text-xs">
                         <strong>📚 Training History:</strong> {trainingHistory.length} learning sessions
