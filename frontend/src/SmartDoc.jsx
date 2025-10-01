@@ -2529,9 +2529,17 @@ const SmartDoc = () => {
                       <strong>Tips for better recognition:</strong> Speak clearly, use a quiet environment, 
                       and pause between sentences. Medical terms are automatically corrected.
                     </p>
-                    <p className="text-emerald-400 text-xs">
-                      <strong>✅ Medication Database:</strong> {Object.keys(MEDICATION_DATABASE).length}+ medications supported including generic and brand names
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-emerald-400 text-xs">
+                        <strong>✅ Base Database:</strong> {Object.keys(MEDICATION_DATABASE).length} medications supported including generic and brand names
+                      </p>
+                      <p className="text-purple-400 text-xs">
+                        <strong>🧠 User Trained:</strong> {userCorrections.length} custom corrections | {Object.keys(dynamicMedicationDB).length - Object.keys(MEDICATION_DATABASE).length} new medications learned
+                      </p>
+                      <p className="text-blue-400 text-xs">
+                        <strong>📚 Training History:</strong> {trainingHistory.length} learning sessions
+                      </p>
+                    </div>
                   </div>
                 </div>
 
