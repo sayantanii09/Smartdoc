@@ -57,6 +57,14 @@ const SmartDoc = () => {
   const [heartRate, setHeartRate] = useState('');
   const [respiratoryRate, setRespiratoryRate] = useState('');
   const [oxygenSaturation, setOxygenSaturation] = useState('');
+  const [pastMedicalHistory, setPastMedicalHistory] = useState('');
+  const [pastMedications, setPastMedications] = useState('');
+  const [familyHistory, setFamilyHistory] = useState('');
+  const [socialHistory, setSocialHistory] = useState('');
+  const [smokingStatus, setSmokingStatus] = useState('');
+  const [alcoholUse, setAlcoholUse] = useState('');
+  const [drugUse, setDrugUse] = useState('');
+  const [exerciseLevel, setExerciseLevel] = useState('');
   const recognitionRef = useRef(null);
 
   const [supportStatus, setSupportStatus] = useState('checking');
