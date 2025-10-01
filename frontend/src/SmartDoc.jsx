@@ -199,15 +199,18 @@ const SmartDoc = () => {
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
 
-  // Demo doctors for testing
-  const DEMO_DOCTORS = [
+  // Demo doctors for testing (In production, this would be stored in database)
+  const [registeredDoctors, setRegisteredDoctors] = useState([
     {
       username: 'drsmith',
       password: 'password123',
       name: 'Dr. John Smith',
       degree: 'MBBS, MD (Internal Medicine)',
       registrationNumber: 'MED12345',
-      organization: 'City General Hospital'
+      organization: 'City General Hospital',
+      email: 'john.smith@hospital.com',
+      phone: '+1-555-0101',
+      specialization: 'Internal Medicine'
     },
     {
       username: 'drjohnson',
@@ -215,9 +218,12 @@ const SmartDoc = () => {
       name: 'Dr. Sarah Johnson',
       degree: 'MBBS, MS (Surgery)',
       registrationNumber: 'MED67890',
-      organization: 'Metropolitan Medical Center'
+      organization: 'Metropolitan Medical Center',
+      email: 'sarah.johnson@medcenter.com',
+      phone: '+1-555-0102',
+      specialization: 'General Surgery'
     }
-  ];
+  ]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
