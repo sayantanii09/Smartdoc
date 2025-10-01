@@ -157,35 +157,8 @@ const SmartDoc = () => {
     }
     setDiagnosis(extractedDiagnosis);
 
-    const extractedMeds = [];
-    COMMON_DRUGS.forEach(drug => {
-      if (lowerText.includes(drug)) {
-        extractedMeds.push({
-          name: drug.charAt(0).toUpperCase() + drug.slice(1),
-          dosage: '10mg',
-          frequency: 'Once daily',
-          duration: '30 days'
-        });
-      }
-    });
-
-    if (extractedMeds.length === 0) {
-      if (extractedDiagnosis.includes('Diabetes')) {
-        extractedMeds.push({
-          name: 'Metformin',
-          dosage: '500mg',
-          frequency: 'Twice daily',
-          duration: '30 days'
-        });
-      } else if (extractedDiagnosis.includes('Hypertension')) {
-        extractedMeds.push({
-          name: 'Lisinopril',
-          dosage: '10mg',
-          frequency: 'Once daily',
-          duration: '30 days'
-        });
-      }
-    }
+    // Advanced medication extraction
+    const extractedMeds = extractMedicationsFromText(text);
     setMedications(extractedMeds);
 
     let extractedPrognosis = '';
@@ -199,6 +172,86 @@ const SmartDoc = () => {
     setPrognosis(extractedPrognosis);
 
     checkInteractions(extractedMeds);
+  };
+
+  const extractMedicationsFromText = (text) => {
+    const medications = [];
+    const lowerText = text.toLowerCase();
+    
+    // Medical abbreviation mappings
+    const frequencyMap = {
+      'od': 'Once daily',
+      'once daily': 'Once daily',
+      'bd': 'Twice daily', 
+      'twice daily': 'Twice daily',
+      'tds': 'Three times daily',
+      'three times daily': 'Three times daily',
+      'qds': 'Four times daily',
+      'four times daily': 'Four times daily',
+      'prn': 'As needed',
+      'as needed': 'As needed'
+    };
+
+    // Enhanced pattern matching for medications
+    const medicationPatterns = [
+      // Pattern: drug name dosage frequency
+      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi,
+      // Pattern: prescribe drug dosage frequency  
+      /(?:prescribe|give|start)\s+(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi
+    ];
+
+    medicationPatterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.exec(text)) !== null) {
+        const [, drugName, dosage, unit, frequency] = match;
+        
+        medications.push({
+          name: drugName.charAt(0).toUpperCase() + drugName.slice(1).toLowerCase(),
+          dosage: `${dosage}${unit}`,
+          frequency: frequencyMap[frequency.toLowerCase()] || frequency,
+          duration: '30 days' // Default duration
+        });
+      }
+    });
+
+    // If no specific medications found, use common drug detection as fallback
+    if (medications.length === 0) {
+      COMMON_DRUGS.forEach(drug => {
+        if (lowerText.includes(drug)) {
+          // Try to extract dosage from context
+          const dosagePattern = new RegExp(`${drug}\\s+(\\d+\\.?\\d*)\\s?(mg|mcg|g|ml|units?)`, 'i');
+          const dosageMatch = dosagePattern.exec(text);
+          
+          medications.push({
+            name: drug.charAt(0).toUpperCase() + drug.slice(1),
+            dosage: dosageMatch ? `${dosageMatch[1]}${dosageMatch[2]}` : '10mg',
+            frequency: 'Once daily',
+            duration: '30 days'
+          });
+        }
+      });
+
+      // Default medications for conditions if nothing found
+      if (medications.length === 0) {
+        if (extractedDiagnosis.includes('Diabetes')) {
+          medications.push({
+            name: 'Metformin',
+            dosage: '500mg',
+            frequency: 'Twice daily',
+            duration: '30 days'
+          });
+        } else if (extractedDiagnosis.includes('Hypertension')) {
+          medications.push({
+            name: 'Lisinopril', 
+            dosage: '10mg',
+            frequency: 'Once daily',
+            duration: '30 days'
+          });
+        }
+      }
+    }
+
+    return medications;
   };
 
   const checkInteractions = (meds) => {
