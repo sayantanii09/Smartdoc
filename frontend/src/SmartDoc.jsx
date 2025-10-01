@@ -1683,7 +1683,13 @@ const SmartDoc = () => {
                     placeholder="Enter Patient ID" 
                     className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 mb-2 text-sm" 
                   />
-                  <button onClick={handleEHRImport} className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold transition-all">Fetch Data</button>
+                  <button 
+                    onClick={handleEHRImport} 
+                    className="w-full py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-sm font-semibold transition-all"
+                    title="Fetch patient data from connected EHR system"
+                  >
+                    Fetch Data
+                  </button>
                 </div>
               )}
               
