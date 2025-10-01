@@ -859,12 +859,16 @@ const SmartDoc = () => {
     const medications = [];
     const lowerText = text.toLowerCase();
     
+    console.log('Extracting medications from text:', text);
+    
     // Enhanced pattern matching for medications with all details
     const medicationPatterns = [
       // Pattern: drug name dosage unit formulation route frequency food_instruction
-      /(?:prescribe|give|start|administer)\s+(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
+      /(?:prescribe|give|start|administer|needs?|prescribed?)\s+(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
       // Simpler pattern: drug dosage frequency
-      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi
+      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi,
+      // More flexible pattern for medication mentions
+      /(?:^|\s)(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s*(?:tablet|capsule|injection|syrup|drops?)?\s*(once|twice|three times|four times|daily|od|bd|tds|qds)/gi
     ];
 
     medicationPatterns.forEach(pattern => {
