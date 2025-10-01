@@ -1128,8 +1128,6 @@ const SmartDoc = () => {
               <p className="text-slate-300 text-sm mb-2">Demo Accounts:</p>
               <p className="text-slate-400 text-xs">👨‍⚕️ drsmith / password123 (Internal Medicine)</p>
               <p className="text-slate-400 text-xs">👩‍⚕️ drjohnson / password123 (Surgery)</p>
-              <p className="text-emerald-400 text-xs mt-2">✅ All accounts now stored securely in MongoDB!</p>
-              <p className="text-emerald-400 text-xs">Or create your own professional account</p>
             </div>
           </div>
         </div>
