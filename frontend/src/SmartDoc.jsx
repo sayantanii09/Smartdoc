@@ -468,7 +468,7 @@ const SmartDoc = () => {
   }, [isListening]);
 
   const handleLogin = () => {
-    const doctor = DEMO_DOCTORS.find(
+    const doctor = registeredDoctors.find(
       d => d.username === loginCredentials.username && d.password === loginCredentials.password
     );
     
@@ -478,8 +478,57 @@ const SmartDoc = () => {
       setCurrentView('input');
       alert(`Welcome, ${doctor.name}!`);
     } else {
-      alert('Invalid credentials. Try: drsmith/password123 or drjohnson/password123');
+      alert('Invalid credentials. Try: drsmith/password123 or drjohnson/password123\nOr create a new account.');
     }
+  };
+
+  const handleRegistration = () => {
+    // Validation
+    if (!registrationData.name || !registrationData.degree || !registrationData.registrationNumber || 
+        !registrationData.organization || !registrationData.username || !registrationData.password) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    if (registrationData.password !== registrationData.confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    if (registeredDoctors.find(d => d.username === registrationData.username)) {
+      alert('Username already exists. Please choose a different username.');
+      return;
+    }
+
+    if (registeredDoctors.find(d => d.registrationNumber === registrationData.registrationNumber)) {
+      alert('Registration number already exists in the system.');
+      return;
+    }
+
+    // Create new doctor account
+    const newDoctor = {
+      username: registrationData.username,
+      password: registrationData.password,
+      name: registrationData.name,
+      degree: registrationData.degree,
+      registrationNumber: registrationData.registrationNumber,
+      organization: registrationData.organization,
+      email: registrationData.email,
+      phone: registrationData.phone,
+      specialization: registrationData.specialization
+    };
+
+    // Add to registered doctors (In production, this would be saved to database)
+    setRegisteredDoctors([...registeredDoctors, newDoctor]);
+    
+    alert(`Account created successfully!\n\nWelcome, ${newDoctor.name}!\nYou can now login with your credentials.`);
+    setShowRegistration(false);
+    
+    // Reset registration form
+    setRegistrationData({
+      name: '', degree: '', registrationNumber: '', organization: '', 
+      email: '', phone: '', specialization: '', username: '', password: '', confirmPassword: ''
+    });
   };
 
   const handleLogout = () => {
