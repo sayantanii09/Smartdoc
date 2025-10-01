@@ -405,11 +405,14 @@ const SmartDoc = () => {
   ];
 
   // API Configuration
-  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || '/api';
   
   // API Helper Functions
   const apiCall = async (endpoint, method = 'GET', data = null) => {
-    const url = `${API_BASE_URL}${endpoint}`;
+    // Remove /api prefix if it already exists in endpoint to avoid double prefix
+    const cleanEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`;
+    const url = API_BASE_URL === '/api' ? cleanEndpoint : `${API_BASE_URL}${endpoint}`;
+    
     const options = {
       method,
       headers: {
@@ -437,7 +440,7 @@ const SmartDoc = () => {
 
       return result;
     } catch (error) {
-      console.error(`API Error (${method} ${endpoint}):`, error);
+      console.error(`API Error (${method} ${url}):`, error);
       throw error;
     }
   };
