@@ -1437,7 +1437,178 @@ const SmartDoc = () => {
         console.error('Error loading speech settings:', error);
       }
     }
+    
+    // Load user corrections and training history
+    loadUserCorrections();
+    loadTrainingHistory();
   }, []);
+
+  // Learning System Functions
+  const loadUserCorrections = () => {
+    const savedCorrections = localStorage.getItem('smartdoc_user_corrections');
+    if (savedCorrections) {
+      try {
+        const corrections = JSON.parse(savedCorrections);
+        setUserCorrections(corrections);
+        
+        // Update dynamic medication database with user corrections
+        const updatedDB = {...MEDICATION_DATABASE};
+        corrections.forEach(correction => {
+          if (correction.type === 'medication') {
+            if (!updatedDB[correction.corrected]) {
+              updatedDB[correction.corrected] = [];
+            }
+            if (!updatedDB[correction.corrected].includes(correction.original)) {
+              updatedDB[correction.corrected].push(correction.original);
+            }
+          }
+        });
+        setDynamicMedicationDB(updatedDB);
+        console.log('Loaded user corrections and updated medication database');
+      } catch (error) {
+        console.error('Error loading user corrections:', error);
+      }
+    }
+  };
+
+  const loadTrainingHistory = () => {
+    const savedHistory = localStorage.getItem('smartdoc_training_history');
+    if (savedHistory) {
+      try {
+        const history = JSON.parse(savedHistory);
+        setTrainingHistory(history);
+      } catch (error) {
+        console.error('Error loading training history:', error);
+      }
+    }
+  };
+
+  const saveUserCorrection = (original, corrected, type = 'medication', context = '') => {
+    const correction = {
+      id: Date.now(),
+      original: original.toLowerCase().trim(),
+      corrected: corrected.toLowerCase().trim(),
+      type: type,
+      context: context,
+      timestamp: new Date().toISOString(),
+      confidence: calculateSimilarity(original, corrected)
+    };
+    
+    // Check if this correction already exists
+    const exists = userCorrections.some(c => 
+      c.original === correction.original && 
+      c.corrected === correction.corrected && 
+      c.type === correction.type
+    );
+    
+    if (!exists) {
+      const updatedCorrections = [...userCorrections, correction];
+      setUserCorrections(updatedCorrections);
+      localStorage.setItem('smartdoc_user_corrections', JSON.stringify(updatedCorrections));
+      
+      // Update dynamic medication database
+      if (type === 'medication') {
+        const updatedDB = {...dynamicMedicationDB};
+        if (!updatedDB[correction.corrected]) {
+          updatedDB[correction.corrected] = [];
+        }
+        if (!updatedDB[correction.corrected].includes(correction.original)) {
+          updatedDB[correction.corrected].push(correction.original);
+        }
+        setDynamicMedicationDB(updatedDB);
+      }
+      
+      // Add to training history
+      const trainingEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        action: 'User Correction Added',
+        details: `"${original}" → "${corrected}" (${type})`,
+        improvement: `App will now recognize "${original}" as "${corrected}"`
+      };
+      
+      const updatedHistory = [trainingEntry, ...trainingHistory.slice(0, 49)]; // Keep last 50
+      setTrainingHistory(updatedHistory);
+      localStorage.setItem('smartdoc_training_history', JSON.stringify(updatedHistory));
+      
+      console.log('✅ User correction saved and app trained:', correction);
+      alert(`✅ App Trained! "${original}" will now be recognized as "${corrected}"`);
+      
+      return true;
+    }
+    
+    return false;
+  };
+
+  const applyCorrectionToText = (text, corrections) => {
+    let correctedText = text.toLowerCase();
+    
+    corrections.forEach(correction => {
+      const regex = new RegExp(`\\b${correction.original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+      correctedText = correctedText.replace(regex, correction.corrected);
+    });
+    
+    return correctedText;
+  };
+
+  const processManualCorrection = () => {
+    if (!liveTranscript || !correctedTranscript) {
+      alert('Please provide both original and corrected text');
+      return;
+    }
+    
+    // Find differences between original and corrected text
+    const originalWords = liveTranscript.toLowerCase().split(/\s+/);
+    const correctedWords = correctedTranscript.toLowerCase().split(/\s+/);
+    
+    const corrections = [];
+    
+    // Simple word-by-word comparison
+    for (let i = 0; i < Math.max(originalWords.length, correctedWords.length); i++) {
+      const original = originalWords[i];
+      const corrected = correctedWords[i];
+      
+      if (original && corrected && original !== corrected) {
+        // Check if it's likely a medication name
+        const isMedication = Object.keys(MEDICATION_DATABASE).some(med => 
+          med.includes(corrected) || calculateSimilarity(corrected, med) > 0.7
+        );
+        
+        if (isMedication || corrected.length > 4) { // Only learn significant words
+          corrections.push({original, corrected});
+        }
+      }
+    }
+    
+    if (corrections.length > 0) {
+      corrections.forEach(correction => {
+        saveUserCorrection(correction.original, correction.corrected, 'medication', liveTranscript);
+      });
+      
+      // Update the transcript with corrections and process it
+      setTranscript(correctedTranscript);
+      processTranscript(correctedTranscript);
+      
+      // Clear the correction interface
+      setLiveTranscript('');
+      setCorrectedTranscript('');
+      setShowLiveTranscript(false);
+      
+    } else {
+      alert('No significant corrections detected to learn from.');
+    }
+  };
+
+  const clearTrainingHistory = () => {
+    if (confirm('⚠️ Are you sure you want to clear all training history? This cannot be undone.')) {
+      setTrainingHistory([]);
+      setUserCorrections([]);
+      setDynamicMedicationDB({...MEDICATION_DATABASE});
+      localStorage.removeItem('smartdoc_training_history');
+      localStorage.removeItem('smartdoc_user_corrections');
+      alert('✅ Training history cleared. App reset to default state.');
+    }
+  };
 
   // Enhanced transcript cleaning function
   const cleanTranscript = (text) => {
