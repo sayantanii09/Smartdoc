@@ -888,29 +888,61 @@ const SmartDoc = () => {
       }
     });
 
-    // Fallback to common drug detection
+    // Enhanced fallback using comprehensive medication database
     if (medications.length === 0) {
-      COMMON_DRUGS.forEach(drug => {
-        if (lowerText.includes(drug)) {
-          const dosagePattern = new RegExp(`${drug}\\s+(\\d+\\.?\\d*)\\s?(mg|mcg|g|ml|units?)`, 'i');
-          const frequencyPattern = new RegExp(`${drug}.*?(od|bd|tds|qds|once daily|twice daily|three times daily)`, 'i');
-          const routePattern = new RegExp(`${drug}.*?(oral|iv|im|sc|topical|sublingual)`, 'i');
+      Object.keys(MEDICATION_DATABASE).forEach(medName => {
+        if (lowerText.includes(medName)) {
+          console.log(`Found medication: ${medName} in text`);
+          
+          // Look for dosage, frequency, and route patterns
+          const dosagePattern = new RegExp(`${medName}\\s+(\\d+\\.?\\d*)\\s?(mg|mcg|g|ml|units?)`, 'i');
+          const frequencyPattern = new RegExp(`${medName}.*?(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)`, 'i');
+          const routePattern = new RegExp(`${medName}.*?(oral|iv|im|sc|topical|sublingual|by mouth|intravenous)`, 'i');
           
           const dosageMatch = dosagePattern.exec(text);
           const frequencyMatch = frequencyPattern.exec(text);
           const routeMatch = routePattern.exec(text);
           
           medications.push({
-            name: drug.charAt(0).toUpperCase() + drug.slice(1),
-            dosage: dosageMatch ? `${dosageMatch[1]}${dosageMatch[2]}` : '10mg',
+            name: medName.charAt(0).toUpperCase() + medName.slice(1),
+            dosage: dosageMatch ? `${dosageMatch[1]}${dosageMatch[2]}` : '25mg',
             formulation: 'Tablet',
             route: expandAbbreviation(routeMatch ? routeMatch[1] : 'oral'),
-            frequency: expandAbbreviation(frequencyMatch ? frequencyMatch[1] : 'once daily'),
+            frequency: expandAbbreviation(frequencyMatch ? frequencyMatch[1] : 'twice daily'),
             foodInstruction: 'With food',
             duration: '30 days'
           });
         }
       });
+    }
+    
+    // Additional smart detection for medication patterns
+    if (medications.length === 0) {
+      // Look for any word followed by dosage pattern
+      const genericMedicationPattern = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
+      let match;
+      while ((match = genericMedicationPattern.exec(text)) !== null) {
+        const [fullMatch, drugName, dosage, unit, frequency] = match;
+        
+        // Check if this might be a medication using our database
+        const possibleMed = Object.keys(MEDICATION_DATABASE).find(med => 
+          calculateSimilarity(drugName.toLowerCase(), med) > 0.6
+        );
+        
+        const finalMedName = possibleMed || drugName;
+        
+        medications.push({
+          name: finalMedName.charAt(0).toUpperCase() + finalMedName.slice(1),
+          dosage: `${dosage}${unit}`,
+          formulation: 'Tablet',
+          route: 'Oral',
+          frequency: expandAbbreviation(frequency),
+          foodInstruction: 'With food',
+          duration: '30 days'
+        });
+        
+        console.log(`Generic pattern matched: ${drugName} -> ${finalMedName}`);
+      }
     }
 
     return medications;
