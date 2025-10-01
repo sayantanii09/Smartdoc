@@ -1657,21 +1657,20 @@ const SmartDoc = () => {
                   <button 
                     onClick={handleLogout} 
                     className="text-xs bg-red-500/20 hover:bg-red-500/30 px-3 py-1 rounded-lg text-red-300 transition-all"
-                    title="Logout from SmartDoc Pro"
+                    title="Logout"
                   >
                     <LogOut className="w-3 h-3" />
                   </button>
                   <button 
                     onClick={() => setShowSettings(true)} 
                     className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg text-white transition-all"
-                    title="EHR Integration Settings"
+                    title="Settings"
                   >
                     <Settings className="w-3 h-3" />
                   </button>
                   <button 
                     onClick={() => setShowEHRImport(!showEHRImport)} 
                     className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg text-white transition-all"
-                    title="Import Patient Data from EHR"
                   >
                     Import EHR
                   </button>
