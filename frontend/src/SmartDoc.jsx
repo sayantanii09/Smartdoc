@@ -571,31 +571,58 @@ const SmartDoc = () => {
                 )}
               </div>
 
-              {/* Medical History in Review */}
-              {(medicalHistory || allergies || currentMedications) && (
+              {/* Comprehensive Medical History in Review */}
+              {(pastMedicalHistory || allergies || pastMedications || familyHistory || smokingStatus || alcoholUse || exerciseLevel || drugUse) && (
                 <div className="mb-8 p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
-                  <h3 className="font-semibold text-purple-300 mb-4 uppercase tracking-wide text-sm">Medical Background</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {medicalHistory && (
-                      <div>
-                        <p className="text-xs text-slate-400 mb-2 uppercase">Medical History</p>
-                        <p className="text-white text-sm whitespace-pre-line">{medicalHistory}</p>
-                      </div>
-                    )}
-                    {allergies && (
-                      <div>
-                        <p className="text-xs text-red-400 mb-2 uppercase flex items-center gap-1">
-                          <AlertTriangle className="w-3 h-3" /> Allergies
-                        </p>
-                        <p className="text-red-200 text-sm whitespace-pre-line">{allergies}</p>
-                      </div>
-                    )}
-                    {currentMedications && (
-                      <div>
-                        <p className="text-xs text-slate-400 mb-2 uppercase">Current Medications</p>
-                        <p className="text-white text-sm whitespace-pre-line">{currentMedications}</p>
-                      </div>
-                    )}
+                  <h3 className="font-semibold text-purple-300 mb-4 uppercase tracking-wide text-sm">Comprehensive Medical History</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Medical History Column */}
+                    <div className="space-y-4">
+                      {pastMedicalHistory && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Past Medical History</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{pastMedicalHistory}</p>
+                        </div>
+                      )}
+                      {allergies && (
+                        <div>
+                          <p className="text-xs text-red-400 mb-2 uppercase flex items-center gap-1 font-semibold">
+                            <AlertTriangle className="w-3 h-3" /> Allergies
+                          </p>
+                          <p className="text-red-200 text-sm whitespace-pre-line bg-red-900/20 p-3 rounded-lg border border-red-500/20">{allergies}</p>
+                        </div>
+                      )}
+                      {pastMedications && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Current Medications</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{pastMedications}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Social & Family History Column */}
+                    <div className="space-y-4">
+                      {familyHistory && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Family History</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{familyHistory}</p>
+                        </div>
+                      )}
+                      
+                      {/* Social History */}
+                      {(smokingStatus || alcoholUse || exerciseLevel || drugUse) && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Social History</p>
+                          <div className="bg-slate-900/30 p-3 rounded-lg space-y-2">
+                            {smokingStatus && <p className="text-white text-sm"><span className="text-slate-400">Smoking:</span> {smokingStatus}</p>}
+                            {alcoholUse && <p className="text-white text-sm"><span className="text-slate-400">Alcohol:</span> {alcoholUse}</p>}
+                            {exerciseLevel && <p className="text-white text-sm"><span className="text-slate-400">Exercise:</span> {exerciseLevel}</p>}
+                            {drugUse && <p className="text-white text-sm"><span className="text-slate-400">Recreational Drugs:</span> {drugUse}</p>}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
