@@ -42,6 +42,7 @@ async def lifespan(app: FastAPI):
         await user_db.init_db()
         await prescription_db.init_db() 
         await drug_db.init_db()
+        await ehr_db.init_db()
         
         logger.info("✅ Database connections established successfully")
         logger.info("✅ SmartDoc Pro Backend Server started successfully")
