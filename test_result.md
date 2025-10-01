@@ -158,13 +158,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "SmartDoc Pro Speech Interface"
     - "Medication Recognition System"
-    - "Speech Recognition Settings"
-    - "Demo Mode Functionality"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Medication Recognition System"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "testing"
