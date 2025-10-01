@@ -599,6 +599,20 @@ const SmartDoc = () => {
                   <input type="text" value={patientWeight} onChange={(e) => setPatientWeight(e.target.value)} className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm" placeholder="Weight" />
                   <input type="text" value={patientBP} onChange={(e) => setPatientBP(e.target.value)} className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm" placeholder="BP" />
                 </div>
+                <textarea 
+                  value={allergies} 
+                  onChange={(e) => setAllergies(e.target.value)} 
+                  className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
+                  placeholder="Known Allergies (e.g., Penicillin, Latex, Foods)" 
+                  rows="2"
+                />
+                <textarea 
+                  value={medicalHistory} 
+                  onChange={(e) => setMedicalHistory(e.target.value)} 
+                  className="w-full px-3 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm resize-none" 
+                  placeholder="Medical History" 
+                  rows="2"
+                />
               </div>
             </div>
           </div>
