@@ -679,8 +679,331 @@ const SmartDoc = () => {
     );
   }
 
-  // Continue with the rest of the component implementation...
-  // This is getting quite long, so I'll continue in the next part
+  // Settings Screen
+  if (showSettings) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Settings className="w-8 h-8 text-blue-400" />
+                  EHR Integration Settings
+                </h2>
+                <button 
+                  onClick={() => setShowSettings(false)} 
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ← Back
+                </button>
+              </div>
+
+              {isEhrConnected && (
+                <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Link className="w-6 h-6 text-emerald-400" />
+                      <div>
+                        <p className="text-emerald-300 font-semibold">EHR Connected</p>
+                        <p className="text-emerald-200 text-sm">{ehrSystem}</p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={handleEhrDisconnect} 
+                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-all border border-red-500/30"
+                    >
+                      <Unlink className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">EHR System</label>
+                  <select 
+                    value={ehrSystem}
+                    onChange={(e) => setEhrSystem(e.target.value)}
+                    disabled={isEhrConnected}
+                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    <option value="">Select EHR System</option>
+                    <option value="Epic Systems">Epic Systems</option>
+                    <option value="Cerner">Cerner (Oracle Health)</option>
+                    <option value="Allscripts">Allscripts</option>
+                    <option value="Meditech">Meditech</option>
+                    <option value="Athenahealth">Athenahealth</option>
+                    <option value="eClinicalWorks">eClinicalWorks</option>
+                    <option value="NextGen">NextGen Healthcare</option>
+                    <option value="Custom FHIR">Custom HL7 FHIR Server</option>
+                    <option value="Indian EHR">Indian EHR System (ABDM Compatible)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">API Endpoint URL</label>
+                  <input
+                    type="text"
+                    value={ehrEndpoint}
+                    onChange={(e) => setEhrEndpoint(e.target.value)}
+                    disabled={isEhrConnected}
+                    placeholder="https://api.ehr-system.com/v1"
+                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">API Key / Authorization Token</label>
+                  <input
+                    type="password"
+                    value={ehrApiKey}
+                    onChange={(e) => setEhrApiKey(e.target.value)}
+                    disabled={isEhrConnected}
+                    placeholder="Enter your API key or OAuth token"
+                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  />
+                  <p className="text-slate-400 text-sm mt-2">🔒 Your credentials are stored locally and never shared</p>
+                </div>
+
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
+                  <h3 className="text-blue-300 font-semibold mb-3 flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Integration Details
+                  </h3>
+                  <ul className="text-slate-300 text-sm space-y-2">
+                    <li>• <strong>HL7 FHIR:</strong> Standard REST API for healthcare data exchange</li>
+                    <li>• <strong>OAuth 2.0:</strong> Secure authentication method</li>
+                    <li>• <strong>Patient Import:</strong> Demographics, history, allergies, medications</li>
+                    <li>• <strong>Prescription Export:</strong> Send prescriptions back to EHR</li>
+                    <li>• <strong>ABDM Support:</strong> Compatible with India's Ayushman Bharat Digital Mission</li>
+                  </ul>
+                </div>
+
+                {!isEhrConnected && (
+                  <button 
+                    onClick={handleEhrConnect} 
+                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg"
+                  >
+                    Connect EHR System
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Review Screen with Enhanced Actions
+  if (currentView === 'review') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
+            <div className="relative">
+              
+              {/* Doctor Header */}
+              <div className="mb-8 p-6 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl border border-blue-500/30">
+                <div className="flex items-center gap-4 mb-4">
+                  <User className="w-8 h-8 text-blue-400" />
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">{currentDoctor.name}</h2>
+                    <p className="text-blue-200">{currentDoctor.degree}</p>
+                    <p className="text-blue-300 text-sm">Registration: {currentDoctor.registrationNumber}</p>
+                    <p className="text-blue-300 text-sm">{currentDoctor.organization}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-slate-300 text-sm">Date: {new Date().toLocaleDateString()}</p>
+                  <p className="text-slate-300 text-sm">Time: {new Date().toLocaleTimeString()}</p>
+                </div>
+              </div>
+
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                <CheckCircle className="w-8 h-8 text-emerald-400" />
+                Final Prescription Review
+              </h2>
+
+              {/* Patient Information */}
+              <div className="mb-8 p-6 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl border border-blue-500/30 backdrop-blur-sm">
+                <div className="flex items-center gap-3 mb-4">
+                  <UserCircle2 className="w-6 h-6 text-blue-400" />
+                  <p className="text-sm text-blue-300 font-semibold uppercase tracking-wide">Patient Information</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div><p className="text-sm text-slate-400 mb-1">Name</p><p className="text-xl font-bold text-white">{patientName || 'Not specified'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Patient ID</p><p className="text-lg text-white">{patientId || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Age</p><p className="text-lg text-white">{patientAge || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Gender</p><p className="text-lg text-white">{patientGender || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Height</p><p className="text-lg text-white">{patientHeight || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Weight</p><p className="text-lg text-white">{patientWeight || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Blood Pressure</p><p className="text-lg text-white">{patientBP || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Temperature</p><p className="text-lg text-white">{temperature || 'N/A'}</p></div>
+                </div>
+                {(heartRate || respiratoryRate || oxygenSaturation) && (
+                  <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {heartRate && <div><p className="text-sm text-slate-400 mb-1">Heart Rate</p><p className="text-lg text-white">{heartRate} bpm</p></div>}
+                    {respiratoryRate && <div><p className="text-sm text-slate-400 mb-1">Respiratory Rate</p><p className="text-lg text-white">{respiratoryRate}</p></div>}
+                    {oxygenSaturation && <div><p className="text-sm text-slate-400 mb-1">O2 Saturation</p><p className="text-lg text-white">{oxygenSaturation}%</p></div>}
+                  </div>
+                )}
+              </div>
+
+              {/* Comprehensive Medical History */}
+              {(pastMedicalHistory || allergies || pastMedications || familyHistory || smokingStatus || alcoholUse || exerciseLevel || drugUse) && (
+                <div className="mb-8 p-6 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/30">
+                  <h3 className="font-semibold text-purple-300 mb-4 uppercase tracking-wide text-sm">Comprehensive Medical History</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      {pastMedicalHistory && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Past Medical History</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{pastMedicalHistory}</p>
+                        </div>
+                      )}
+                      {allergies && (
+                        <div>
+                          <p className="text-xs text-red-400 mb-2 uppercase flex items-center gap-1 font-semibold">
+                            <AlertTriangle className="w-3 h-3" /> Allergies
+                          </p>
+                          <p className="text-red-200 text-sm whitespace-pre-line bg-red-900/20 p-3 rounded-lg border border-red-500/20">{allergies}</p>
+                        </div>
+                      )}
+                      {pastMedications && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Current Medications</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{pastMedications}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4">
+                      {familyHistory && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Family History</p>
+                          <p className="text-white text-sm whitespace-pre-line bg-slate-900/30 p-3 rounded-lg">{familyHistory}</p>
+                        </div>
+                      )}
+                      
+                      {(smokingStatus || alcoholUse || exerciseLevel || drugUse) && (
+                        <div>
+                          <p className="text-xs text-slate-400 mb-2 uppercase font-semibold">Social History</p>
+                          <div className="bg-slate-900/30 p-3 rounded-lg space-y-2">
+                            {smokingStatus && <p className="text-white text-sm"><span className="text-slate-400">Smoking:</span> {smokingStatus}</p>}
+                            {alcoholUse && <p className="text-white text-sm"><span className="text-slate-400">Alcohol:</span> {alcoholUse}</p>}
+                            {exerciseLevel && <p className="text-white text-sm"><span className="text-slate-400">Exercise:</span> {exerciseLevel}</p>}
+                            {drugUse && <p className="text-white text-sm"><span className="text-slate-400">Recreational Drugs:</span> {drugUse}</p>}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Diagnosis */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-blue-300 mb-3 uppercase tracking-wide text-sm">Diagnosis</h3>
+                <div className="p-5 bg-slate-900/50 rounded-xl border border-slate-600/50">
+                  <p className="text-white text-lg">{diagnosis}</p>
+                </div>
+              </div>
+
+              {/* Enhanced Prescriptions */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-blue-300 mb-3 uppercase tracking-wide text-sm">Prescriptions</h3>
+                <div className="space-y-3">
+                  {medications.map((med, i) => (
+                    <div key={i} className="p-5 bg-slate-900/50 rounded-xl border border-slate-600/50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <p className="font-bold text-white text-lg mb-1">{med.name} - {med.dosage}</p>
+                          <p className="text-slate-400 text-sm">{med.formulation} • {med.route}</p>
+                        </div>
+                        <div className="text-right md:text-left">
+                          <p className="text-white font-medium">{med.frequency}</p>
+                          <p className="text-slate-400 text-sm">{med.foodInstruction} • {med.duration}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Prognosis */}
+              <div className="mb-8">
+                <h3 className="font-semibold text-blue-300 mb-3 uppercase tracking-wide text-sm">Prognosis</h3>
+                <div className="p-5 bg-slate-900/50 rounded-xl border border-slate-600/50">
+                  <p className="text-white text-lg leading-relaxed">{prognosis}</p>
+                </div>
+              </div>
+
+              {/* Drug Interactions */}
+              {interactions.length > 0 && (
+                <div className="mb-8 bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/30 rounded-xl p-6">
+                  <h3 className="font-bold text-amber-300 mb-3 flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5" />
+                    Interactions Acknowledged
+                  </h3>
+                  <ul className="space-y-2">
+                    {interactions.map((int, i) => (
+                      <li key={i} className="text-amber-200 flex items-center gap-2">
+                        <span className="w-2 h-2 bg-amber-400 rounded-full"></span>
+                        {int.type === 'drug-drug' ? `${int.drug1} + ${int.drug2}` : `${int.drug} + Food Interactions`}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Enhanced Action Buttons */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button 
+                  onClick={() => setCurrentView('input')} 
+                  className="py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all border border-slate-600"
+                >
+                  ← Back to Edit
+                </button>
+                <button 
+                  onClick={handlePrintPDF} 
+                  className="py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Download className="w-5 h-5" />
+                  Print PDF
+                </button>
+                <button 
+                  onClick={isEhrConnected ? handleSubmitToEHR : () => alert('Please configure EHR connection in Settings')} 
+                  className={`py-4 rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 ${
+                    isEhrConnected 
+                      ? 'bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white' 
+                      : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  }`}
+                  disabled={!isEhrConnected}
+                >
+                  <Send className="w-5 h-5" />
+                  Submit to EHR
+                </button>
+              </div>
+              
+              {/* Combined Action */}
+              <button 
+                onClick={handleBothActions} 
+                className="w-full mt-4 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg"
+                style={{ boxShadow: '0 10px 40px rgba(147, 51, 234, 0.4)' }}
+              >
+                🎯 Print PDF & Submit to EHR (Both Actions)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
