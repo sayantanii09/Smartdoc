@@ -342,27 +342,44 @@ class EHRBackendTester:
     
     async def test_authentication_required_endpoints(self):
         """Test 7: Authentication Required for Protected Endpoints"""
-        endpoints_to_test = [
+        get_endpoints = [
             "/ehr/providers",
-            "/ehr/configurations", 
+            "/ehr/configurations"
+        ]
+        
+        post_endpoints = [
             "/ehr/configure",
             "/ehr/test-connection"
         ]
         
         all_passed = True
         
-        for endpoint in endpoints_to_test:
+        # Test GET endpoints without authentication
+        for endpoint in get_endpoints:
             try:
-                # Test without authentication
                 async with self.session.get(f"{API_BASE}{endpoint}") as response:
-                    if response.status == 401:
-                        self.log_test(f"Auth Required - {endpoint}", True, "Correctly requires authentication")
+                    if response.status in [401, 403]:  # Both are valid auth errors
+                        self.log_test(f"Auth Required - GET {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
                     else:
-                        self.log_test(f"Auth Required - {endpoint}", False, f"Expected 401, got {response.status}")
+                        self.log_test(f"Auth Required - GET {endpoint}", False, f"Expected 401/403, got {response.status}")
                         all_passed = False
                         
             except Exception as e:
-                self.log_test(f"Auth Required - {endpoint}", False, f"Error: {str(e)}")
+                self.log_test(f"Auth Required - GET {endpoint}", False, f"Error: {str(e)}")
+                all_passed = False
+        
+        # Test POST endpoints without authentication
+        for endpoint in post_endpoints:
+            try:
+                async with self.session.post(f"{API_BASE}{endpoint}", json={}) as response:
+                    if response.status in [401, 403]:  # Both are valid auth errors
+                        self.log_test(f"Auth Required - POST {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
+                    else:
+                        self.log_test(f"Auth Required - POST {endpoint}", False, f"Expected 401/403, got {response.status}")
+                        all_passed = False
+                        
+            except Exception as e:
+                self.log_test(f"Auth Required - POST {endpoint}", False, f"Error: {str(e)}")
                 all_passed = False
         
         return all_passed
