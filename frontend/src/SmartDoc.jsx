@@ -496,6 +496,16 @@ const SmartDoc = () => {
   const [medicationSuggestions, setMedicationSuggestions] = useState([]);
   const [lastCorrectedMeds, setLastCorrectedMeds] = useState([]);
   
+  // Manual correction and learning system
+  const [showLiveTranscript, setShowLiveTranscript] = useState(false);
+  const [liveTranscript, setLiveTranscript] = useState('');
+  const [correctedTranscript, setCorrectedTranscript] = useState('');
+  const [userCorrections, setUserCorrections] = useState([]);
+  const [isLearningMode, setIsLearningMode] = useState(false);
+  const [trainingHistory, setTrainingHistory] = useState([]);
+  const [showTrainingPanel, setShowTrainingPanel] = useState(false);
+  const [dynamicMedicationDB, setDynamicMedicationDB] = useState({...MEDICATION_DATABASE});
+  
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
 
