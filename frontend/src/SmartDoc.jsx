@@ -1858,23 +1858,43 @@ const SmartDoc = () => {
                       <AlertTriangle className="w-6 h-6 text-amber-400" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-amber-300 mb-3 text-lg">Drug Interactions Detected</h3>
+                      <h3 className="font-bold text-amber-300 mb-3 text-lg">Comprehensive Drug Analysis</h3>
                       <div className="space-y-3">
                         {interactions.map((int, i) => (
                           <div key={i} className="bg-slate-900/50 rounded-lg p-4 border border-amber-500/20">
                             {int.type === 'drug-drug' ? (
-                              <p className="text-amber-200">
-                                <span className="font-semibold text-white">{int.drug1}</span> + <span className="font-semibold text-white">{int.drug2}</span>
-                                <span className="block mt-1 text-sm text-amber-300">{int.warning}</span>
-                              </p>
+                              <div>
+                                <p className="text-amber-200 font-semibold">
+                                  🚨 Drug-Drug Interaction: <span className="text-white">{int.drug1}</span> + <span className="text-white">{int.drug2}</span>
+                                </p>
+                                <p className="text-slate-300 text-sm mt-1">Classes: {int.class1} + {int.class2}</p>
+                                <p className="text-amber-300 text-sm mt-2">{int.warning}</p>
+                              </div>
+                            ) : int.type === 'contraindication' ? (
+                              <div>
+                                <p className="text-red-300 font-semibold">
+                                  ⛔ Contraindications: <span className="text-white">{int.drug}</span>
+                                </p>
+                                <p className="text-slate-300 text-sm mt-1">Class: {int.class}</p>
+                                <p className="text-red-200 text-sm mt-2">Review: {int.contraindications.join(', ')}</p>
+                              </div>
                             ) : (
-                              <p className="text-amber-200">
-                                <span className="font-semibold text-white">{int.drug}</span> interacts with: {int.foods.join(', ')}
-                                <span className="block mt-1 text-sm text-amber-300">{int.warning}</span>
-                              </p>
+                              <div>
+                                <p className="text-amber-200 font-semibold">
+                                  🥗 Drug-Food Interaction: <span className="text-white">{int.drug}</span>
+                                </p>
+                                <p className="text-slate-300 text-sm mt-1">Class: {int.class}</p>
+                                <p className="text-amber-200 text-sm mt-2">Avoid/Monitor: {int.foods.join(', ')}</p>
+                                <p className="text-amber-300 text-sm mt-1">{int.warning}</p>
+                              </div>
                             )}
                           </div>
                         ))}
+                      </div>
+                      <div className="mt-4 p-3 bg-blue-500/10 rounded-lg border border-blue-500/30">
+                        <p className="text-blue-300 text-sm">
+                          💡 <strong>Database:</strong> {Object.keys(COMPREHENSIVE_DRUG_DATABASE).length} drugs with comprehensive interaction data from Medscape-equivalent sources
+                        </p>
                       </div>
                     </div>
                   </div>
