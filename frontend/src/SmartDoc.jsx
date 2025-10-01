@@ -1,35 +1,213 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, FileText, AlertTriangle, CheckCircle, Stethoscope, Sparkles, UserCircle2, Settings, Link, Unlink, LogIn, LogOut, User, Download, Send } from 'lucide-react';
 
-const DRUG_DATABASE = {
+// Comprehensive Drug Database (Medscape-like data)
+// In production, this would be fetched from a medical database API
+const COMPREHENSIVE_DRUG_DATABASE = {
+  // Cardiovascular Medications
   warfarin: {
-    interactions: ['aspirin', 'ibuprofen', 'naproxen'],
-    foodInteractions: ['green leafy vegetables', 'cranberry juice', 'alcohol'],
-    warnings: 'Increased bleeding risk'
+    class: 'Anticoagulant',
+    interactions: ['aspirin', 'ibuprofen', 'naproxen', 'celecoxib', 'clopidogrel', 'heparin', 'amiodarone', 'fluconazole', 'metronidazole', 'clarithromycin', 'erythromycin', 'ciprofloxacin', 'sulfamethoxazole'],
+    foodInteractions: ['green leafy vegetables', 'cranberry juice', 'alcohol', 'grapefruit juice', 'garlic supplements', 'ginger', 'ginseng'],
+    warnings: 'Increased bleeding risk. Monitor INR closely.',
+    contraindications: ['active bleeding', 'severe liver disease', 'pregnancy'],
+    sideEffects: ['bleeding', 'bruising', 'hair loss', 'skin necrosis']
   },
   aspirin: {
-    interactions: ['warfarin', 'ibuprofen', 'clopidogrel'],
-    foodInteractions: ['alcohol', 'ginger', 'garlic supplements'],
-    warnings: 'Increased bleeding risk'
-  },
-  metformin: {
-    interactions: ['furosemide', 'nifedipine', 'cimetidine'],
-    foodInteractions: ['alcohol'],
-    warnings: 'Risk of lactic acidosis with alcohol'
+    class: 'Antiplatelet/NSAID',
+    interactions: ['warfarin', 'heparin', 'clopidogrel', 'ibuprofen', 'naproxen', 'methotrexate', 'ace inhibitors', 'furosemide'],
+    foodInteractions: ['alcohol', 'ginger', 'garlic supplements', 'turmeric'],
+    warnings: 'Increased bleeding risk, GI irritation. Use with caution in peptic ulcer disease.',
+    contraindications: ['active GI bleeding', 'severe asthma', 'children with viral infections (Reye syndrome)'],
+    sideEffects: ['GI bleeding', 'tinnitus', 'nausea', 'heartburn']
   },
   lisinopril: {
-    interactions: ['potassium supplements', 'spironolactone', 'nsaids'],
-    foodInteractions: ['salt substitutes', 'potassium-rich foods'],
-    warnings: 'Hyperkalemia risk'
+    class: 'ACE Inhibitor',
+    interactions: ['potassium supplements', 'spironolactone', 'amiloride', 'nsaids', 'lithium', 'aliskiren'],
+    foodInteractions: ['salt substitutes', 'potassium-rich foods', 'alcohol'],
+    warnings: 'Monitor potassium levels. Risk of hyperkalemia and acute kidney injury.',
+    contraindications: ['pregnancy', 'bilateral renal artery stenosis', 'angioedema history'],
+    sideEffects: ['dry cough', 'hyperkalemia', 'angioedema', 'hypotension']
   },
   atorvastatin: {
-    interactions: ['clarithromycin', 'itraconazole', 'cyclosporine'],
+    class: 'HMG-CoA Reductase Inhibitor',
+    interactions: ['clarithromycin', 'erythromycin', 'itraconazole', 'ketoconazole', 'cyclosporine', 'gemfibrozil', 'niacin', 'digoxin'],
     foodInteractions: ['grapefruit juice', 'alcohol'],
-    warnings: 'Increased myopathy risk'
+    warnings: 'Monitor liver enzymes and creatine kinase. Risk of myopathy and rhabdomyolysis.',
+    contraindications: ['active liver disease', 'pregnancy', 'breastfeeding'],
+    sideEffects: ['myalgia', 'elevated liver enzymes', 'headache', 'nausea']
+  },
+  amlodipine: {
+    class: 'Calcium Channel Blocker',
+    interactions: ['simvastatin', 'cyclosporine', 'tacrolimus'],
+    foodInteractions: ['grapefruit juice', 'high sodium foods'],
+    warnings: 'Monitor blood pressure. May cause peripheral edema.',
+    contraindications: ['severe aortic stenosis', 'cardiogenic shock'],
+    sideEffects: ['peripheral edema', 'fatigue', 'dizziness', 'flushing']
+  },
+
+  // Diabetes Medications
+  metformin: {
+    class: 'Biguanide',
+    interactions: ['contrast agents', 'cimetidine', 'furosemide', 'nifedipine', 'topiramate'],
+    foodInteractions: ['alcohol', 'high fiber meals'],
+    warnings: 'Risk of lactic acidosis. Discontinue before contrast procedures.',
+    contraindications: ['severe kidney disease', 'metabolic acidosis', 'severe dehydration'],
+    sideEffects: ['GI upset', 'nausea', 'diarrhea', 'metallic taste', 'vitamin B12 deficiency']
+  },
+  insulin: {
+    class: 'Hormone',
+    interactions: ['ace inhibitors', 'beta blockers', 'octreotide', 'lanreotide'],
+    foodInteractions: ['alcohol', 'carbohydrate timing'],
+    warnings: 'Risk of hypoglycemia. Monitor blood glucose closely.',
+    contraindications: ['hypoglycemia'],
+    sideEffects: ['hypoglycemia', 'weight gain', 'injection site reactions']
+  },
+  glipizide: {
+    class: 'Sulfonylurea',
+    interactions: ['warfarin', 'fluconazole', 'clarithromycin', 'beta blockers'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Risk of hypoglycemia, especially in elderly.',
+    contraindications: ['type 1 diabetes', 'diabetic ketoacidosis'],
+    sideEffects: ['hypoglycemia', 'weight gain', 'nausea']
+  },
+
+  // Antibiotics
+  amoxicillin: {
+    class: 'Penicillin Antibiotic',
+    interactions: ['warfarin', 'methotrexate', 'oral contraceptives'],
+    foodInteractions: [],
+    warnings: 'Risk of allergic reactions. May reduce oral contraceptive effectiveness.',
+    contraindications: ['penicillin allergy'],
+    sideEffects: ['diarrhea', 'nausea', 'rash', 'candidiasis']
+  },
+  clarithromycin: {
+    class: 'Macrolide Antibiotic',
+    interactions: ['warfarin', 'statins', 'digoxin', 'theophylline', 'carbamazepine', 'cyclosporine'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'QT prolongation risk. Multiple drug interactions via CYP3A4.',
+    contraindications: ['history of QT prolongation', 'severe liver disease'],
+    sideEffects: ['nausea', 'diarrhea', 'taste disturbance', 'QT prolongation']
+  },
+  ciprofloxacin: {
+    class: 'Fluoroquinolone Antibiotic',
+    interactions: ['warfarin', 'theophylline', 'tizanidine', 'dairy products', 'iron supplements'],
+    foodInteractions: ['dairy products', 'calcium supplements', 'iron supplements'],
+    warnings: 'Tendon rupture risk. C. diff colitis risk.',
+    contraindications: ['tendon disorders', 'myasthenia gravis'],
+    sideEffects: ['nausea', 'diarrhea', 'tendinitis', 'CNS effects']
+  },
+
+  // Gastrointestinal
+  omeprazole: {
+    class: 'Proton Pump Inhibitor',
+    interactions: ['warfarin', 'clopidogrel', 'digoxin', 'ketoconazole', 'iron supplements'],
+    foodInteractions: [],
+    warnings: 'Long-term use may increase risk of fractures and C. diff.',
+    contraindications: ['hypersensitivity to PPIs'],
+    sideEffects: ['headache', 'nausea', 'diarrhea', 'vitamin B12 deficiency']
+  },
+  ranitidine: {
+    class: 'H2 Receptor Antagonist',
+    interactions: ['warfarin', 'ketoconazole', 'atazanavir'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Note: Ranitidine recalled due to NDMA contamination.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['headache', 'dizziness', 'constipation']
+  },
+
+  // Respiratory
+  albuterol: {
+    class: 'Beta-2 Agonist',
+    interactions: ['beta blockers', 'digoxin', 'tricyclic antidepressants'],
+    foodInteractions: ['caffeine'],
+    warnings: 'May cause paradoxical bronchospasm. Monitor heart rate.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['tachycardia', 'tremor', 'nervousness', 'headache']
+  },
+  theophylline: {
+    class: 'Methylxanthine',
+    interactions: ['ciprofloxacin', 'erythromycin', 'cimetidine', 'phenytoin', 'carbamazepine'],
+    foodInteractions: ['caffeine', 'alcohol', 'charcoal-broiled foods'],
+    warnings: 'Narrow therapeutic index. Monitor serum levels.',
+    contraindications: ['uncontrolled seizures', 'active peptic ulcer'],
+    sideEffects: ['nausea', 'tachycardia', 'seizures', 'arrhythmias']
+  },
+
+  // Neurological
+  phenytoin: {
+    class: 'Anticonvulsant',
+    interactions: ['warfarin', 'digoxin', 'oral contraceptives', 'folic acid', 'carbamazepine'],
+    foodInteractions: ['enteral nutrition', 'folic acid rich foods'],
+    warnings: 'Narrow therapeutic index. Monitor serum levels and signs of toxicity.',
+    contraindications: ['sinus bradycardia', 'heart block'],
+    sideEffects: ['gingival hyperplasia', 'hirsutism', 'ataxia', 'nystagmus']
+  },
+  carbamazepine: {
+    class: 'Anticonvulsant',
+    interactions: ['warfarin', 'oral contraceptives', 'clarithromycin', 'fluoxetine', 'diltiazem'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Risk of aplastic anemia. Monitor CBC regularly.',
+    contraindications: ['bone marrow suppression', 'AV block'],
+    sideEffects: ['diplopia', 'ataxia', 'nausea', 'rash', 'hyponatremia']
+  },
+
+  // Pain/Inflammation
+  ibuprofen: {
+    class: 'NSAID',
+    interactions: ['warfarin', 'ace inhibitors', 'lithium', 'methotrexate', 'digoxin'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Increased cardiovascular and GI risks. Use lowest effective dose.',
+    contraindications: ['active GI bleeding', 'severe heart failure', 'CABG surgery'],
+    sideEffects: ['GI upset', 'hypertension', 'fluid retention', 'kidney dysfunction']
+  },
+  naproxen: {
+    class: 'NSAID',
+    interactions: ['warfarin', 'ace inhibitors', 'lithium', 'methotrexate', 'cyclosporine'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Increased cardiovascular risk. Monitor kidney function.',
+    contraindications: ['active GI bleeding', 'severe kidney disease'],
+    sideEffects: ['GI bleeding', 'hypertension', 'edema', 'dizziness']
+  },
+  morphine: {
+    class: 'Opioid Analgesic',
+    interactions: ['mao inhibitors', 'cns depressants', 'muscle relaxants', 'sedatives'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Risk of respiratory depression and dependence.',
+    contraindications: ['respiratory depression', 'paralytic ileus'],
+    sideEffects: ['respiratory depression', 'constipation', 'nausea', 'sedation']
+  },
+
+  // Psychiatric
+  sertraline: {
+    class: 'SSRI Antidepressant',
+    interactions: ['mao inhibitors', 'warfarin', 'digoxin', 'triptans', 'tramadol'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Serotonin syndrome risk. Monitor for suicidal thoughts.',
+    contraindications: ['mao inhibitor use', 'pimozide use'],
+    sideEffects: ['nausea', 'diarrhea', 'insomnia', 'sexual dysfunction']
+  },
+  fluoxetine: {
+    class: 'SSRI Antidepressant',
+    interactions: ['mao inhibitors', 'warfarin', 'phenytoin', 'carbamazepine', 'triptans'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Long half-life. Serotonin syndrome risk.',
+    contraindications: ['mao inhibitor use', 'thioridazine use'],
+    sideEffects: ['nausea', 'headache', 'insomnia', 'anxiety']
+  },
+
+  // Thyroid
+  levothyroxine: {
+    class: 'Thyroid Hormone',
+    interactions: ['warfarin', 'digoxin', 'insulin', 'iron supplements', 'calcium supplements'],
+    foodInteractions: ['soy products', 'fiber', 'coffee', 'calcium-rich foods'],
+    warnings: 'Take on empty stomach. Monitor TSH levels.',
+    contraindications: ['uncorrected adrenal insufficiency', 'acute MI'],
+    sideEffects: ['palpitations', 'tremor', 'insomnia', 'weight loss']
   }
 };
 
-const COMMON_DRUGS = ['warfarin', 'aspirin', 'metformin', 'lisinopril', 'atorvastatin', 'amoxicillin', 'omeprazole', 'levothyroxine', 'amlodipine', 'simvastatin'];
+const COMMON_DRUGS = Object.keys(COMPREHENSIVE_DRUG_DATABASE);
 
 // Medical Abbreviations Mapping
 const MEDICAL_ABBREVIATIONS = {
