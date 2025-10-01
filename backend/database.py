@@ -368,3 +368,6 @@ class DrugDB:
 user_db = UserDB()
 prescription_db = PrescriptionDB()
 drug_db = DrugDB()
+
+# Import EHR database
+from ehr_database import ehr_db
