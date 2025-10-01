@@ -143,7 +143,7 @@ const SmartDoc = () => {
   };
 
   const runDemo = () => {
-    const demoText = 'Patient has type 2 diabetes and hypertension. Blood sugar is elevated. Prescribe metformin 500mg twice daily and lisinopril 10mg once daily. Patient should follow up in two weeks for monitoring.';
+    const demoText = 'Patient has type 2 diabetes and hypertension. Blood sugar is elevated. Prescribe metformin 40mg OD and lisinopril 5mg once daily. Patient should follow up in two weeks for monitoring.';
     setTranscript(demoText);
     setTimeout(() => processTranscript(demoText), 500);
   };
