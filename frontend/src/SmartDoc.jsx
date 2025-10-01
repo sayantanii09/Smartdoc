@@ -639,7 +639,35 @@ const SmartDoc = () => {
 
         recognitionRef.current.onerror = (event) => {
           console.error('Speech recognition error:', event.error);
-          alert('Speech Error: ' + event.error + '. This often happens in embedded environments. Use Demo Mode or deploy to emergent.sh for full functionality.');
+          
+          let errorMessage = 'Speech Recognition Error: ';
+          
+          switch(event.error) {
+            case 'not-allowed':
+              errorMessage += 'Microphone access denied. Please allow microphone permissions and try again.';
+              break;
+            case 'network':
+              errorMessage += 'Network connection issue. Check your internet connection.';
+              break;
+            case 'aborted':
+              errorMessage += 'Speech recognition was aborted. This often happens in embedded environments.';
+              break;
+            case 'audio-capture':
+              errorMessage += 'No microphone detected. Please check your audio devices.';
+              break;
+            case 'no-speech':
+              errorMessage += 'No speech detected. Please try speaking closer to the microphone.';
+              break;
+            case 'service-not-allowed':
+              errorMessage += 'Speech service not available. Try using Demo Mode instead.';
+              break;
+            default:
+              errorMessage += event.error + '. Try adjusting speech settings or use Demo Mode.';
+          }
+          
+          errorMessage += '\n\n💡 Tips:\n• Use Demo Mode for testing\n• Check microphone permissions\n• Adjust language/accent settings\n• Speak clearly in a quiet environment';
+          
+          alert(errorMessage);
           setIsListening(false);
         };
 
