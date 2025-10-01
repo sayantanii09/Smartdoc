@@ -206,6 +206,92 @@ const COMPREHENSIVE_DRUG_DATABASE = {
     warnings: 'Take on empty stomach. Monitor TSH levels.',
     contraindications: ['uncorrected adrenal insufficiency', 'acute MI'],
     sideEffects: ['palpitations', 'tremor', 'insomnia', 'weight loss']
+  },
+
+  // Diuretics
+  furosemide: {
+    class: 'Loop Diuretic',
+    interactions: ['lithium', 'digoxin', 'aminoglycosides', 'nsaids', 'ace inhibitors'],
+    foodInteractions: ['alcohol', 'licorice'],
+    warnings: 'Monitor electrolytes, kidney function, and hearing. Risk of dehydration.',
+    contraindications: ['anuria', 'severe electrolyte depletion'],
+    sideEffects: ['hypokalemia', 'hyponatremia', 'dehydration', 'ototoxicity', 'hyperuricemia']
+  },
+  hydrochlorothiazide: {
+    class: 'Thiazide Diuretic',
+    interactions: ['lithium', 'digoxin', 'nsaids', 'corticosteroids'],
+    foodInteractions: ['alcohol', 'licorice'],
+    warnings: 'Monitor electrolytes and blood glucose. May worsen diabetes.',
+    contraindications: ['anuria', 'severe kidney disease'],
+    sideEffects: ['hypokalemia', 'hyperglycemia', 'hyperuricemia', 'photosensitivity']
+  },
+  spironolactone: {
+    class: 'Potassium-Sparing Diuretic',
+    interactions: ['ace inhibitors', 'potassium supplements', 'nsaids', 'lithium'],
+    foodInteractions: ['salt substitutes', 'potassium-rich foods'],
+    warnings: 'Monitor potassium levels. Risk of hyperkalemia.',
+    contraindications: ['hyperkalemia', 'severe kidney disease', 'addison disease'],
+    sideEffects: ['hyperkalemia', 'gynecomastia', 'menstrual irregularities']
+  },
+
+  // Beta Blockers
+  metoprolol: {
+    class: 'Beta-1 Selective Blocker',
+    interactions: ['verapamil', 'diltiazem', 'clonidine', 'insulin', 'epinephrine'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Do not stop abruptly. Monitor heart rate and blood pressure.',
+    contraindications: ['severe bradycardia', 'heart block', 'cardiogenic shock'],
+    sideEffects: ['bradycardia', 'hypotension', 'fatigue', 'depression']
+  },
+  propranolol: {
+    class: 'Non-Selective Beta Blocker',
+    interactions: ['verapamil', 'diltiazem', 'insulin', 'theophylline', 'lidocaine'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Do not stop abruptly. Avoid in asthma patients.',
+    contraindications: ['severe asthma', 'severe bradycardia', 'heart failure'],
+    sideEffects: ['bradycardia', 'bronchospasm', 'fatigue', 'depression']
+  },
+
+  // Additional Common Drugs
+  prednisone: {
+    class: 'Corticosteroid',
+    interactions: ['nsaids', 'warfarin', 'diabetes medications', 'vaccines'],
+    foodInteractions: ['alcohol', 'grapefruit juice'],
+    warnings: 'Do not stop abruptly. Monitor blood glucose and bone density.',
+    contraindications: ['systemic fungal infections', 'live vaccines'],
+    sideEffects: ['hyperglycemia', 'osteoporosis', 'immunosuppression', 'mood changes']
+  },
+  digoxin: {
+    class: 'Cardiac Glycoside',
+    interactions: ['diuretics', 'amiodarone', 'quinidine', 'verapamil', 'erythromycin'],
+    foodInteractions: ['high fiber foods', 'st john wort'],
+    warnings: 'Narrow therapeutic index. Monitor digoxin levels.',
+    contraindications: ['ventricular fibrillation', 'heart block'],
+    sideEffects: ['nausea', 'visual disturbances', 'arrhythmias', 'confusion']
+  },
+  losartan: {
+    class: 'ARB (Angiotensin Receptor Blocker)',
+    interactions: ['potassium supplements', 'nsaids', 'lithium', 'rifampin'],
+    foodInteractions: ['salt substitutes', 'potassium-rich foods'],
+    warnings: 'Monitor kidney function and potassium levels.',
+    contraindications: ['pregnancy', 'bilateral renal artery stenosis'],
+    sideEffects: ['hyperkalemia', 'hypotension', 'dizziness', 'fatigue']
+  },
+  clopidogrel: {
+    class: 'Antiplatelet Agent',
+    interactions: ['warfarin', 'omeprazole', 'aspirin', 'nsaids'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Increased bleeding risk. Avoid proton pump inhibitors.',
+    contraindications: ['active bleeding', 'severe liver disease'],
+    sideEffects: ['bleeding', 'bruising', 'headache', 'diarrhea']
+  },
+  simvastatin: {
+    class: 'HMG-CoA Reductase Inhibitor',
+    interactions: ['grapefruit juice', 'amlodipine', 'diltiazem', 'verapamil', 'clarithromycin'],
+    foodInteractions: ['grapefruit juice', 'alcohol'],
+    warnings: 'Monitor liver enzymes and creatine kinase. Risk of myopathy.',
+    contraindications: ['active liver disease', 'pregnancy'],
+    sideEffects: ['myalgia', 'elevated liver enzymes', 'headache']
   }
 };
 
