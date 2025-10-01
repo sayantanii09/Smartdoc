@@ -866,6 +866,8 @@ const SmartDoc = () => {
   };
 
   const expandAbbreviation = (text) => {
+    if (!text || typeof text !== 'string') return text || '';
+    
     const words = text.toLowerCase().split(/\s+/);
     const expandedWords = words.map(word => {
       // Remove punctuation for matching
