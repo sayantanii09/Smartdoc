@@ -256,7 +256,7 @@ class DrugDB:
                 return
 
             # Import comprehensive drug database
-            from .drug_database import COMPREHENSIVE_DRUG_DATABASE
+            from drug_database import COMPREHENSIVE_DRUG_DATABASE
             
             drugs_to_insert = []
             for drug_name, drug_data in COMPREHENSIVE_DRUG_DATABASE.items():
