@@ -1433,17 +1433,38 @@ const SmartDoc = () => {
     }
   };
 
-  const handleSubmitToEHR = () => {
-    if (!isEhrConnected) {
-      alert('⚠️ EHR system not connected. Please configure EHR settings first.');
+  const handleSubmitToEHR = async () => {
+    if (!isEhrConnected || ehrConfigurations.length === 0) {
+      alert('⚠️ EHR system not configured. Please configure EHR settings first.');
+      setShowEHRConfig(true);
       return;
     }
     
-    setCurrentView('submitted');
-    setTimeout(() => {
-      setCurrentView('input');
-      resetAllFields();
-    }, 3000);
+    // If no EHR provider is selected, show selection dialog
+    if (!selectedEhrProvider && ehrConfigurations.length > 1) {
+      const providerOptions = ehrConfigurations.map((config, index) => 
+        `${index + 1}. ${config.provider} (${config.base_url})`
+      ).join('\n');
+      
+      const selection = prompt(`Multiple EHR systems configured. Select one:\n\n${providerOptions}\n\nEnter number (1-${ehrConfigurations.length}):`);
+      
+      if (selection) {
+        const index = parseInt(selection) - 1;
+        if (index >= 0 && index < ehrConfigurations.length) {
+          setSelectedEhrProvider(ehrConfigurations[index].provider);
+          await submitPrescriptionToEHR();
+        } else {
+          alert('Invalid selection');
+        }
+      }
+      return;
+    }
+    
+    // Use the selected provider or the first available one
+    const providerToUse = selectedEhrProvider || ehrConfigurations[0]?.provider;
+    setSelectedEhrProvider(providerToUse);
+    
+    await submitPrescriptionToEHR();
   };
 
   const handleBothActions = () => {
