@@ -1,34 +1,34 @@
 {
   "summary": {
-    "passed": 6,
+    "passed": 7,
     "total": 7,
-    "success_rate": "85.7%",
-    "timestamp": "2025-10-01T16:51:04.063777"
+    "success_rate": "100.0%",
+    "timestamp": "2025-10-01T16:51:26.318371"
   },
   "results": [
     {
       "test": "Health Check",
       "success": true,
       "message": "Backend is healthy",
-      "timestamp": "2025-10-01T16:51:02.930000",
+      "timestamp": "2025-10-01T16:51:25.429926",
       "details": {
         "status": "healthy",
         "service": "SmartDoc Pro Backend",
         "version": "1.0.0",
-        "timestamp": "2025-10-01T16:51:02.927527"
+        "timestamp": "2025-10-01T16:51:25.427434"
       }
     },
     {
       "test": "Doctor Registration",
       "success": true,
       "message": "Registration successful",
-      "timestamp": "2025-10-01T16:51:03.204272",
+      "timestamp": "2025-10-01T16:51:25.677726",
       "details": {
         "success": true,
         "message": "Account created successfully! You can now login with your credentials.",
         "data": {
-          "user_id": "68dd5bf74963b07600683906",
-          "username": "test_doctor_96dd3588"
+          "user_id": "68dd5c0d4963b0760068390a",
+          "username": "test_doctor_77b86a99"
         }
       }
     },
@@ -36,17 +36,17 @@
       "test": "Doctor Login",
       "success": true,
       "message": "Login successful",
-      "timestamp": "2025-10-01T16:51:03.459647",
+      "timestamp": "2025-10-01T16:51:25.928990",
       "details": {
         "token_type": "bearer",
-        "user_id": "68dd5bf74963b07600683906"
+        "user_id": "68dd5c0d4963b0760068390a"
       }
     },
     {
       "test": "EHR Providers",
       "success": true,
       "message": "Retrieved 8 providers",
-      "timestamp": "2025-10-01T16:51:03.512155",
+      "timestamp": "2025-10-01T16:51:25.935701",
       "details": {
         "total_providers": 8,
         "expected_found": 5,
@@ -66,12 +66,12 @@
       "test": "EHR Configuration (Epic OAuth)",
       "success": true,
       "message": "Epic configuration saved",
-      "timestamp": "2025-10-01T16:51:03.567451",
+      "timestamp": "2025-10-01T16:51:25.945322",
       "details": {
         "success": true,
         "message": "EHR configuration saved successfully",
         "data": {
-          "config_id": "1a105982-c6ac-4e1d-8f07-4f4ecc079bc0",
+          "config_id": "f9742e49-3d4a-4a19-b2a6-b7b47112af69",
           "provider": "Epic"
         }
       }
@@ -80,12 +80,12 @@
       "test": "EHR Configuration (Cerner API Key)",
       "success": true,
       "message": "Cerner configuration saved",
-      "timestamp": "2025-10-01T16:51:03.578910",
+      "timestamp": "2025-10-01T16:51:25.955123",
       "details": {
         "success": true,
         "message": "EHR configuration saved successfully",
         "data": {
-          "config_id": "d78b6e91-1d8c-4d80-9fbc-f428f7cae7e5",
+          "config_id": "093e881a-3f75-4485-aee4-b5a8258fdf25",
           "provider": "Cerner"
         }
       }
@@ -94,13 +94,13 @@
       "test": "EHR Connection Test",
       "success": true,
       "message": "Connection test completed with status: connected",
-      "timestamp": "2025-10-01T16:51:03.869674",
+      "timestamp": "2025-10-01T16:51:26.205692",
       "details": {
         "success": true,
         "message": "Connection successful",
         "data": {
           "status": "connected",
-          "response_time": 0.189193,
+          "response_time": 0.136808,
           "capabilities": [
             "MeasureReport",
             "Condition",
@@ -170,7 +170,7 @@
       "test": "Get EHR Configurations",
       "success": true,
       "message": "Retrieved 2 configurations",
-      "timestamp": "2025-10-01T16:51:03.920640",
+      "timestamp": "2025-10-01T16:51:26.254587",
       "details": {
         "count": 2,
         "providers": [
@@ -180,31 +180,31 @@
       }
     },
     {
-      "test": "Auth Required - /ehr/providers",
-      "success": false,
-      "message": "Expected 401, got 403",
-      "timestamp": "2025-10-01T16:51:03.927270",
+      "test": "Auth Required - GET /ehr/providers",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-01T16:51:26.260543",
       "details": {}
     },
     {
-      "test": "Auth Required - /ehr/configurations",
-      "success": false,
-      "message": "Expected 401, got 403",
-      "timestamp": "2025-10-01T16:51:03.975472",
+      "test": "Auth Required - GET /ehr/configurations",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-01T16:51:26.266076",
       "details": {}
     },
     {
-      "test": "Auth Required - /ehr/configure",
-      "success": false,
-      "message": "Expected 401, got 405",
-      "timestamp": "2025-10-01T16:51:04.057607",
+      "test": "Auth Required - POST /ehr/configure",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-01T16:51:26.312049",
       "details": {}
     },
     {
-      "test": "Auth Required - /ehr/test-connection",
-      "success": false,
-      "message": "Expected 401, got 405",
-      "timestamp": "2025-10-01T16:51:04.063621",
+      "test": "Auth Required - POST /ehr/test-connection",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-01T16:51:26.318200",
       "details": {}
     }
   ]
