@@ -860,6 +860,140 @@ const SmartDoc = () => {
     }, 1000);
   };
 
+  // Registration Screen
+  if (showRegistration) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-6">
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-2xl shadow-2xl p-8 max-w-2xl w-full border border-slate-700/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-blue-500/10"></div>
+          <div className="relative">
+            <div className="text-center mb-8">
+              <div className="bg-gradient-to-br from-emerald-500 to-blue-500 p-4 rounded-xl shadow-lg mx-auto w-20 h-20 flex items-center justify-center">
+                <User className="w-10 h-10 text-white" />
+              </div>
+              <h1 className="text-3xl font-bold text-white mt-4 mb-2">Create Doctor Account</h1>
+              <p className="text-blue-200">Join SmartDoc Pro Professional Network</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <input
+                type="text"
+                placeholder="Full Name *"
+                value={registrationData.name}
+                onChange={(e) => setRegistrationData({...registrationData, name: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="text"
+                placeholder="Degree (e.g., MBBS, MD) *"
+                value={registrationData.degree}
+                onChange={(e) => setRegistrationData({...registrationData, degree: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="text"
+                placeholder="Medical Registration Number *"
+                value={registrationData.registrationNumber}
+                onChange={(e) => setRegistrationData({...registrationData, registrationNumber: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="text"
+                placeholder="Organization/Hospital *"
+                value={registrationData.organization}
+                onChange={(e) => setRegistrationData({...registrationData, organization: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={registrationData.email}
+                onChange={(e) => setRegistrationData({...registrationData, email: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="tel"
+                placeholder="Phone Number"
+                value={registrationData.phone}
+                onChange={(e) => setRegistrationData({...registrationData, phone: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+            
+            <div className="mb-6">
+              <select
+                value={registrationData.specialization}
+                onChange={(e) => setRegistrationData({...registrationData, specialization: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option value="">Select Specialization</option>
+                <option value="Internal Medicine">Internal Medicine</option>
+                <option value="General Surgery">General Surgery</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Gynecology">Gynecology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Psychiatry">Psychiatry</option>
+                <option value="Emergency Medicine">Emergency Medicine</option>
+                <option value="Family Medicine">Family Medicine</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <input
+                type="text"
+                placeholder="Username *"
+                value={registrationData.username}
+                onChange={(e) => setRegistrationData({...registrationData, username: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <div></div>
+              <input
+                type="password"
+                placeholder="Password *"
+                value={registrationData.password}
+                onChange={(e) => setRegistrationData({...registrationData, password: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+              <input
+                type="password"
+                placeholder="Confirm Password *"
+                value={registrationData.confirmPassword}
+                onChange={(e) => setRegistrationData({...registrationData, confirmPassword: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              />
+            </div>
+            
+            <button
+              onClick={handleRegistration}
+              className="w-full py-3 bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white rounded-xl font-bold transition-all shadow-lg mb-4"
+            >
+              Create Doctor Account
+            </button>
+            
+            <div className="text-center">
+              <button
+                onClick={() => setShowRegistration(false)}
+                className="text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Already have an account? Sign In
+              </button>
+            </div>
+
+            <div className="bg-emerald-900/30 rounded-lg p-4 text-left mt-6">
+              <p className="text-emerald-300 text-sm mb-2">Account Verification:</p>
+              <p className="text-emerald-200 text-xs">✓ All accounts are instantly activated for demo purposes</p>
+              <p className="text-emerald-200 text-xs">✓ In production, medical credentials would be verified</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Login Screen
   if (!isLoggedIn) {
     return (
@@ -899,11 +1033,20 @@ const SmartDoc = () => {
               <LogIn className="w-5 h-5 inline mr-2" />
               Login to SmartDoc
             </button>
+
+            <button
+              onClick={() => setShowRegistration(true)}
+              className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg mb-6"
+            >
+              <User className="w-5 h-5 inline mr-2" />
+              Create New Account
+            </button>
             
             <div className="bg-slate-900/30 rounded-lg p-4 text-left">
               <p className="text-slate-300 text-sm mb-2">Demo Accounts:</p>
               <p className="text-slate-400 text-xs">👨‍⚕️ drsmith / password123</p>
               <p className="text-slate-400 text-xs">👩‍⚕️ drjohnson / password123</p>
+              <p className="text-emerald-400 text-xs mt-2">Or create your own professional account</p>
             </div>
           </div>
         </div>
