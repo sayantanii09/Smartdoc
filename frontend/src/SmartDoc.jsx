@@ -704,26 +704,45 @@ const SmartDoc = () => {
     const medNames = meds.map(m => m.name.toLowerCase());
 
     medNames.forEach((med, index) => {
-      if (DRUG_DATABASE[med]) {
+      if (COMPREHENSIVE_DRUG_DATABASE[med]) {
+        const drugData = COMPREHENSIVE_DRUG_DATABASE[med];
+        
+        // Check drug-drug interactions
         medNames.forEach((otherMed, otherIndex) => {
-          if (index !== otherIndex && DRUG_DATABASE[med].interactions.includes(otherMed)) {
+          if (index !== otherIndex && drugData.interactions.includes(otherMed)) {
             foundInteractions.push({
               type: 'drug-drug',
               severity: 'high',
               drug1: meds[index].name,
               drug2: meds[otherIndex].name,
-              warning: DRUG_DATABASE[med].warnings
+              warning: drugData.warnings,
+              class1: drugData.class,
+              class2: COMPREHENSIVE_DRUG_DATABASE[otherMed]?.class || 'Unknown'
             });
           }
         });
 
-        if (DRUG_DATABASE[med].foodInteractions.length > 0) {
+        // Check drug-food interactions
+        if (drugData.foodInteractions.length > 0) {
           foundInteractions.push({
             type: 'drug-food',
             severity: 'moderate',
             drug: meds[index].name,
-            foods: DRUG_DATABASE[med].foodInteractions,
-            warning: DRUG_DATABASE[med].warnings
+            foods: drugData.foodInteractions,
+            warning: drugData.warnings,
+            class: drugData.class
+          });
+        }
+
+        // Check contraindications
+        if (drugData.contraindications.length > 0) {
+          foundInteractions.push({
+            type: 'contraindication',
+            severity: 'critical',
+            drug: meds[index].name,
+            contraindications: drugData.contraindications,
+            warning: `Critical: Review contraindications for ${meds[index].name}`,
+            class: drugData.class
           });
         }
       }
