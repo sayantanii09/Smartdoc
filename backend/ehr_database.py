@@ -250,6 +250,9 @@ class EHRDatabase:
                 "id": submission_id
             })
             
+            if submission and "_id" in submission:
+                submission["_id"] = str(submission["_id"])
+            
             return submission
             
         except Exception as e:
