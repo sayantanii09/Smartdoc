@@ -484,6 +484,13 @@ const SmartDoc = () => {
     timeout: 30,
     verifySsl: true
   });
+
+  // Enhanced Speech Recognition Settings
+  const [speechLanguage, setSpeechLanguage] = useState('en-US');
+  const [speechQuality, setSpeechQuality] = useState('high');
+  const [enableNoiseReduction, setEnableNoiseReduction] = useState(true);
+  const [confidenceThreshold, setConfidenceThreshold] = useState(0.7);
+  const [showSpeechSettings, setShowSpeechSettings] = useState(false);
   
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
