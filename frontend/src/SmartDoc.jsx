@@ -914,10 +914,134 @@ const SmartDoc = () => {
 
   const handleReview = () => setCurrentView('review');
 
-  const handlePrintPDF = () => {
-    setCurrentView('pdf');
-    // In a real implementation, this would generate and download a PDF
-    alert('📄 PDF Generation\n\nPrescription PDF with doctor details, patient information, and all medications would be generated here.\n\nFeatures:\n• Professional format\n• Doctor credentials at top\n• Date/time stamp\n• Complete medication details\n• Ready for printing');
+  const handlePrintPDF = async () => {
+    try {
+      // Create PDF content
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let yPosition = 20;
+      
+      // Header with doctor information
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('MEDICAL PRESCRIPTION', pageWidth / 2, yPosition, { align: 'center' });
+      yPosition += 15;
+      
+      // Doctor details
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Dr. ${currentDoctor.name}`, 20, yPosition);
+      yPosition += 5;
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`${currentDoctor.degree}`, 20, yPosition);
+      yPosition += 5;
+      pdf.text(`Registration: ${currentDoctor.registration_number || currentDoctor.registrationNumber}`, 20, yPosition);
+      yPosition += 5;
+      pdf.text(`${currentDoctor.organization}`, 20, yPosition);
+      yPosition += 10;
+      
+      // Date and time
+      pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPosition);
+      pdf.text(`Time: ${new Date().toLocaleTimeString()}`, 120, yPosition);
+      yPosition += 15;
+      
+      // Patient Information
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('PATIENT INFORMATION:', 20, yPosition);
+      yPosition += 8;
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`Name: ${patientName || 'Not specified'}`, 20, yPosition);
+      yPosition += 5;
+      pdf.text(`Age: ${patientAge || 'N/A'}   Gender: ${patientGender || 'N/A'}   Height: ${patientHeight || 'N/A'}   Weight: ${patientWeight || 'N/A'}`, 20, yPosition);
+      yPosition += 5;
+      pdf.text(`Blood Pressure: ${patientBP || 'N/A'}   Temperature: ${temperature || 'N/A'}`, 20, yPosition);
+      if (heartRate || oxygenSaturation) {
+        yPosition += 5;
+        pdf.text(`Heart Rate: ${heartRate || 'N/A'}   O2 Saturation: ${oxygenSaturation || 'N/A'}%`, 20, yPosition);
+      }
+      yPosition += 15;
+      
+      // Allergies (if any)
+      if (allergies) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('ALLERGIES:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        const allergiesLines = pdf.splitTextToSize(allergies, pageWidth - 40);
+        pdf.text(allergiesLines, 20, yPosition);
+        yPosition += allergiesLines.length * 5 + 10;
+      }
+      
+      // Diagnosis
+      if (diagnosis) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('DIAGNOSIS:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        const diagnosisLines = pdf.splitTextToSize(diagnosis, pageWidth - 40);
+        pdf.text(diagnosisLines, 20, yPosition);
+        yPosition += diagnosisLines.length * 5 + 10;
+      }
+      
+      // Medications/Prescriptions
+      if (medications.length > 0) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('PRESCRIPTIONS:', 20, yPosition);
+        yPosition += 8;
+        
+        medications.forEach((med, index) => {
+          pdf.setFont('helvetica', 'bold');
+          pdf.text(`${index + 1}. ${med.name} - ${med.dosage}`, 25, yPosition);
+          yPosition += 5;
+          pdf.setFont('helvetica', 'normal');
+          pdf.text(`   Formulation: ${med.formulation}   Route: ${med.route}`, 25, yPosition);
+          yPosition += 4;
+          pdf.text(`   Frequency: ${med.frequency}   Food: ${med.foodInstruction}`, 25, yPosition);
+          yPosition += 4;
+          pdf.text(`   Duration: ${med.duration}`, 25, yPosition);
+          yPosition += 8;
+          
+          // Check if we need a new page
+          if (yPosition > pageHeight - 30) {
+            pdf.addPage();
+            yPosition = 20;
+          }
+        });
+      }
+      
+      // Prognosis
+      if (prognosis) {
+        yPosition += 5;
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('PROGNOSIS & ADVICE:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        const prognosisLines = pdf.splitTextToSize(prognosis, pageWidth - 40);
+        pdf.text(prognosisLines, 20, yPosition);
+        yPosition += prognosisLines.length * 5 + 15;
+      }
+      
+      // Doctor signature area
+      yPosition = Math.max(yPosition, pageHeight - 40);
+      pdf.line(120, yPosition, 180, yPosition); // Signature line
+      yPosition += 5;
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Dr. ${currentDoctor.name}`, 120, yPosition);
+      yPosition += 4;
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(`${currentDoctor.degree}`, 120, yPosition);
+      
+      // Save the PDF
+      const fileName = `Prescription_${patientName || 'Patient'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
+      
+      alert(`✅ PDF Generated Successfully!\n\nFile: ${fileName}\nThe prescription has been downloaded to your device.`);
+      
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      alert(`❌ PDF Generation Failed\n\nError: ${error.message}\nPlease try again or contact support.`);
+    }
   };
 
   const handleSubmitToEHR = () => {
