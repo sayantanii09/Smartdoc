@@ -1848,7 +1848,7 @@ const SmartDoc = () => {
                   Configure EHR System
                 </h2>
                 <button 
-                  onClick={() => setShowEHRConfig(false)} 
+                  onClick={() => { setShowEHRConfig(false); setShowSettings(true); }} 
                   className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
                 >
                   ← Back
