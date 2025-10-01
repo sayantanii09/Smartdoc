@@ -1774,6 +1774,7 @@ const SmartDoc = () => {
                     ? '0 0 60px rgba(239, 68, 68, 0.6)' 
                     : '0 0 60px rgba(59, 130, 246, 0.6)' 
                 }}
+                title={isListening ? "Stop Recording" : "Start Recording"}
               >
                 {isListening ? <MicOff className="w-14 h-14 text-white" /> : <Mic className="w-14 h-14 text-white" />}
               </button>
