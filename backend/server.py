@@ -69,7 +69,7 @@ app = FastAPI(
 # CORS configuration
 allowed_origins = [
     "http://localhost:3000",
-    "https://cacef907-fa9c-4c7c-b67e-2d2572d0ced7.preview.emergentagent.com",
+    "https://healthscribe-3.preview.emergentagent.com",
     os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 
