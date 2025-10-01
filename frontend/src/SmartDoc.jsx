@@ -480,14 +480,22 @@ const SmartDoc = () => {
                   <UserCircle2 className="w-6 h-6 text-blue-400" />
                   <p className="text-sm text-blue-300 font-semibold uppercase tracking-wide">Patient Information</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-2 lg:grid-cols-4 gap-4">
                   <div><p className="text-sm text-slate-400 mb-1">Name</p><p className="text-xl font-bold text-white">{patientName || 'Not specified'}</p></div>
                   <div><p className="text-sm text-slate-400 mb-1">Patient ID</p><p className="text-xl font-bold text-white">{patientId || 'N/A'}</p></div>
                   <div><p className="text-sm text-slate-400 mb-1">Age</p><p className="text-lg text-white">{patientAge || 'N/A'}</p></div>
                   <div><p className="text-sm text-slate-400 mb-1">Weight</p><p className="text-lg text-white">{patientWeight || 'N/A'}</p></div>
                   <div><p className="text-sm text-slate-400 mb-1">Blood Pressure</p><p className="text-lg text-white">{patientBP || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Temperature</p><p className="text-lg text-white">{temperature || 'N/A'}</p></div>
+                  <div><p className="text-sm text-slate-400 mb-1">Heart Rate</p><p className="text-lg text-white">{heartRate || 'N/A'}</p></div>
                   <div><p className="text-sm text-slate-400 mb-1">Date</p><p className="text-lg text-white">{new Date().toLocaleDateString()}</p></div>
                 </div>
+                {(respiratoryRate || oxygenSaturation) && (
+                  <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {respiratoryRate && <div><p className="text-sm text-slate-400 mb-1">Respiratory Rate</p><p className="text-lg text-white">{respiratoryRate}</p></div>}
+                    {oxygenSaturation && <div><p className="text-sm text-slate-400 mb-1">O2 Saturation</p><p className="text-lg text-white">{oxygenSaturation}%</p></div>}
+                  </div>
+                )}
               </div>
 
               {/* Medical History in Review */}
