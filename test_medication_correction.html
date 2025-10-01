@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medication Correction Test</title>
+</head>
+<body>
+    <h1>SmartDoc Pro - Medication Correction Test</h1>
+    <p>Testing cinnarizine correction:</p>
+    <div id="test-results"></div>
+
+    <script>
+        // Extract the medication database and correction function from SmartDoc
+        const MEDICATION_DATABASE = {
+            'cinnarizine': ['scenarizine', 'cinarizine', 'sinarizine', 'cinnarizon', 'scenarizon', 'stugeron'],
+            'ibuprofen': ['ibuprophen', 'ibupropen', 'advil', 'motrin'],
+            'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol', 'paracetamol']
+        };
+
+        function correctMedicalTerms(text) {
+            let corrected = text.toLowerCase();
+            
+            Object.entries(MEDICATION_DATABASE).forEach(([correct, variants]) => {
+                variants.forEach(variant => {
+                    const regex = new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                    corrected = corrected.replace(regex, correct);
+                });
+            });
+            
+            return corrected;
+        }
+
+        // Test cases
+        const testCases = [
+            "Patient needs scenarizine 25mg twice daily",
+            "Prescribed ibuprophen 400mg for pain",
+            "Give acetamenophen 500mg every 6 hours"
+        ];
+
+        const results = testCases.map(test => {
+            const corrected = correctMedicalTerms(test);
+            return {
+                original: test,
+                corrected: corrected,
+                changed: test !== corrected
+            };
+        });
+
+        document.getElementById('test-results').innerHTML = results.map(result => 
+            `<div style="margin: 10px 0; padding: 10px; border: 1px solid #ccc;">
+                <strong>Original:</strong> ${result.original}<br>
+                <strong>Corrected:</strong> ${result.corrected}<br>
+                <strong>Status:</strong> ${result.changed ? '✅ CORRECTED' : '❌ NO CHANGE'}
+            </div>`
+        ).join('');
+    </script>
+</body>
+</html>
