@@ -323,6 +323,10 @@ const SmartDoc = () => {
       setMedicalHistory('');
       setAllergies('');
       setCurrentMedications('');
+      setTemperature('');
+      setHeartRate('');
+      setRespiratoryRate('');
+      setOxygenSaturation('');
     }, 3000);
   };
 
