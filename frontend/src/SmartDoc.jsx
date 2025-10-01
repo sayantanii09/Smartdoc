@@ -579,7 +579,12 @@ const SmartDoc = () => {
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 min-w-[280px]">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2"><UserCircle2 className="w-5 h-5 text-blue-200" /><p className="text-sm text-blue-200 font-semibold">Patient Information</p></div>
-                <button onClick={() => setShowEHRImport(!showEHRImport)} className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg text-white transition-all">Import from EHR</button>
+                <div className="flex gap-2">
+                  <button onClick={() => setShowSettings(true)} className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg text-white transition-all">
+                    <Settings className="w-3 h-3" />
+                  </button>
+                  <button onClick={() => setShowEHRImport(!showEHRImport)} className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg text-white transition-all">Import EHR</button>
+                </div>
               </div>
               {showEHRImport && (
                 <div className="mb-3 p-3 bg-white/10 rounded-lg border border-white/20">
