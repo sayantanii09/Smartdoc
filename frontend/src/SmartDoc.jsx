@@ -629,11 +629,22 @@ const SmartDoc = () => {
             }
           }
           
+          // Update live transcript for manual correction
+          if (showLiveTranscript) {
+            setLiveTranscript(prev => {
+              const updated = prev + (finalTranscript || interimTranscript);
+              return updated;
+            });
+          }
+          
           if (finalTranscript) {
-            // Clean and correct the transcript
+            // Clean and correct the transcript using dynamic database
             const cleanedTranscript = cleanTranscript(finalTranscript);
             const originalTranscript = cleanedTranscript;
-            const correctedTranscript = correctMedicalTerms(cleanedTranscript);
+            
+            // Apply user corrections first, then built-in corrections
+            const userCorrectedTranscript = applyCorrectionToText(cleanedTranscript, userCorrections);
+            const correctedTranscript = correctMedicalTermsWithDynamicDB(userCorrectedTranscript);
             
             // Track medication corrections for user feedback
             if (originalTranscript !== correctedTranscript) {
@@ -658,8 +669,7 @@ const SmartDoc = () => {
           }
           
           // Show interim results for better user feedback
-          if (interimTranscript && !finalTranscript) {
-            // You could show interim results in a different color or style
+          if (interimTranscript && !finalTranscript && showLiveTranscript) {
             console.log('Interim:', cleanTranscript(interimTranscript));
           }
         };
