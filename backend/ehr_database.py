@@ -98,6 +98,9 @@ class EHRDatabase:
             
             configs = []
             async for config in cursor:
+                # Convert ObjectId to string for JSON serialization
+                if "_id" in config:
+                    config["_id"] = str(config["_id"])
                 configs.append(config)
             
             return configs
