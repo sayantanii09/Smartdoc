@@ -1391,45 +1391,213 @@ const SmartDoc = () => {
     return cleaned;
   };
 
-  // Medical terminology correction
+  // Comprehensive medical terminology database with phonetic matching
+  const MEDICATION_DATABASE = {
+    // Cardiovascular medications
+    'cinnarizine': ['scenarizine', 'cinarizine', 'sinarizine', 'cinnarizon', 'scenarizon', 'stugeron'],
+    'amlodipine': ['amlodapine', 'amladipine', 'norvasc', 'amlodippin'],
+    'atorvastatin': ['atorvastin', 'atorvastaten', 'lipitor', 'atorvastat'],
+    'lisinopril': ['lysinopril', 'lisinoprel', 'prinivil', 'zestril', 'lysine april'],
+    'losartan': ['lozartan', 'losarten', 'cozaar', 'losaarten'],
+    'metoprolol': ['metoprrolol', 'metaprolol', 'lopressor', 'toprol'],
+    'propranolol': ['propanolol', 'propranelol', 'inderal'],
+    'diltiazem': ['diltiazen', 'diltiazam', 'cardizem', 'tiazac'],
+    'verapamil': ['verapamel', 'verapamyl', 'calan', 'isoptin'],
+    'hydrochlorothiazide': ['hctz', 'hydrochlorthiazide', 'microzide', 'aquazide'],
+    'furosemide': ['furosemaid', 'furosemyde', 'lasix'],
+    'warfarin': ['warfaren', 'warfarin', 'coumadin', 'jantoven'],
+    'clopidogrel': ['clopidagrel', 'clopidogryl', 'plavix'],
+    'aspirin': ['asperen', 'asprin', 'bayer', 'ecotrin'],
+    'simvastatin': ['simvastin', 'simvastaten', 'zocor'],
+    'rosuvastatin': ['rosuvastin', 'rosuvastaten', 'crestor'],
+
+    // Diabetes medications
+    'metformin': ['metfromin', 'metforman', 'glucophage', 'fortamet'],
+    'glipizide': ['glipazide', 'glimpizide', 'glucotrol'],
+    'glyburide': ['glyburaid', 'glybride', 'diabeta', 'micronase'],
+    'pioglitazone': ['pioglitazin', 'pioglitazon', 'actos'],
+    'sitagliptin': ['sitaglipten', 'sitaglyptin', 'januvia'],
+    'insulin': ['insulen', 'insulyn', 'humalog', 'novolog', 'lantus'],
+
+    // Antibiotics
+    'amoxicillin': ['amoxicilin', 'amoxacillin', 'amoxyl', 'trimox'],
+    'azithromycin': ['azithromicin', 'azithromycen', 'zithromax', 'z-pak'],
+    'ciprofloxacin': ['ciprofloxacen', 'ciprofloxasin', 'cipro'],
+    'doxycycline': ['doxycyclin', 'doxicicline', 'vibramycin'],
+    'levofloxacin': ['levofloxacen', 'levofloxasin', 'levaquin'],
+    'cephalexin': ['cephalexen', 'cefalexin', 'keflex'],
+    'clarithromycin': ['clarithromicin', 'clarithromycen', 'biaxin'],
+    'erythromycin': ['erithromycin', 'erythromicin'],
+    'penicillin': ['penicilin', 'penicilen'],
+
+    // Pain medications  
+    'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol', 'paracetamol'],
+    'ibuprofen': ['ibuprophen', 'ibupropen', 'advil', 'motrin'],
+    'naproxen': ['naproxin', 'naproxyn', 'aleve', 'naprosyn'],
+    'diclofenac': ['diclofanak', 'diclofenak', 'voltaren'],
+    'tramadol': ['tramodol', 'tramadal', 'ultram'],
+    'codeine': ['codeen', 'codeein'],
+    'morphine': ['morfine', 'morpheen'],
+    'oxycodone': ['oxycodon', 'oxycoden', 'oxycontin', 'percocet'],
+    'hydrocodone': ['hydrocodon', 'hydrocoden', 'vicodin', 'norco'],
+
+    // Gastrointestinal
+    'omeprazole': ['omeprazol', 'omeprazole', 'prilosec'],
+    'lansoprazole': ['lansoprazol', 'lansaprazole', 'prevacid'],
+    'esomeprazole': ['esomeprazol', 'esomaprazole', 'nexium'],
+    'pantoprazole': ['pantoprazol', 'pantaprazole', 'protonix'],
+    'ranitidine': ['rantidine', 'ranatidine', 'zantac'],
+    'famotidine': ['famotideen', 'famatidine', 'pepcid'],
+    'simethicone': ['simethicon', 'simethiconee', 'gas-x'],
+
+    // Respiratory
+    'albuterol': ['albutrol', 'albuterel', 'proventil', 'ventolin'],
+    'salmeterol': ['salmeterel', 'salmaterol', 'serevent'],
+    'fluticasone': ['fluticason', 'fluticasone', 'flovent', 'flonase'],
+    'montelukast': ['monteleukast', 'montelucast', 'singulair'],
+    'cetirizine': ['cetirizin', 'cetrizine', 'zyrtec'],
+    'loratadine': ['loratadin', 'loratadeen', 'claritin'],
+    'pseudoephedrine': ['pseudoephedrin', 'pseudoephedreen', 'sudafed'],
+
+    // Neurological
+    'gabapentin': ['gabapenten', 'gabapantin', 'neurontin'],
+    'pregabalin': ['pregabaleen', 'pregabalen', 'lyrica'],
+    'phenytoin': ['phenytoen', 'phenytoyn', 'dilantin'],
+    'carbamazepine': ['carbamazepin', 'carbamazepeen', 'tegretol'],
+    'valproic acid': ['valproate', 'valproik acid', 'depakote'],
+    'lamotrigine': ['lamotrigin', 'lamotrigeen', 'lamictal'],
+
+    // Psychiatric
+    'sertraline': ['sertralin', 'sertraleen', 'zoloft'],
+    'fluoxetine': ['fluoxetin', 'fluoxeteen', 'prozac'],
+    'paroxetine': ['paroxetin', 'paroxeteen', 'paxil'],
+    'escitalopram': ['escitalapram', 'escitaloprem', 'lexapro'],
+    'alprazolam': ['alprazalam', 'alprazolam', 'xanax'],
+    'lorazepam': ['lorazapam', 'lorazepem', 'ativan'],
+    'clonazepam': ['clonazapam', 'clonazepem', 'klonopin'],
+
+    // Endocrine
+    'levothyroxine': ['levothyroxin', 'levothyroxeen', 'synthroid', 'levoxyl'],
+    'liothyronine': ['liothyronin', 'liothyroneen', 'cytomel'],
+    'prednisone': ['prednizon', 'prednisone', 'deltasone'],
+    'prednisolone': ['prednisolon', 'prednisolonee'],
+    'dexamethasone': ['dexamethason', 'dexamethasone'],
+
+    // Vitamins and supplements
+    'vitamin d': ['vitamin dee', 'vitamen d', 'cholecalciferol'],
+    'vitamin b12': ['vitamin b twelve', 'vitamen b12', 'cyanocobalamin'],
+    'folic acid': ['folik acid', 'folate', 'folacin'],
+    'calcium': ['calcium', 'calcyum'],
+    'magnesium': ['magneesium', 'magnesyum'],
+    'iron': ['iron', 'ferrous sulfate'],
+
+    // Medical terms and dosage
+    'milligrams': ['mg', 'milligram', 'miligrams'],
+    'micrograms': ['mcg', 'microgram', 'mikrograms'],
+    'milliliters': ['ml', 'milliliter', 'mililiter'],
+    'tablet': ['tab', 'pill', 'tablets'],
+    'capsule': ['cap', 'caps', 'capsules'],
+    'once daily': ['od', 'once a day', 'daily', 'one time daily'],
+    'twice daily': ['bid', 'twice a day', 'two times daily', 'b.i.d'],
+    'three times daily': ['tid', 'three times a day', 't.i.d'],
+    'four times daily': ['qid', 'four times a day', 'q.i.d'],
+    'as needed': ['prn', 'as required', 'when needed', 'p.r.n'],
+    'before meals': ['ac', 'ante cibum', 'a.c'],
+    'after meals': ['pc', 'post cibum', 'p.c'],
+    'at bedtime': ['hs', 'hora somni', 'h.s', 'bedtime'],
+    'by mouth': ['po', 'per os', 'p.o', 'orally'],
+    'intravenous': ['iv', 'i.v', 'intravenously'],
+    'intramuscular': ['im', 'i.m', 'intramuscularly'],
+    'subcutaneous': ['sc', 'subq', 's.c', 'subcutaneously']
+  };
+
+  // Enhanced medical terminology correction with phonetic matching
   const correctMedicalTerms = (text) => {
-    const corrections = {
-      // Common medication name corrections
-      'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol'],
-      'ibuprofen': ['ibuprophen', 'advil', 'motrin'],
-      'amoxicillin': ['amoxicilin', 'amoxacillin'],
-      'metformin': ['metfromin', 'glucophage'],
-      'lisinopril': ['lysinopril', 'prinivil', 'zestril'],
-      'atorvastatin': ['atorvastin', 'lipitor'],
-      'amlodipine': ['amlodapine', 'norvasc'],
-      'omeprazole': ['omeprazol', 'prilosec'],
-      'losartan': ['lozartan', 'cozaar'],
-      'hydrochlorothiazide': ['hctz', 'microzide'],
-      
-      // Medical terms
-      'hypertension': ['high blood pressure', 'hbp'],
-      'diabetes': ['diabeties', 'diabetis'],
-      'once daily': ['od', 'once a day', 'daily'],
-      'twice daily': ['bid', 'twice a day', 'two times daily'],
-      'three times daily': ['tid', 'three times a day'],
-      'four times daily': ['qid', 'four times a day'],
-      'as needed': ['prn', 'as required'],
-      'milligrams': ['mg', 'milligram'],
-      'milliequivalents': ['meq', 'milliequivalent'],
-      'tablet': ['tab', 'pill'],
-      'capsule': ['cap', 'caps']
-    };
+    let corrected = text.toLowerCase();
     
-    let corrected = text;
-    
-    Object.entries(corrections).forEach(([correct, variants]) => {
+    // First pass: Direct replacements
+    Object.entries(MEDICATION_DATABASE).forEach(([correct, variants]) => {
       variants.forEach(variant => {
-        const regex = new RegExp(`\\b${variant}\\b`, 'gi');
+        const regex = new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
         corrected = corrected.replace(regex, correct);
       });
     });
+
+    // Second pass: Fuzzy matching for unmatched words
+    const words = corrected.split(' ');
+    const correctedWords = words.map(word => {
+      const cleanWord = word.replace(/[^a-zA-Z]/g, '');
+      if (cleanWord.length < 4) return word; // Skip very short words
+      
+      // Check if word might be a medication name
+      let bestMatch = null;
+      let bestScore = 0.6; // Minimum similarity threshold
+      
+      Object.keys(MEDICATION_DATABASE).forEach(medication => {
+        const similarity = calculateSimilarity(cleanWord, medication);
+        if (similarity > bestScore) {
+          bestScore = similarity;
+          bestMatch = medication;
+        }
+        
+        // Also check variants
+        MEDICATION_DATABASE[medication].forEach(variant => {
+          const variantSimilarity = calculateSimilarity(cleanWord, variant);
+          if (variantSimilarity > bestScore) {
+            bestScore = variantSimilarity;
+            bestMatch = medication;
+          }
+        });
+      });
+      
+      if (bestMatch && bestScore > 0.7) {
+        console.log(`Corrected "${cleanWord}" to "${bestMatch}" (similarity: ${(bestScore * 100).toFixed(1)}%)`);
+        return word.replace(cleanWord, bestMatch);
+      }
+      
+      return word;
+    });
     
-    return corrected;
+    return correctedWords.join(' ');
+  };
+
+  // Levenshtein distance for fuzzy matching
+  const calculateSimilarity = (str1, str2) => {
+    const longer = str1.length > str2.length ? str1 : str2;
+    const shorter = str1.length > str2.length ? str2 : str1;
+    
+    if (longer.length === 0) return 1.0;
+    
+    const editDistance = levenshteinDistance(longer, shorter);
+    return (longer.length - editDistance) / longer.length;
+  };
+
+  const levenshteinDistance = (str1, str2) => {
+    const matrix = [];
+    
+    for (let i = 0; i <= str2.length; i++) {
+      matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= str1.length; j++) {
+      matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    
+    return matrix[str2.length][str1.length];
   };
 
   const handleEHRImport = () => {
