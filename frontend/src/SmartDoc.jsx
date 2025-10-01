@@ -1448,6 +1448,9 @@ const SmartDoc = () => {
       }
     }
     
+    // Initialize dynamic medication database
+    setDynamicMedicationDB({...MEDICATION_DATABASE});
+    
     // Load user corrections and training history
     loadUserCorrections();
     loadTrainingHistory();
