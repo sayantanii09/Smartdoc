@@ -1257,6 +1257,83 @@ const SmartDoc = () => {
     }
   }, [authToken, isLoggedIn]);
 
+  // Enhanced transcript cleaning function
+  const cleanTranscript = (text) => {
+    if (!text) return '';
+    
+    // Convert to lowercase for processing
+    let cleaned = text.toLowerCase();
+    
+    // Remove repeated words (common speech recognition issue)
+    const words = cleaned.split(' ');
+    const cleanedWords = [];
+    let lastWord = '';
+    
+    words.forEach(word => {
+      const trimmedWord = word.trim();
+      if (trimmedWord && trimmedWord !== lastWord) {
+        cleanedWords.push(trimmedWord);
+        lastWord = trimmedWord;
+      }
+    });
+    
+    cleaned = cleanedWords.join(' ');
+    
+    // Remove common speech recognition artifacts
+    cleaned = cleaned
+      .replace(/\buh\b|\buhm\b|\bum\b/g, '') // Remove filler words
+      .replace(/\ber\b|\bah\b|\boh\b/g, '') // Remove hesitation sounds
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .replace(/([.!?])\s*\1+/g, '$1') // Remove repeated punctuation
+      .trim();
+    
+    // Capitalize first letter of sentences
+    cleaned = cleaned.replace(/(^|[.!?]\s+)([a-z])/g, (match, p1, p2) => p1 + p2.toUpperCase());
+    
+    return cleaned;
+  };
+
+  // Medical terminology correction
+  const correctMedicalTerms = (text) => {
+    const corrections = {
+      // Common medication name corrections
+      'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol'],
+      'ibuprofen': ['ibuprophen', 'advil', 'motrin'],
+      'amoxicillin': ['amoxicilin', 'amoxacillin'],
+      'metformin': ['metfromin', 'glucophage'],
+      'lisinopril': ['lysinopril', 'prinivil', 'zestril'],
+      'atorvastatin': ['atorvastin', 'lipitor'],
+      'amlodipine': ['amlodapine', 'norvasc'],
+      'omeprazole': ['omeprazol', 'prilosec'],
+      'losartan': ['lozartan', 'cozaar'],
+      'hydrochlorothiazide': ['hctz', 'microzide'],
+      
+      // Medical terms
+      'hypertension': ['high blood pressure', 'hbp'],
+      'diabetes': ['diabeties', 'diabetis'],
+      'once daily': ['od', 'once a day', 'daily'],
+      'twice daily': ['bid', 'twice a day', 'two times daily'],
+      'three times daily': ['tid', 'three times a day'],
+      'four times daily': ['qid', 'four times a day'],
+      'as needed': ['prn', 'as required'],
+      'milligrams': ['mg', 'milligram'],
+      'milliequivalents': ['meq', 'milliequivalent'],
+      'tablet': ['tab', 'pill'],
+      'capsule': ['cap', 'caps']
+    };
+    
+    let corrected = text;
+    
+    Object.entries(corrections).forEach(([correct, variants]) => {
+      variants.forEach(variant => {
+        const regex = new RegExp(`\\b${variant}\\b`, 'gi');
+        corrected = corrected.replace(regex, correct);
+      });
+    });
+    
+    return corrected;
+  };
+
   const handleEHRImport = () => {
     if (!patientId.trim()) {
       alert('Please enter a Patient ID');
