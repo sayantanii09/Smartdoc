@@ -972,32 +972,37 @@ const SmartDoc = () => {
       });
     }
     
-    // Additional smart detection for medication patterns
+    // Additional smart detection for medication patterns - only if no medications found yet
     if (medications.length === 0) {
-      // Look for any word followed by dosage pattern
+      // Look for any word followed by dosage pattern, but be very selective
       const genericMedicationPattern = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
       let match;
       while ((match = genericMedicationPattern.exec(text)) !== null) {
         const [fullMatch, drugName, dosage, unit, frequency] = match;
         
-        // Check if this might be a medication using our database
-        const possibleMed = Object.keys(MEDICATION_DATABASE).find(med => 
-          calculateSimilarity(drugName.toLowerCase(), med) > 0.6
+        // Strict filtering - only allow if it matches known medications
+        const possibleMed = Object.keys(dynamicMedicationDB).find(med => 
+          calculateSimilarity(drugName.toLowerCase(), med) > 0.7
         );
         
-        const finalMedName = possibleMed || drugName;
+        // Additional check - exclude common non-medication words
+        const commonWords = ['patient', 'prescribed', 'give', 'take', 'before', 'after', 'with', 'without'];
         
-        medications.push({
-          name: finalMedName.charAt(0).toUpperCase() + finalMedName.slice(1),
-          dosage: `${dosage}${unit}`,
-          formulation: 'Tablet',
-          route: 'Oral',
-          frequency: expandAbbreviation(frequency),
-          foodInstruction: 'With food',
-          duration: '30 days'
-        });
-        
-        console.log(`Generic pattern matched: ${drugName} -> ${finalMedName}`);
+        if (possibleMed && !commonWords.includes(drugName.toLowerCase())) {
+          medications.push({
+            name: possibleMed.charAt(0).toUpperCase() + possibleMed.slice(1),
+            dosage: `${dosage}${unit}`,
+            formulation: 'Tablet',
+            route: 'Oral',
+            frequency: expandAbbreviation(frequency),
+            foodInstruction: 'With food',
+            duration: '30 days'
+          });
+          
+          console.log(`Smart detection: "${drugName}" -> "${possibleMed}"`);
+        } else {
+          console.log(`Rejected generic pattern: "${drugName}" (not a valid medication)`);
+        }
       }
     }
 
