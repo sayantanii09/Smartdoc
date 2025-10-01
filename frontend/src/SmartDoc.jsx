@@ -1800,7 +1800,6 @@ const SmartDoc = () => {
                 <button 
                   onClick={runDemo} 
                   className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-bold transition-all shadow-lg"
-                  title="Run a demo medical consultation with sample data"
                 >
                   🎬 Run Demo Consultation
                 </button>
@@ -1808,7 +1807,6 @@ const SmartDoc = () => {
                   <button 
                     onClick={toggleListening} 
                     className="px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-bold transition-all shadow-lg"
-                    title="Stop voice recording and process the consultation"
                   >
                     ⏹️ Stop & Process Recording
                   </button>
