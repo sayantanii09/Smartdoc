@@ -492,6 +492,10 @@ const SmartDoc = () => {
   const [confidenceThreshold, setConfidenceThreshold] = useState(0.7);
   const [showSpeechSettings, setShowSpeechSettings] = useState(false);
   
+  // Medication recognition feedback
+  const [medicationSuggestions, setMedicationSuggestions] = useState([]);
+  const [lastCorrectedMeds, setLastCorrectedMeds] = useState([]);
+  
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
 
