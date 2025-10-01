@@ -931,6 +931,11 @@ const SmartDoc = () => {
 
     const lowerText = correctedText.toLowerCase();
     
+    // Update transcript with corrected version if changes were made
+    if (text !== correctedText) {
+      setTranscript(correctedText);
+    }
+    
     // Extract diagnosis
     let extractedDiagnosis = '';
     if (lowerText.includes('diabetes') || lowerText.includes('diabetic')) {
