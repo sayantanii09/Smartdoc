@@ -159,3 +159,5 @@ agent_communication:
     message: "Starting comprehensive EHR integration backend testing. All endpoints are implemented and ready for testing."
   - agent: "testing"
     message: "✅ ALL EHR INTEGRATION BACKEND TESTS PASSED! Fixed critical issues: 1) Import errors in auth.py (relative imports), 2) Missing EHRConnectionStatus import in server.py, 3) ObjectId serialization in ehr_database.py, 4) Error handlers returning dicts instead of JSONResponse. All 6 EHR endpoints working perfectly with proper authentication, FHIR integration, and MongoDB storage."
+  - agent: "testing"
+    message: "Starting comprehensive testing of SmartDoc Pro's enhanced medication recognition system. Focus on cinnarizine/scenarizine correction, speech settings, demo mode, and medication database functionality."
