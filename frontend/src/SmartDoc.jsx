@@ -388,6 +388,14 @@ const SmartDoc = () => {
       setHeartRate('');
       setRespiratoryRate('');
       setOxygenSaturation('');
+      setPastMedicalHistory('');
+      setPastMedications('');
+      setFamilyHistory('');
+      setSocialHistory('');
+      setSmokingStatus('');
+      setAlcoholUse('');
+      setDrugUse('');
+      setExerciseLevel('');
     }, 3000);
   };
 
