@@ -67,12 +67,21 @@ app = FastAPI(
 )
 
 # CORS configuration
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+allowed_origins = [
+    "http://localhost:3000",
+    "https://cacef907-fa9c-4c7c-b67e-2d2572d0ced7.preview.emergentagent.com",
+    os.getenv("FRONTEND_URL", "http://localhost:3000")
+]
+
+# Get additional origins from environment
+env_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+allowed_origins.extend([origin.strip() for origin in env_origins if origin.strip()])
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
