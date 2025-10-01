@@ -731,24 +731,32 @@ async def delete_ehr_configuration(
         )
 
 # Error handlers
+from fastapi.responses import JSONResponse
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
     """Handle HTTP exceptions"""
-    return {
-        "success": False,
-        "error": exc.detail,
-        "status_code": exc.status_code
-    }
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "error": exc.detail,
+            "status_code": exc.status_code
+        }
+    )
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     """Handle general exceptions"""
     logger.error(f"Unhandled exception: {exc}")
-    return {
-        "success": False,
-        "error": "Internal server error",
-        "status_code": 500
-    }
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "error": "Internal server error",
+            "status_code": 500
+        }
+    )
 
 # Development endpoints (remove in production)
 if os.getenv("ENVIRONMENT") == "development":
