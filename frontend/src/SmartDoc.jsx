@@ -2068,7 +2068,6 @@ const SmartDoc = () => {
                   <button 
                     onClick={addMedication} 
                     className="mt-4 px-6 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl font-semibold transition-all border border-blue-500/30"
-                    title="Add another medication to the prescription"
                   >
                     + Add Medication
                   </button>
