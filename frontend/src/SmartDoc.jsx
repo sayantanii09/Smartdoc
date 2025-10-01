@@ -598,10 +598,22 @@ const SmartDoc = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      // Call logout API
+      await apiCall('/api/auth/logout', 'POST');
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+      // Continue with logout even if API fails
+    }
+    
+    // Clear local storage and state
+    localStorage.removeItem('smartdoc_token');
+    setAuthToken(null);
     setIsLoggedIn(false);
     setCurrentDoctor(null);
     setCurrentView('login');
+    
     // Reset all forms
     resetAllFields();
   };
