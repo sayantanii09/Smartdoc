@@ -622,7 +622,17 @@ const SmartDoc = () => {
           if (finalTranscript) {
             // Clean and correct the transcript
             const cleanedTranscript = cleanTranscript(finalTranscript);
+            const originalTranscript = cleanedTranscript;
             const correctedTranscript = correctMedicalTerms(cleanedTranscript);
+            
+            // Track medication corrections for user feedback
+            if (originalTranscript !== correctedTranscript) {
+              const corrections = findMedicationCorrections(originalTranscript, correctedTranscript);
+              if (corrections.length > 0) {
+                setLastCorrectedMeds(corrections);
+                setMedicationSuggestions(prev => [...corrections, ...prev.slice(0, 4)]); // Keep last 5
+              }
+            }
             
             setTranscript(prev => {
               const newTranscript = prev + correctedTranscript + ' ';
@@ -632,6 +642,9 @@ const SmartDoc = () => {
             });
             
             console.log(`Speech processed with confidence: ${(bestConfidence * 100).toFixed(1)}%`);
+            if (originalTranscript !== correctedTranscript) {
+              console.log(`Medication corrected: "${originalTranscript}" → "${correctedTranscript}"`);
+            }
           }
           
           // Show interim results for better user feedback
