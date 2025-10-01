@@ -379,7 +379,7 @@ const SmartDoc = () => {
   const [supportStatus, setSupportStatus] = useState('checking');
 
   // Demo doctors for testing (In production, this would be stored in database)
-  const [registeredDoctors, setRegisteredDoctors] = useState([
+  const DEMO_DOCTORS = [
     {
       username: 'drsmith',
       password: 'password123',
@@ -402,7 +402,45 @@ const SmartDoc = () => {
       phone: '+1-555-0102',
       specialization: 'General Surgery'
     }
-  ]);
+  ];
+
+  // API Configuration
+  const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+  
+  // API Helper Functions
+  const apiCall = async (endpoint, method = 'GET', data = null) => {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const options = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    // Add auth token if available
+    if (authToken) {
+      options.headers.Authorization = `Bearer ${authToken}`;
+    }
+
+    // Add body for POST/PUT requests
+    if (data) {
+      options.body = JSON.stringify(data);
+    }
+
+    try {
+      const response = await fetch(url, options);
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || result.detail || 'API request failed');
+      }
+
+      return result;
+    } catch (error) {
+      console.error(`API Error (${method} ${endpoint}):`, error);
+      throw error;
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
