@@ -1771,34 +1771,37 @@ const SmartDoc = () => {
                       value={smokingStatus} 
                       onChange={(e) => setSmokingStatus(e.target.value)} 
                       className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                      style={{color: 'white'}}
                     >
-                      <option value="">Smoking Status</option>
-                      <option value="Never smoker">Never smoker</option>
-                      <option value="Current smoker">Current smoker</option>
-                      <option value="Former smoker">Former smoker</option>
-                      <option value="Social smoker">Social smoker</option>
+                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Smoking Status</option>
+                      <option value="Never smoker" style={{color: 'black', backgroundColor: 'white'}}>Never smoker</option>
+                      <option value="Current smoker" style={{color: 'black', backgroundColor: 'white'}}>Current smoker</option>
+                      <option value="Former smoker" style={{color: 'black', backgroundColor: 'white'}}>Former smoker</option>
+                      <option value="Social smoker" style={{color: 'black', backgroundColor: 'white'}}>Social smoker</option>
                     </select>
                     <select 
                       value={alcoholUse} 
                       onChange={(e) => setAlcoholUse(e.target.value)} 
                       className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                      style={{color: 'white'}}
                     >
-                      <option value="">Alcohol Use</option>
-                      <option value="None">None</option>
-                      <option value="Occasional">Occasional</option>
-                      <option value="Moderate">Moderate</option>
-                      <option value="Heavy">Heavy</option>
+                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Alcohol Use</option>
+                      <option value="None" style={{color: 'black', backgroundColor: 'white'}}>None</option>
+                      <option value="Occasional" style={{color: 'black', backgroundColor: 'white'}}>Occasional</option>
+                      <option value="Moderate" style={{color: 'black', backgroundColor: 'white'}}>Moderate</option>
+                      <option value="Heavy" style={{color: 'black', backgroundColor: 'white'}}>Heavy</option>
                     </select>
                     <select 
                       value={exerciseLevel} 
                       onChange={(e) => setExerciseLevel(e.target.value)} 
                       className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                      style={{color: 'white'}}
                     >
-                      <option value="">Exercise Level</option>
-                      <option value="Sedentary">Sedentary</option>
-                      <option value="Light activity">Light activity</option>
-                      <option value="Moderate activity">Moderate activity</option>
-                      <option value="Very active">Very active</option>
+                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Exercise Level</option>
+                      <option value="Sedentary" style={{color: 'black', backgroundColor: 'white'}}>Sedentary</option>
+                      <option value="Light activity" style={{color: 'black', backgroundColor: 'white'}}>Light activity</option>
+                      <option value="Moderate activity" style={{color: 'black', backgroundColor: 'white'}}>Moderate activity</option>
+                      <option value="Very active" style={{color: 'black', backgroundColor: 'white'}}>Very active</option>
                     </select>
                     <input 
                       type="text" 
