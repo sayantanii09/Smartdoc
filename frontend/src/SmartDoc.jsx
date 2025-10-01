@@ -951,9 +951,11 @@ const SmartDoc = () => {
     }
     setDiagnosis(extractedDiagnosis);
 
-    // Extract medications with enhanced parsing
-    const extractedMeds = extractMedicationsFromText(text);
+    // Extract medications with enhanced parsing from corrected text
+    const extractedMeds = extractMedicationsFromText(correctedText);
     setMedications(extractedMeds);
+    
+    console.log('Medications extracted from corrected text:', extractedMeds);
 
     // Extract prognosis
     let extractedPrognosis = '';
