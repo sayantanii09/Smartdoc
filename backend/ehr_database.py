@@ -232,6 +232,9 @@ class EHRDatabase:
             
             submissions = []
             async for submission in cursor:
+                # Convert ObjectId to string for JSON serialization
+                if "_id" in submission:
+                    submission["_id"] = str(submission["_id"])
                 submissions.append(submission)
             
             return submissions
