@@ -118,6 +118,9 @@ class EHRDatabase:
                 "is_active": True
             })
             
+            if config and "_id" in config:
+                config["_id"] = str(config["_id"])
+            
             return config
             
         except Exception as e:
