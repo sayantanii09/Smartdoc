@@ -1718,80 +1718,100 @@ const SmartDoc = () => {
                   <Settings className="w-8 h-8 text-blue-400" />
                   EHR Integration Settings
                 </h2>
-                <button 
-                  onClick={() => setShowSettings(false)} 
-                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
-                >
-                  ← Back
-                </button>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setShowEHRConfig(true)} 
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all"
+                  >
+                    + Configure EHR
+                  </button>
+                  <button 
+                    onClick={() => setShowSettings(false)} 
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                  >
+                    ← Back
+                  </button>
+                </div>
               </div>
 
-              {isEhrConnected && (
-                <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Link className="w-6 h-6 text-emerald-400" />
-                      <div>
-                        <p className="text-emerald-300 font-semibold">EHR Connected</p>
-                        <p className="text-emerald-200 text-sm">{ehrSystem}</p>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={handleEhrDisconnect} 
-                      className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-all border border-red-500/30"
-                    >
-                      <Unlink className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
+              {/* EHR Configurations List */}
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">EHR System</label>
-                  <select 
-                    value={ehrSystem}
-                    onChange={(e) => setEhrSystem(e.target.value)}
-                    disabled={isEhrConnected}
-                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                  >
-                    <option value="">Select EHR System</option>
-                    <option value="Epic Systems">Epic Systems</option>
-                    <option value="Cerner">Cerner (Oracle Health)</option>
-                    <option value="Allscripts">Allscripts</option>
-                    <option value="Meditech">Meditech</option>
-                    <option value="Athenahealth">Athenahealth</option>
-                    <option value="eClinicalWorks">eClinicalWorks</option>
-                    <option value="NextGen">NextGen Healthcare</option>
-                    <option value="Custom FHIR">Custom HL7 FHIR Server</option>
-                    <option value="Indian EHR">Indian EHR System (ABDM Compatible)</option>
-                  </select>
-                </div>
+                <h3 className="text-xl font-semibold text-white mb-4">Configured EHR Systems</h3>
+                
+                {ehrConfigurations.length > 0 ? (
+                  <div className="space-y-4">
+                    {ehrConfigurations.map((config, index) => (
+                      <div key={config.id} className="p-4 bg-slate-800/50 border border-slate-600/50 rounded-xl">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Link className="w-6 h-6 text-emerald-400" />
+                            <div>
+                              <p className="text-white font-semibold">{config.provider}</p>
+                              <p className="text-slate-400 text-sm">{config.base_url}</p>
+                              <p className="text-slate-500 text-xs">
+                                Created: {new Date(config.created_at).toLocaleDateString()}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button 
+                              onClick={() => testEhrConnection(config)}
+                              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-all"
+                            >
+                              Test
+                            </button>
+                            <input
+                              type="radio"
+                              name="selectedProvider"
+                              value={config.provider}
+                              checked={selectedEhrProvider === config.provider}
+                              onChange={(e) => setSelectedEhrProvider(e.target.value)}
+                              className="w-4 h-4"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center bg-slate-800/30 border border-slate-600/30 rounded-xl">
+                    <Unlink className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400 text-lg mb-2">No EHR systems configured</p>
+                    <p className="text-slate-500 text-sm">Configure your first EHR connection to enable prescription submission</p>
+                  </div>
+                )}
 
-                <div>
-                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">API Endpoint URL</label>
-                  <input
-                    type="text"
-                    value={ehrEndpoint}
-                    onChange={(e) => setEhrEndpoint(e.target.value)}
-                    disabled={isEhrConnected}
-                    placeholder="https://api.ehr-system.com/v1"
-                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">API Key / Authorization Token</label>
-                  <input
-                    type="password"
-                    value={ehrApiKey}
-                    onChange={(e) => setEhrApiKey(e.target.value)}
-                    disabled={isEhrConnected}
-                    placeholder="Enter your API key or OAuth token"
-                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                  />
-                  <p className="text-slate-400 text-sm mt-2">🔒 Your credentials are stored locally and never shared</p>
-                </div>
+                {/* EHR Submission History */}
+                {ehrSubmissions.length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="text-xl font-semibold text-white mb-4">Recent EHR Submissions</h3>
+                    <div className="space-y-3 max-h-60 overflow-y-auto">
+                      {ehrSubmissions.slice(0, 5).map((submission) => (
+                        <div key={submission.id} className="p-3 bg-slate-800/30 border border-slate-600/30 rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-white text-sm font-medium">
+                                {submission.ehr_provider} - {submission.prescription_id.substring(0, 8)}...
+                              </p>
+                              <p className="text-slate-400 text-xs">
+                                {new Date(submission.submitted_at).toLocaleString()}
+                              </p>
+                            </div>
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              submission.status === 'success' 
+                                ? 'bg-emerald-500/20 text-emerald-300' 
+                                : submission.status === 'failed'
+                                ? 'bg-red-500/20 text-red-300'
+                                : 'bg-yellow-500/20 text-yellow-300'
+                            }`}>
+                              {submission.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
                   <h3 className="text-blue-300 font-semibold mb-3 flex items-center gap-2">
@@ -1799,22 +1819,177 @@ const SmartDoc = () => {
                     Integration Details
                   </h3>
                   <ul className="text-slate-300 text-sm space-y-2">
-                    <li>• <strong>HL7 FHIR:</strong> Standard REST API for healthcare data exchange</li>
+                    <li>• <strong>HL7 FHIR R4:</strong> Standard REST API for healthcare data exchange</li>
                     <li>• <strong>OAuth 2.0:</strong> Secure authentication method</li>
-                    <li>• <strong>Patient Import:</strong> Demographics, history, allergies, medications</li>
-                    <li>• <strong>Prescription Export:</strong> Send prescriptions back to EHR</li>
-                    <li>• <strong>ABDM Support:</strong> Compatible with India's Ayushman Bharat Digital Mission</li>
+                    <li>• <strong>Multiple Providers:</strong> Epic, Cerner, Allscripts, and more</li>
+                    <li>• <strong>Prescription Export:</strong> Send prescriptions directly to EHR systems</li>
+                    <li>• <strong>Audit Trail:</strong> Complete submission history and status tracking</li>
                   </ul>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-                {!isEhrConnected && (
-                  <button 
-                    onClick={handleEhrConnect} 
-                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg"
+  // EHR Configuration Modal
+  if (showEHRConfig) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Link className="w-8 h-8 text-emerald-400" />
+                  Configure EHR System
+                </h2>
+                <button 
+                  onClick={() => setShowEHRConfig(false)} 
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ← Back
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">EHR Provider</label>
+                  <select 
+                    value={ehrConfigData.provider}
+                    onChange={(e) => setEhrConfigData({...ehrConfigData, provider: e.target.value})}
+                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
-                    Connect EHR System
-                  </button>
+                    <option value="">Select EHR Provider</option>
+                    {ehrProviders.map((provider) => (
+                      <option key={provider.value} value={provider.value}>
+                        {provider.label} - {provider.description}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">FHIR Base URL</label>
+                  <input
+                    type="text"
+                    value={ehrConfigData.baseUrl}
+                    onChange={(e) => setEhrConfigData({...ehrConfigData, baseUrl: e.target.value})}
+                    placeholder="https://fhir.ehr-system.com/api/FHIR/R4"
+                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center gap-2 text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">
+                      <input
+                        type="checkbox"
+                        checked={ehrConfigData.useOauth}
+                        onChange={(e) => setEhrConfigData({...ehrConfigData, useOauth: e.target.checked})}
+                        className="rounded"
+                      />
+                      Use OAuth 2.0
+                    </label>
+                  </div>
+                </div>
+
+                {ehrConfigData.useOauth ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Client ID</label>
+                      <input
+                        type="text"
+                        value={ehrConfigData.clientId}
+                        onChange={(e) => setEhrConfigData({...ehrConfigData, clientId: e.target.value})}
+                        placeholder="OAuth Client ID"
+                        className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Client Secret</label>
+                      <input
+                        type="password"
+                        value={ehrConfigData.clientSecret}
+                        onChange={(e) => setEhrConfigData({...ehrConfigData, clientSecret: e.target.value})}
+                        placeholder="OAuth Client Secret"
+                        className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Authorization URL</label>
+                      <input
+                        type="text"
+                        value={ehrConfigData.authUrl}
+                        onChange={(e) => setEhrConfigData({...ehrConfigData, authUrl: e.target.value})}
+                        placeholder="https://fhir.ehr-system.com/oauth/authorize"
+                        className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Token URL</label>
+                      <input
+                        type="text"
+                        value={ehrConfigData.tokenUrl}
+                        onChange={(e) => setEhrConfigData({...ehrConfigData, tokenUrl: e.target.value})}
+                        placeholder="https://fhir.ehr-system.com/oauth/token"
+                        className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">API Key</label>
+                    <input
+                      type="password"
+                      value={ehrConfigData.apiKey}
+                      onChange={(e) => setEhrConfigData({...ehrConfigData, apiKey: e.target.value})}
+                      placeholder="API Key for authentication"
+                      className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
                 )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Organization ID</label>
+                    <input
+                      type="text"
+                      value={ehrConfigData.organizationId}
+                      onChange={(e) => setEhrConfigData({...ehrConfigData, organizationId: e.target.value})}
+                      placeholder="Organization identifier (optional)"
+                      className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Facility ID</label>
+                    <input
+                      type="text"
+                      value={ehrConfigData.facilityId}
+                      onChange={(e) => setEhrConfigData({...ehrConfigData, facilityId: e.target.value})}
+                      placeholder="Facility identifier (optional)"
+                      className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-4">
+                  <button 
+                    onClick={() => testEhrConnection()}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all"
+                  >
+                    Test Connection
+                  </button>
+                  <button 
+                    onClick={saveEhrConfiguration}
+                    className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl font-bold transition-all"
+                  >
+                    Save Configuration
+                  </button>
+                </div>
               </div>
             </div>
           </div>
