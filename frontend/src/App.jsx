@@ -1,5 +1,5 @@
 import React from 'react';
-import SmartDoc from './SmartDoc';
+import Shrutapex from './SmartDoc';
 
 function App() {
   return (
