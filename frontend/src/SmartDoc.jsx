@@ -803,7 +803,7 @@ const Shrutapex = () => {
 
       const response = await apiCall('/api/auth/register', 'POST', registrationPayload);
       
-      alert(`Account created successfully!\n\nWelcome to SmartDoc Pro!\nYou can now login with your credentials.`);
+      alert(`Account created successfully!\n\nWelcome to Shrutapex!\nYou can now login with your credentials.`);
       setShowRegistration(false);
       
       // Reset registration form
