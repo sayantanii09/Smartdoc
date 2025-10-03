@@ -1476,7 +1476,7 @@ const Shrutapex = () => {
 
   // Load speech settings from localStorage on component mount
   useEffect(() => {
-    const savedSettings = localStorage.getItem('smartdoc_speech_settings');
+    const savedSettings = localStorage.getItem('shrutapex_speech_settings');
     if (savedSettings) {
       try {
         const settings = JSON.parse(savedSettings);
