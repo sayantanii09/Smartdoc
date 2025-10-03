@@ -1658,8 +1658,8 @@ const Shrutapex = () => {
       setTrainingHistory([]);
       setUserCorrections([]);
       setDynamicMedicationDB({...MEDICATION_DATABASE});
-      localStorage.removeItem('smartdoc_training_history');
-      localStorage.removeItem('smartdoc_user_corrections');
+      localStorage.removeItem('shrutapex_training_history');
+      localStorage.removeItem('shrutapex_user_corrections');
       alert('✅ Training history cleared. App reset to default state.');
     }
   };
