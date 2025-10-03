@@ -21,7 +21,7 @@ class MongoDB:
             cls.client = AsyncIOMotorClient(mongo_url)
             
             # Extract database name from URL
-            db_name = mongo_url.split('/')[-1] if '/' in mongo_url else "smartdoc_pro"
+            db_name = mongo_url.split('/')[-1] if '/' in mongo_url else "shrutapex"
             cls.database = cls.client[db_name]
             
             # Test connection
