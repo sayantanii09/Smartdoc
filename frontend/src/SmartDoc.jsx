@@ -2335,7 +2335,7 @@ const Shrutapex = () => {
               className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg mb-4"
             >
               <LogIn className="w-5 h-5 inline mr-2" />
-              Login to SmartDoc
+              Login to Shrutapex
             </button>
 
             <button
