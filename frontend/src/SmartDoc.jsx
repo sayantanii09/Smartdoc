@@ -390,7 +390,7 @@ const FOOD_INSTRUCTIONS = [
   'Before lunch', 'After lunch', 'Before dinner', 'After dinner'
 ];
 
-const SmartDoc = () => {
+const Shrutapex = () => {
   // Authentication state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentDoctor, setCurrentDoctor] = useState(null);
