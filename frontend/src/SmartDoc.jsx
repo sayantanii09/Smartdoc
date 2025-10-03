@@ -2309,7 +2309,7 @@ const Shrutapex = () => {
               <div className="bg-gradient-to-br from-blue-500 to-indigo-500 p-4 rounded-xl shadow-lg mx-auto w-20 h-20 flex items-center justify-center">
                 <Stethoscope className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-white mt-4 mb-2">SmartDoc Pro</h1>
+              <h1 className="text-3xl font-bold text-white mt-4 mb-2">Shrutapex</h1>
               <p className="text-blue-200">Professional Medical Documentation System</p>
             </div>
             
