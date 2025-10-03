@@ -828,7 +828,7 @@ const Shrutapex = () => {
     }
     
     // Clear local storage and state
-    localStorage.removeItem('smartdoc_token');
+    localStorage.removeItem('shrutapex_token');
     setAuthToken(null);
     setIsLoggedIn(false);
     setCurrentDoctor(null);
