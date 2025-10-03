@@ -1526,7 +1526,7 @@ const Shrutapex = () => {
   };
 
   const loadTrainingHistory = () => {
-    const savedHistory = localStorage.getItem('smartdoc_training_history');
+    const savedHistory = localStorage.getItem('shrutapex_training_history');
     if (savedHistory) {
       try {
         const history = JSON.parse(savedHistory);
