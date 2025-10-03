@@ -409,7 +409,7 @@ const Shrutapex = () => {
     password: '',
     confirmPassword: ''
   });
-  const [authToken, setAuthToken] = useState(localStorage.getItem('smartdoc_token'));
+  const [authToken, setAuthToken] = useState(localStorage.getItem('shrutapex_token'));
   
   // Doctor profile state
   const [doctorProfile, setDoctorProfile] = useState({
