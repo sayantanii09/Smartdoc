@@ -1471,7 +1471,7 @@ const Shrutapex = () => {
       noiseReduction: enableNoiseReduction,
       confidenceThreshold: confidenceThreshold
     };
-    localStorage.setItem('smartdoc_speech_settings', JSON.stringify(speechSettings));
+    localStorage.setItem('shrutapex_speech_settings', JSON.stringify(speechSettings));
   }, [speechLanguage, speechQuality, enableNoiseReduction, confidenceThreshold]);
 
   // Load speech settings from localStorage on component mount
