@@ -3643,4 +3643,4 @@ const Shrutapex = () => {
   );
 };
 
-export default SmartDoc;
+export default Shrutapex;
