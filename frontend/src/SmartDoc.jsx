@@ -738,7 +738,7 @@ const Shrutapex = () => {
         })
         .catch(error => {
           console.error('Token verification failed:', error);
-          localStorage.removeItem('smartdoc_token');
+          localStorage.removeItem('shrutapex_token');
           setAuthToken(null);
         });
     }
