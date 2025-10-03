@@ -2175,7 +2175,7 @@ const Shrutapex = () => {
                 <User className="w-10 h-10 text-white" />
               </div>
               <h1 className="text-3xl font-bold text-white mt-4 mb-2">Create Doctor Account</h1>
-              <p className="text-blue-200">Join SmartDoc Pro Professional Network</p>
+              <p className="text-blue-200">Join Shrutapex Professional Network</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
