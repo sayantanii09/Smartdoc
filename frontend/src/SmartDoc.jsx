@@ -1499,7 +1499,7 @@ const Shrutapex = () => {
 
   // Learning System Functions
   const loadUserCorrections = () => {
-    const savedCorrections = localStorage.getItem('smartdoc_user_corrections');
+    const savedCorrections = localStorage.getItem('shrutapex_user_corrections');
     if (savedCorrections) {
       try {
         const corrections = JSON.parse(savedCorrections);
