@@ -1558,7 +1558,7 @@ const Shrutapex = () => {
     if (!exists) {
       const updatedCorrections = [...userCorrections, correction];
       setUserCorrections(updatedCorrections);
-      localStorage.setItem('smartdoc_user_corrections', JSON.stringify(updatedCorrections));
+      localStorage.setItem('shrutapex_user_corrections', JSON.stringify(updatedCorrections));
       
       // Update dynamic medication database
       if (type === 'medication') {
