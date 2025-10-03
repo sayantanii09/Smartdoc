@@ -1070,24 +1070,182 @@ const Shrutapex = () => {
 
   const toggleListening = () => {
     if (!recognitionRef.current) {
-      alert('⚠️ Voice recognition not available in this environment.\n\n✅ Use "Demo Mode" to test the app\n✅ Voice WILL work when deployed on emergent.sh');
+      alert('Speech recognition not supported in this browser');
       return;
     }
-
+    
     if (isListening) {
+      // Stop listening
       recognitionRef.current.stop();
       setIsListening(false);
-      processTranscript(transcript);
+      console.log('🛑 Speech recognition stopped');
     } else {
-      setTranscript('');
       try {
+        // Ensure clean restart by recreating the recognition object if needed
+        if (recognitionRef.current.readyState !== undefined && recognitionRef.current.readyState !== 0) {
+          console.log('🔄 Recreating speech recognition object for clean restart');
+          
+          // Reinitialize speech recognition
+          const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          recognitionRef.current = new SpeechRecognition();
+          
+          // Reapply all settings
+          recognitionRef.current.continuous = true;
+          recognitionRef.current.interimResults = true;
+          recognitionRef.current.lang = speechLanguage;
+          recognitionRef.current.maxAlternatives = 3;
+          
+          // Reattach all event handlers
+          setupSpeechRecognitionHandlers();
+        }
+        
         recognitionRef.current.start();
         setIsListening(true);
-      } catch (error) {
-        console.error('Error starting speech recognition:', error);
-        alert('⚠️ Cannot start voice in this environment.\n\n✅ Use "Demo Mode" button below\n✅ Voice WILL work on emergent.sh');
+        console.log('🎤 Speech recognition started');
+      } catch (e) {
+        console.error('Speech recognition start error:', e);
+        alert(`Failed to start speech recognition: ${e.message}\n\nTry refreshing the page or use Demo Mode instead.`);
       }
     }
+  };
+
+  // Separate function to setup speech recognition event handlers
+  const setupSpeechRecognitionHandlers = () => {
+    if (!recognitionRef.current) return;
+
+    recognitionRef.current.onstart = () => {
+      console.log('Enhanced speech recognition started');
+      setTranscript(''); // Clear previous transcript when starting new session
+    };
+
+    recognitionRef.current.onresult = (event) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      let bestConfidence = 0;
+      
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
+        let bestTranscript = '';
+        let bestAlternativeConfidence = 0;
+        
+        // Check all alternatives and pick the one with highest confidence
+        for (let j = 0; j < result.length; j++) {
+          const alternative = result[j];
+          if (alternative.confidence > bestAlternativeConfidence) {
+            bestAlternativeConfidence = alternative.confidence;
+            bestTranscript = alternative.transcript;
+          }
+        }
+        
+        // Only use transcripts above confidence threshold
+        if (bestAlternativeConfidence >= confidenceThreshold) {
+          if (result.isFinal) {
+            finalTranscript += bestTranscript + ' ';
+            bestConfidence = bestAlternativeConfidence;
+          } else {
+            interimTranscript += bestTranscript + ' ';
+          }
+        }
+      }
+      
+      // Update live transcript for manual correction
+      if (showLiveTranscript) {
+        setLiveTranscript(prev => {
+          const updated = prev + (finalTranscript || interimTranscript);
+          return updated;
+        });
+      }
+      
+      if (finalTranscript) {
+        // Clean and correct the transcript using dynamic database
+        const cleanedTranscript = cleanTranscript(finalTranscript);
+        const originalTranscript = cleanedTranscript;
+        
+        // Apply user corrections first, then built-in corrections
+        const userCorrectedTranscript = applyCorrectionToText(cleanedTranscript, userCorrections);
+        const correctedTranscript = correctMedicalTermsWithDynamicDB(userCorrectedTranscript);
+        
+        // Track medication corrections for user feedback
+        if (originalTranscript !== correctedTranscript) {
+          const corrections = findMedicationCorrections(originalTranscript, correctedTranscript);
+          if (corrections.length > 0) {
+            setLastCorrectedMeds(corrections);
+            setMedicationSuggestions(prev => [...corrections, ...prev.slice(0, 4)]); // Keep last 5
+          }
+        }
+        
+        setTranscript(prev => {
+          const newTranscript = prev + correctedTranscript + ' ';
+          // Process in real-time for continuous updates
+          processTranscript(newTranscript);
+          return newTranscript;
+        });
+        
+        console.log(`Speech processed with confidence: ${(bestConfidence * 100).toFixed(1)}%`);
+        if (originalTranscript !== correctedTranscript) {
+          console.log(`Medication corrected: "${originalTranscript}" → "${correctedTranscript}"`);
+        }
+      }
+      
+      // Show interim results for better user feedback
+      if (interimTranscript && !finalTranscript && showLiveTranscript) {
+        console.log('Interim:', cleanTranscript(interimTranscript));
+      }
+    };
+
+    recognitionRef.current.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      
+      let errorMessage = 'Speech Recognition Error: ';
+      
+      switch(event.error) {
+        case 'not-allowed':
+          errorMessage += 'Microphone access denied. Please allow microphone permissions and try again.';
+          break;
+        case 'network':
+          errorMessage += 'Network connection issue. Check your internet connection.';
+          break;
+        case 'aborted':
+          errorMessage += 'Speech recognition was aborted. This often happens in embedded environments.';
+          break;
+        case 'audio-capture':
+          errorMessage += 'No microphone detected. Please check your audio devices.';
+          break;
+        case 'no-speech':
+          errorMessage += 'No speech detected. Please try speaking closer to the microphone.';
+          break;
+        case 'service-not-allowed':
+          errorMessage += 'Speech service not available. Try using Demo Mode instead.';
+          break;
+        default:
+          errorMessage += event.error + '. Try adjusting speech settings or use Demo Mode.';
+      }
+      
+      errorMessage += '\n\n💡 Tips:\n• Use Demo Mode for testing\n• Check microphone permissions\n• Adjust language/accent settings\n• Speak clearly in a quiet environment';
+      
+      alert(errorMessage);
+      setIsListening(false);
+    };
+
+    recognitionRef.current.onend = () => {
+      console.log('Speech recognition ended');
+      setIsListening(false);
+      
+      // Auto-restart if it was supposed to be continuous
+      if (isListening) {
+        console.log('🔄 Auto-restarting speech recognition...');
+        setTimeout(() => {
+          if (isListening) {
+            try {
+              recognitionRef.current.start();
+            } catch (e) {
+              console.error('Auto-restart failed:', e);
+              setIsListening(false);
+            }
+          }
+        }, 100);
+      }
+    };
   };
 
   const runDemo = () => {
