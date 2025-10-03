@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
         await ehr_db.init_db()
         
         logger.info("✅ Database connections established successfully")
-        logger.info("✅ SmartDoc Pro Backend Server started successfully")
+        logger.info("✅ Shrutapex Backend Server started successfully")
         
     except Exception as e:
         logger.error(f"❌ Failed to start server: {e}")
