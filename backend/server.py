@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    logger.info("Starting SmartDoc Pro Backend Server...")
+    logger.info("Starting Shrutapex Backend Server...")
     try:
         # Connect to MongoDB
         await MongoDB.connect_db()
