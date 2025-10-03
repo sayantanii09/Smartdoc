@@ -752,7 +752,7 @@ const Shrutapex = () => {
       });
 
       // Store token and user data
-      localStorage.setItem('smartdoc_token', response.access_token);
+      localStorage.setItem('shrutapex_token', response.access_token);
       setAuthToken(response.access_token);
       setCurrentDoctor(response.user);
       setIsLoggedIn(true);
