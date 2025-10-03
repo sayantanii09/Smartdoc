@@ -3003,7 +3003,7 @@ const Shrutapex = () => {
               </div>
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-white flex items-center gap-2">
-                  SmartDoc Pro<Sparkles className="w-6 h-6 text-yellow-300" />
+                  Shrutapex<Sparkles className="w-6 h-6 text-yellow-300" />
                 </h1>
                 <p className="text-blue-100 text-sm md:text-base">Professional Medical Documentation System</p>
                 <p className="text-blue-200 text-sm">Dr. {currentDoctor.name} • {currentDoctor.organization}</p>
