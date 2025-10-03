@@ -17,7 +17,7 @@ class MongoDB:
     async def connect_db(cls):
         """Create database connection"""
         try:
-            mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017/smartdoc_pro")
+            mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017/shrutapex")
             cls.client = AsyncIOMotorClient(mongo_url)
             
             # Extract database name from URL
