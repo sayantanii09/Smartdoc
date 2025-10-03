@@ -1583,7 +1583,7 @@ const Shrutapex = () => {
       
       const updatedHistory = [trainingEntry, ...trainingHistory.slice(0, 49)]; // Keep last 50
       setTrainingHistory(updatedHistory);
-      localStorage.setItem('smartdoc_training_history', JSON.stringify(updatedHistory));
+      localStorage.setItem('shrutapex_training_history', JSON.stringify(updatedHistory));
       
       console.log('✅ User correction saved and app trained:', correction);
       alert(`✅ App Trained! "${original}" will now be recognized as "${corrected}"`);
