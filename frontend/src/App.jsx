@@ -4,7 +4,7 @@ import Shrutapex from './SmartDoc';
 function App() {
   return (
     <div>
-      <SmartDoc />
+      <Shrutapex />
     </div>
   );
 }
