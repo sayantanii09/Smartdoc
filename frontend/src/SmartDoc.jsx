@@ -1778,6 +1778,205 @@ const Shrutapex = () => {
       console.error('Error fetching saved patients:', error);
     }
   };
+  
+  // ============ NEW PATIENT MANAGEMENT FUNCTIONS ============
+  
+  const searchPatients = async () => {
+    if (!patientSearchTerm.trim()) {
+      alert('Please enter a patient name, MRN, or phone number');
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/search-patients`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          search_term: patientSearchTerm.trim()
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data.patients || []);
+        
+        if (data.patients.length === 0) {
+          alert(`No patients found matching "${patientSearchTerm}"`);
+        }
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Search failed: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error searching patients:', error);
+      alert('❌ Search failed: Network error');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  
+  const selectExistingPatient = async (patient) => {
+    try {
+      setSelectedPatient(patient);
+      setCurrentPatientMRN(patient.mrn);
+      setIsNewPatient(false);
+      
+      // Load patient info into form
+      setPatientName(patient.patient_info.name || '');
+      setPatientAge(patient.patient_info.age || '');
+      setPatientGender(patient.patient_info.gender || '');
+      setPatientHeight(patient.patient_info.height || '');
+      setPatientWeight(patient.patient_info.weight || '');
+      setPatientBP(patient.patient_info.blood_pressure || '');
+      setHeartRate(patient.patient_info.heart_rate || '');
+      setTemperature(patient.patient_info.temperature || '');
+      setOxygenSaturation(patient.patient_info.oxygen_saturation || '');
+      
+      // Show patient selected message
+      alert(`✅ Selected existing patient: ${patient.patient_info.name}\nMRN: ${patient.mrn}\nTotal visits: ${patient.total_visits}\nLast visit: ${new Date(patient.latest_visit_date).toLocaleDateString()}`);
+      
+      // Close search modal
+      setShowPatientSearch(false);
+      setSearchResults([]);
+      setPatientSearchTerm('');
+      
+    } catch (error) {
+      console.error('Error selecting patient:', error);
+      alert('❌ Error selecting patient');
+    }
+  };
+  
+  const createNewPatientWithVisit = async () => {
+    setIsSavingPatient(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/create-new`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patient_info: {
+            name: patientName,
+            age: patientAge,
+            gender: patientGender,
+            height: patientHeight,
+            weight: patientWeight,
+            blood_pressure: patientBP,
+            heart_rate: heartRate,
+            temperature: temperature,
+            oxygen_saturation: oxygenSaturation
+          },
+          medical_history: {
+            past_conditions: pastMedicalHistory,
+            past_surgeries: pastMedications,
+            family_history: familyHistory,
+            allergies: allergies,
+            social_history: {
+              smoking: smokingStatus,
+              alcohol: alcoholUse,
+              exercise: exerciseLevel,
+              drugs: drugUse
+            }
+          },
+          diagnosis: diagnosis,
+          prognosis: prognosis,
+          notes: ''
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCurrentPatientMRN(data.data.mrn);
+        
+        alert(`✅ New patient created successfully!\n\nPatient: ${data.data.patient_name}\nMRN: ${data.data.mrn}\nVisit Code: ${data.data.visit_code}\n\n🔍 Use MRN for future visits.`);
+        
+        setShowSavePatientDialog(false);
+        await fetchSavedPatients();
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to create patient: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error creating new patient:', error);
+      alert('❌ Failed to create patient: Network error');
+    } finally {
+      setIsSavingPatient(false);
+    }
+  };
+  
+  const addVisitToExistingPatient = async () => {
+    if (!currentPatientMRN) {
+      alert('No patient selected');
+      return;
+    }
+    
+    setIsSavingPatient(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/add-visit`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patient_mrn: currentPatientMRN,
+          medical_history: {
+            past_conditions: pastMedicalHistory,
+            past_surgeries: pastMedications,
+            family_history: familyHistory,
+            allergies: allergies,
+            social_history: {
+              smoking: smokingStatus,
+              alcohol: alcoholUse,
+              exercise: exerciseLevel,
+              drugs: drugUse
+            }
+          },
+          diagnosis: diagnosis,
+          prognosis: prognosis,
+          notes: ''
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        alert(`✅ New visit added successfully!\n\nPatient MRN: ${currentPatientMRN}\nVisit Code: ${data.data.visit_code}\n\n📋 Visit recorded as follow-up.`);
+        
+        setShowSavePatientDialog(false);
+        await fetchSavedPatients();
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to add visit: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error adding visit:', error);
+      alert('❌ Failed to add visit: Network error');
+    } finally {
+      setIsSavingPatient(false);
+    }
+  };
+  
+  const handleSavePatient = () => {
+    setShowNewVsExisting(true);
+  };
+  
+  const proceedWithNewPatient = () => {
+    setIsNewPatient(true);
+    setShowNewVsExisting(false);
+    setShowSavePatientDialog(true);
+  };
+  
+  const proceedWithExistingPatient = () => {
+    setIsNewPatient(false);
+    setShowNewVsExisting(false);
+    setShowSavePatientDialog(true);
+  };
 
   // Medication Template Functions
   const saveMedicationTemplate = async () => {
