@@ -1,28 +1,28 @@
 {
   "summary": {
-    "passed": 8,
+    "passed": 10,
     "total": 12,
-    "success_rate": "66.7%",
-    "timestamp": "2025-10-08T15:32:12.221159"
+    "success_rate": "83.3%",
+    "timestamp": "2025-10-08T15:32:53.280281"
   },
   "results": [
     {
       "test": "Health Check",
       "success": true,
       "message": "Backend is healthy",
-      "timestamp": "2025-10-08T15:32:11.145435",
+      "timestamp": "2025-10-08T15:32:52.399914",
       "details": {
         "status": "healthy",
         "service": "SmartDoc Pro Backend",
         "version": "1.0.0",
-        "timestamp": "2025-10-08T15:32:11.142557"
+        "timestamp": "2025-10-08T15:32:52.396361"
       }
     },
     {
       "test": "Doctor Login (Demo Account)",
       "success": true,
       "message": "Demo account login successful",
-      "timestamp": "2025-10-08T15:32:11.397001",
+      "timestamp": "2025-10-08T15:32:52.662742",
       "details": {
         "username": "drsmith",
         "token_type": "bearer",
@@ -31,62 +31,71 @@
     },
     {
       "test": "Patient Save",
-      "success": false,
-      "message": "HTTP 422",
-      "timestamp": "2025-10-08T15:32:11.408709",
+      "success": true,
+      "message": "Patient saved successfully with code: DO3614",
+      "timestamp": "2025-10-08T15:32:52.680818",
       "details": {
-        "response": "{\"detail\":[{\"type\":\"string_type\",\"loc\":[\"body\",\"patient_info\",\"age\"],\"msg\":\"Input should be a valid string\",\"input\":45,\"url\":\"https://errors.pydantic.dev/2.4/v/string_type\"},{\"type\":\"string_type\",\"loc\":[\"body\",\"medical_history\",\"allergies\"],\"msg\":\"Input should be a valid string\",\"input\":[\"Penicillin\",\"Shellfish\"],\"url\":\"https://errors.pydantic.dev/2.4/v/string_type\"},{\"type\":\"string_type\",\"loc\":[\"body\",\"medical_history\",\"family_history\"],\"msg\":\"Input should be a valid string\",\"input\":[\"Diabetes (Father)\",\"Heart Disease (Mother)\"],\"url\":\"https://errors.pydantic.dev/2.4/v/string_type\"}]}"
+        "patient_code": "DO3614",
+        "patient_id": "46ad4289-8f0d-4875-afa7-d0217a064666",
+        "visit_date": "2025-10-08T15:32:52.672721+00:00",
+        "code_length": 6
       }
     },
     {
       "test": "Patient Search",
       "success": false,
-      "message": "No saved patient code available for search",
-      "timestamp": "2025-10-08T15:32:11.408755",
-      "details": {}
+      "message": "HTTP 500",
+      "timestamp": "2025-10-08T15:32:52.696615",
+      "details": {
+        "response": "{\"success\":false,\"error\":\"Internal server error\",\"status_code\":500}"
+      }
     },
     {
       "test": "Patient Search Invalid Code",
-      "success": false,
-      "message": "Expected HTTP 404, got 422",
-      "timestamp": "2025-10-08T15:32:11.417762",
+      "success": true,
+      "message": "Correctly returned 404 for invalid patient code",
+      "timestamp": "2025-10-08T15:32:52.713942",
       "details": {
-        "response": "{\"detail\":[{\"type\":\"string_too_long\",\"loc\":[\"body\",\"patient_code\"],\"msg\":\"String should have at most 8 characters\",\"input\":\"INVALID123\",\"ctx\":{\"max_length\":8},\"url\":\"https://errors.pydantic.dev/2.4/v/string_too_long\"}]}"
+        "success": false,
+        "error": "Patient not found with the provided code",
+        "status_code": 404
       }
     },
     {
       "test": "Get My Patients",
       "success": false,
-      "message": "Expected at least 1 patient, got 0",
-      "timestamp": "2025-10-08T15:32:11.472069",
-      "details": {}
+      "message": "HTTP 500",
+      "timestamp": "2025-10-08T15:32:52.724261",
+      "details": {
+        "response": "{\"success\":false,\"error\":\"Internal server error\",\"status_code\":500}"
+      }
     },
     {
       "test": "Auth Required - GET /patients/my-patients",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:11.485361",
+      "timestamp": "2025-10-08T15:32:52.732254",
       "details": {}
     },
     {
       "test": "Auth Required - POST /patients/save",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:11.540103",
+      "timestamp": "2025-10-08T15:32:52.742914",
       "details": {}
     },
     {
       "test": "Auth Required - POST /patients/search",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:11.558399",
+      "timestamp": "2025-10-08T15:32:52.755105",
       "details": {}
     },
     {
       "test": "EHR Providers",
       "success": true,
       "message": "Retrieved 8 providers",
-      "timestamp": "2025-10-08T15:32:11.581554",
+      "timestamp": "2025-10-08T15:32:52.766812",
       "details": {
         "total_providers": 8,
         "expected_found": 5,
@@ -106,7 +115,7 @@
       "test": "EHR Configuration (Epic OAuth)",
       "success": true,
       "message": "Epic configuration saved",
-      "timestamp": "2025-10-08T15:32:11.689341",
+      "timestamp": "2025-10-08T15:32:52.819559",
       "details": {
         "success": true,
         "message": "EHR configuration saved successfully",
@@ -120,7 +129,7 @@
       "test": "EHR Configuration (Cerner API Key)",
       "success": true,
       "message": "Cerner configuration saved",
-      "timestamp": "2025-10-08T15:32:11.715383",
+      "timestamp": "2025-10-08T15:32:52.830980",
       "details": {
         "success": true,
         "message": "EHR configuration saved successfully",
@@ -134,13 +143,13 @@
       "test": "EHR Connection Test",
       "success": true,
       "message": "Connection test completed with status: connected",
-      "timestamp": "2025-10-08T15:32:12.080499",
+      "timestamp": "2025-10-08T15:32:53.152713",
       "details": {
         "success": true,
         "message": "Connection successful",
         "data": {
           "status": "connected",
-          "response_time": 0.163321,
+          "response_time": 0.200985,
           "capabilities": [
             "Claim",
             "Immunization",
@@ -210,7 +219,7 @@
       "test": "Get EHR Configurations",
       "success": true,
       "message": "Retrieved 2 configurations",
-      "timestamp": "2025-10-08T15:32:12.093183",
+      "timestamp": "2025-10-08T15:32:53.164037",
       "details": {
         "count": 2,
         "providers": [
@@ -223,28 +232,28 @@
       "test": "Auth Required - GET /ehr/providers",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:12.144417",
+      "timestamp": "2025-10-08T15:32:53.214053",
       "details": {}
     },
     {
       "test": "Auth Required - GET /ehr/configurations",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:12.157664",
+      "timestamp": "2025-10-08T15:32:53.223668",
       "details": {}
     },
     {
       "test": "Auth Required - POST /ehr/configure",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:12.205707",
+      "timestamp": "2025-10-08T15:32:53.272268",
       "details": {}
     },
     {
       "test": "Auth Required - POST /ehr/test-connection",
       "success": true,
       "message": "Correctly requires authentication (HTTP 403)",
-      "timestamp": "2025-10-08T15:32:12.220948",
+      "timestamp": "2025-10-08T15:32:53.280077",
       "details": {}
     }
   ]
