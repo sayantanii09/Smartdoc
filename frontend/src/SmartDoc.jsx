@@ -1735,6 +1735,73 @@ const Shrutapex = () => {
     return cleaned;
   };
 
+  // Context-aware extraction using trigger words
+  const extractInformationByTriggers = (text) => {
+    const lowerText = text.toLowerCase();
+    const extracted = {
+      diagnosis: [],
+      medications: [],
+      prognosis: [],
+      familyHistory: [],
+      referrals: [],
+      vitals: [],
+      allergies: [],
+      socialHistory: []
+    };
+
+    // Trigger word patterns for different medical information
+    const triggerPatterns = {
+      diagnosis: [
+        /(?:diagnosis|diagnosed with|suffering from|presents with|chief complaint|cc):?\s*([^.;,]+)/gi,
+        /(?:patient has|patient is|condition is|condition):?\s*([^.;,]+)/gi
+      ],
+      medications: [
+        /(?:medications?|prescribe|prescribed|give|start|medication list|meds?):?\s*([^.;,]+)/gi,
+        /(?:take|taking|on):?\s*([^.;,]*(?:mg|mcg|ml|tablet|capsule)[^.;,]*)/gi
+      ],
+      prognosis: [
+        /(?:prognosis|outlook|expected outcome|recovery):?\s*([^.;,]+)/gi,
+        /(?:expected to|likely to|should):?\s*([^.;,]+)/gi
+      ],
+      familyHistory: [
+        /(?:family history|father|mother|parent|sibling|brother|sister|grandfather|grandmother):?\s*([^.;,]+)/gi,
+        /(?:runs in family|genetic|hereditary):?\s*([^.;,]+)/gi
+      ],
+      referrals: [
+        /(?:refer|referral|refer to|see|consult|consultation):?\s*([^.;,]+)/gi,
+        /(?:specialist|cardiologist|neurologist|dermatologist|psychiatrist):?\s*([^.;,]+)/gi
+      ],
+      vitals: [
+        /(?:vitals?|blood pressure|bp|heart rate|hr|temperature|temp|pulse|respiration|oxygen saturation):?\s*([^.;,]+)/gi,
+        /(?:systolic|diastolic|\d+\/\d+|\d+\s*mmhg|\d+\s*bpm|\d+\s*degrees?):?\s*([^.;,]*)/gi
+      ],
+      allergies: [
+        /(?:allergies?|allergic to|allergy|adverse reaction):?\s*([^.;,]+)/gi,
+        /(?:cannot take|avoid|sensitive to):?\s*([^.;,]+)/gi
+      ],
+      socialHistory: [
+        /(?:social history|smoking|alcohol|drinking|exercise|occupation|job):?\s*([^.;,]+)/gi,
+        /(?:works as|employed as|drinks|smokes|exercises):?\s*([^.;,]+)/gi
+      ]
+    };
+
+    // Extract information based on trigger patterns
+    Object.entries(triggerPatterns).forEach(([category, patterns]) => {
+      patterns.forEach(pattern => {
+        let match;
+        while ((match = pattern.exec(lowerText)) !== null) {
+          const extractedText = match[1]?.trim();
+          if (extractedText && extractedText.length > 2) {
+            extracted[category].push(extractedText);
+            console.log(`Extracted ${category}: "${extractedText}"`);
+          }
+        }
+      });
+    });
+
+    return extracted;
+  };
+
   // Comprehensive medical terminology database with phonetic matching
   const MEDICATION_DATABASE = {
     // Cardiovascular medications
