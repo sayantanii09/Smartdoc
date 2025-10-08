@@ -672,7 +672,7 @@ class EHRBackendTester:
     
     async def run_all_tests(self):
         """Run all EHR integration tests"""
-        print("🚀 Starting SmartDoc Pro EHR Integration Backend Tests")
+        print("🚀 Starting Shrutapex Patient Storage Backend Tests")
         print("=" * 60)
         
         # Test sequence - Focus on Patient Storage as requested
