@@ -3291,6 +3291,181 @@ const Shrutapex = () => {
     );
   }
 
+  
+  // ============ NEW PATIENT MANAGEMENT MODALS ============
+  
+  // New vs Existing Patient Choice Modal
+  if (showNewVsExisting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-blue-500/5"></div>
+            <div className="relative text-center">
+              
+              <div className="mb-8">
+                <User className="w-16 h-16 text-indigo-400 mx-auto mb-4" />
+                <h2 className="text-3xl font-bold text-white mb-4">Save Patient Information</h2>
+                <p className="text-slate-300 text-lg">Is this a new patient or an existing patient with a new visit?</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+                  <div className="text-center mb-4">
+                    <Plus className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
+                    <h3 className="text-xl font-semibold text-white mb-2">New Patient</h3>
+                    <p className="text-slate-300 text-sm">Create a new patient record with unique Medical Record Number (MRN)</p>
+                  </div>
+                  <button
+                    onClick={proceedWithNewPatient}
+                    className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl font-bold transition-all"
+                  >
+                    Create New Patient
+                  </button>
+                </div>
+
+                <div className="p-6 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                  <div className="text-center mb-4">
+                    <User className="w-12 h-12 text-blue-400 mx-auto mb-3" />
+                    <h3 className="text-xl font-semibold text-white mb-2">Existing Patient</h3>
+                    <p className="text-slate-300 text-sm">Add a new visit to an existing patient record</p>
+                  </div>
+                  <button
+                    onClick={proceedWithExistingPatient}
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all"
+                  >
+                    Add Visit to Existing
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setShowNewVsExisting(false)}
+                  className="flex-1 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-xl font-bold transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => setShowPatientSearch(true)}
+                  className="flex-1 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-xl font-bold transition-all"
+                >
+                  🔍 Search Patients First
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // Patient Search Modal
+  if (showPatientSearch) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-500/5"></div>
+            <div className="relative">
+              
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <User className="w-8 h-8 text-purple-400" />
+                  Search Existing Patients
+                </h2>
+                <button 
+                  onClick={() => {
+                    setShowPatientSearch(false);
+                    setShowNewVsExisting(true);
+                  }}
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ← Back
+                </button>
+              </div>
+
+              <div className="mb-8">
+                <div className="flex gap-4 mb-4">
+                  <input
+                    type="text"
+                    value={patientSearchTerm}
+                    onChange={(e) => setPatientSearchTerm(e.target.value)}
+                    placeholder="Enter patient name, MRN (e.g., MRN1234567), or phone number..."
+                    className="flex-1 px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    onKeyPress={(e) => e.key === 'Enter' && searchPatients()}
+                  />
+                  <button
+                    onClick={searchPatients}
+                    disabled={isSearching || !patientSearchTerm.trim()}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-bold transition-all disabled:cursor-not-allowed"
+                  >
+                    {isSearching ? 'Searching...' : '🔍 Search'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Search Results */}
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-white mb-4">Search Results</h3>
+                {searchResults.length > 0 ? (
+                  <div className="grid gap-4 max-h-96 overflow-y-auto">
+                    {searchResults.map((patient, index) => (
+                      <div key={patient.mrn || index} className="p-4 bg-slate-800/30 border border-slate-600/30 rounded-xl hover:bg-slate-700/30 transition-all">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-lg font-semibold text-white">{patient.patient_info?.name}</h4>
+                            <p className="text-slate-400 text-sm">MRN: {patient.mrn}</p>
+                            <p className="text-slate-400 text-sm">
+                              Age: {patient.patient_info?.age} | Gender: {patient.patient_info?.gender}
+                            </p>
+                            <p className="text-slate-400 text-sm">
+                              Total Visits: {patient.total_visits} | Last Visit: {new Date(patient.latest_visit_date).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => selectExistingPatient(patient)}
+                            className="px-4 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-bold transition-all"
+                          >
+                            Select Patient
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center bg-slate-800/30 border border-slate-600/30 rounded-xl">
+                    <User className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400">
+                      {patientSearchTerm ? `No patients found matching "${patientSearchTerm}"` : 'Enter search criteria above to find existing patients'}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => {
+                    setShowPatientSearch(false);
+                    setShowNewVsExisting(true);
+                  }}
+                  className="flex-1 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-xl font-bold transition-all"
+                >
+                  ← Back to Options
+                </button>
+                <button
+                  onClick={proceedWithNewPatient}
+                  className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl font-bold transition-all"
+                >
+                  Create New Patient Instead
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   // Save Patient Dialog
   if (showSavePatientDialog) {
     return (
