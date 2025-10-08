@@ -44,6 +44,8 @@ async def lifespan(app: FastAPI):
         await prescription_db.init_db() 
         await drug_db.init_db()
         await ehr_db.init_db()
+        await patient_storage_db.init_db()
+        await medication_template_db.init_db()
         
         logger.info("✅ Database connections established successfully")
         logger.info("✅ Shrutapex Backend Server started successfully")
