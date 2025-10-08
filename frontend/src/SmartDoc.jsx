@@ -2986,6 +2986,194 @@ const Shrutapex = () => {
     );
   }
 
+  // Create Template Modal
+  if (showCreateTemplate) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Plus className="w-8 h-8 text-emerald-400" />
+                  Create Medication Template
+                </h2>
+                <button 
+                  onClick={() => setShowCreateTemplate(false)} 
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ← Back
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Template Name</label>
+                  <input
+                    type="text"
+                    value={templateData.name}
+                    onChange={(e) => setTemplateData({...templateData, name: e.target.value})}
+                    placeholder="e.g., 'Hypertension Standard Protocol'"
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Disease/Condition</label>
+                  <input
+                    type="text"
+                    value={templateData.disease_condition}
+                    onChange={(e) => setTemplateData({...templateData, disease_condition: e.target.value})}
+                    placeholder="e.g., 'Hypertension', 'Diabetes Type 2', 'Anxiety'"
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Description (Optional)</label>
+                  <textarea
+                    value={templateData.description}
+                    onChange={(e) => setTemplateData({...templateData, description: e.target.value})}
+                    placeholder="Brief description of this treatment protocol..."
+                    className="w-full h-24 px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="isPublic"
+                    checked={templateData.is_public}
+                    onChange={(e) => setTemplateData({...templateData, is_public: e.target.checked})}
+                    className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500"
+                  />
+                  <label htmlFor="isPublic" className="text-emerald-300 text-sm">
+                    Make this template public (available to all doctors)
+                  </label>
+                </div>
+
+                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                  <h4 className="text-blue-300 font-semibold mb-2">Current Medications ({medications.length})</h4>
+                  {medications.length > 0 ? (
+                    <div className="space-y-2">
+                      {medications.map((med, index) => (
+                        <div key={index} className="p-2 bg-slate-800/30 rounded text-sm text-slate-300">
+                          {med.name} - {med.dosage} - {med.frequency} - {med.duration}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-slate-500 text-sm">No medications added yet. Add medications in the main prescription form first.</p>
+                  )}
+                </div>
+
+                <button 
+                  onClick={saveMedicationTemplate}
+                  disabled={isCreatingTemplate || !templateData.name || !templateData.disease_condition || medications.length === 0}
+                  className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-bold transition-all disabled:cursor-not-allowed"
+                >
+                  {isCreatingTemplate ? 'Creating Template...' : 'Create Template'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Save Patient Dialog
+  if (showSavePatientDialog) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Save className="w-8 h-8 text-green-400" />
+                  Save Patient Information
+                </h2>
+                <button 
+                  onClick={() => setShowSavePatientDialog(false)} 
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ✕ Cancel
+                </button>
+              </div>
+
+              <div className="space-y-6">
+                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                  <h4 className="text-blue-300 font-semibold mb-3">📋 Patient Information Summary</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-slate-400">Name:</span>
+                      <span className="text-white ml-2">{patientName || 'Not provided'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400">Age:</span>
+                      <span className="text-white ml-2">{patientAge || 'Not provided'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400">Gender:</span>
+                      <span className="text-white ml-2">{patientGender || 'Not provided'}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-400">Diagnosis:</span>
+                      <span className="text-white ml-2">{diagnosis || 'Not provided'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+                  <h4 className="text-emerald-300 font-semibold mb-2">🔑 Unique Patient Code</h4>
+                  <p className="text-slate-300 text-sm mb-2">
+                    A unique 6-8 character code will be generated for this patient. 
+                    Use this code to retrieve all patient information in future visits.
+                  </p>
+                  <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <span>Example codes:</span>
+                    <span className="bg-slate-700 px-2 py-1 rounded">AB1234</span>
+                    <span className="bg-slate-700 px-2 py-1 rounded">CD56789</span>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+                  <h4 className="text-orange-300 font-semibold mb-2">💾 What Will Be Saved:</h4>
+                  <ul className="text-slate-300 text-sm space-y-1">
+                    <li>• Complete patient demographics and vitals</li>
+                    <li>• Medical history, allergies, and social history</li>
+                    <li>• Current diagnosis and prognosis</li>
+                    <li>• All consultation notes and transcript</li>
+                    <li>• Visit date and time</li>
+                  </ul>
+                </div>
+
+                <div className="flex gap-4">
+                  <button 
+                    onClick={() => setShowSavePatientDialog(false)}
+                    className="flex-1 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-xl font-bold transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    onClick={saveCurrentPatient}
+                    disabled={isSavingPatient || !patientName}
+                    className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-bold transition-all disabled:cursor-not-allowed"
+                  >
+                    {isSavingPatient ? 'Saving Patient...' : 'Save Patient'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Login Screen
   if (!isLoggedIn) {
     return (
