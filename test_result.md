@@ -195,6 +195,18 @@ frontend:
         agent: "testing"
         comment: "✅ PASS - Demo mode working correctly. Successfully populates transcript with sample medical data including diabetes and hypertension case with metformin and lisinopril medications. Demo consultation runs without errors."
 
+  - task: "Patient Information Storage Frontend"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/SmartDoc.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for Patient Information Storage frontend functionality including login, navigation, patient storage UI, save patient functionality, integration testing, and error handling"
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
