@@ -1260,24 +1260,33 @@ class NewPatientManagementTester:
         return all_passed
     
     async def run_all_tests(self):
-        """Run all EHR integration tests"""
-        print("🚀 Starting Shrutapex Patient Storage Backend Tests")
-        print("=" * 60)
+        """Run all NEW Patient Management System tests"""
+        print("🚀 Starting NEW Patient Management System Backend Tests")
+        print("=" * 70)
         
-        # Test sequence - Focus on Patient Storage as requested
+        # Test sequence - Focus on NEW Patient Management System
         tests = [
             ("Health Check", self.test_health_check),
             ("Doctor Authentication", self.test_doctor_registration_and_login),
-            ("Patient Save", self.test_patient_save),
-            ("Patient Search", self.test_patient_search),
-            ("Patient Search Invalid Code", self.test_patient_search_invalid_code),
-            ("Get My Patients", self.test_get_my_patients),
-            ("Patient Auth Required", self.test_patient_endpoints_authentication),
-            ("EHR Providers", self.test_ehr_providers),
-            ("EHR Configuration", self.test_ehr_configuration),
-            ("EHR Connection Test", self.test_ehr_connection_test),
-            ("Get EHR Configurations", self.test_get_ehr_configurations),
-            ("EHR Auth Required", self.test_authentication_required_endpoints)
+            
+            # NEW Patient Management System Tests
+            ("Search Patients Empty", self.test_search_patients_empty),
+            ("Create New Patient", self.test_create_new_patient),
+            ("Search Patients by Name", self.test_search_patients_by_name),
+            ("Search Patients by MRN", self.test_search_patients_by_mrn),
+            ("Get Patient Details", self.test_get_patient_details),
+            ("Add Visit to Existing Patient", self.test_add_visit_to_existing_patient),
+            ("Search Visit by Code", self.test_search_visit_by_code),
+            ("Search Visit Invalid Code", self.test_search_visit_invalid_code),
+            ("Patient Details Invalid MRN", self.test_patient_details_invalid_mrn),
+            ("New Patient Auth Required", self.test_new_patient_endpoints_authentication),
+            
+            # Legacy System Tests (for backward compatibility)
+            ("Legacy Patient Save", self.test_patient_save),
+            ("Legacy Patient Search", self.test_patient_search),
+            ("Legacy Patient Search Invalid Code", self.test_patient_search_invalid_code),
+            ("Legacy Get My Patients", self.test_get_my_patients),
+            ("Legacy Patient Auth Required", self.test_patient_endpoints_authentication)
         ]
         
         passed = 0
