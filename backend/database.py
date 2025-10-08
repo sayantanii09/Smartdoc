@@ -371,3 +371,6 @@ drug_db = DrugDB()
 
 # Import EHR database
 from ehr_database import ehr_db
+
+# Import Patient Storage and Templates
+from patient_storage import patient_storage_db, medication_template_db
