@@ -3438,12 +3438,19 @@ const Shrutapex = () => {
               )}
 
               {/* Enhanced Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <button 
                   onClick={() => setCurrentView('input')} 
                   className="py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all border border-slate-600"
                 >
                   ← Back to Edit
+                </button>
+                <button 
+                  onClick={() => setShowSavePatientDialog(true)}
+                  className="py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
+                >
+                  <User className="w-5 h-5" />
+                  Save Patient
                 </button>
                 <button 
                   onClick={handlePrintPDF} 
