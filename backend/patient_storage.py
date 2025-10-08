@@ -116,6 +116,12 @@ class PatientStorageDB:
                 "is_active": True
             })
             
+            if patient and "_id" in patient:
+                # Convert MongoDB ObjectId to string and remove _id field
+                if "id" not in patient:
+                    patient["id"] = str(patient["_id"])
+                del patient["_id"]
+            
             return patient
             
         except Exception as e:
