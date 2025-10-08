@@ -303,7 +303,32 @@ class FHIRBundle(BaseModel):
     timestamp: Optional[str] = None
     entry: List[dict] = Field(default_factory=list)
 
-# Patient Storage System Models
+# Patient Management System Models
+
+class Patient(BaseModel):
+    """Core patient record with unique Medical Record Number"""
+    mrn: str = Field(..., description="Medical Record Number - unique patient identifier")
+    patient_info: PatientInfo
+    created_by_doctor_id: str
+    created_date: datetime
+    last_updated: datetime
+    is_active: bool = True
+
+class Visit(BaseModel):
+    """Individual visit/consultation record linked to a patient"""
+    visit_code: str = Field(..., description="Unique 6-8 character visit code")
+    patient_mrn: str = Field(..., description="Reference to patient's MRN")
+    doctor_id: str
+    visit_date: datetime
+    medical_history: MedicalHistory
+    diagnosis: Optional[str] = None
+    prognosis: Optional[str] = None
+    medications: List[dict] = Field(default_factory=list)
+    notes: Optional[str] = None
+    visit_type: str = Field(default="consultation", description="consultation, follow-up, emergency")
+    is_active: bool = True
+
+# Legacy model for backward compatibility
 class SavedPatient(BaseModel):
     patient_code: str = Field(..., description="Unique 6-8 character patient code")
     patient_info: PatientInfo
@@ -316,8 +341,36 @@ class SavedPatient(BaseModel):
     notes: Optional[str] = None
     is_active: bool = True
 
+# Search and Request Models
 class PatientSearchRequest(BaseModel):
-    patient_code: str = Field(..., min_length=6, max_length=8)
+    search_term: str = Field(..., min_length=2, description="Name, MRN, or phone number")
+    
+class VisitSearchRequest(BaseModel):
+    visit_code: str = Field(..., min_length=6, max_length=8)
+
+class NewPatientRequest(BaseModel):
+    patient_info: PatientInfo
+    medical_history: MedicalHistory
+    diagnosis: Optional[str] = None
+    prognosis: Optional[str] = None
+    notes: Optional[str] = None
+
+class ExistingPatientVisitRequest(BaseModel):
+    patient_mrn: str
+    medical_history: MedicalHistory
+    diagnosis: Optional[str] = None
+    prognosis: Optional[str] = None
+    notes: Optional[str] = None
+
+# Response Models
+class PatientSearchResponse(BaseModel):
+    patients: List[dict]
+    total_count: int
+
+class PatientWithVisitsResponse(BaseModel):
+    patient: dict
+    visits: List[dict]
+    visit_count: int
 
 # Medication Template System Models
 class MedicationTemplate(BaseModel):
