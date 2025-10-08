@@ -843,6 +843,162 @@ async def get_my_patients(
             detail="Error retrieving patients"
         )
 
+# ============ NEW PATIENT MANAGEMENT SYSTEM ============
+
+@app.post("/api/patients/search-patients", response_model=PatientSearchResponse)
+async def search_patients(
+    search_request: PatientSearchRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Search for existing patients by name, MRN, or phone"""
+    try:
+        patients = await patient_storage_db.search_patients(
+            search_term=search_request.search_term,
+            doctor_id=current_user_id
+        )
+        
+        return PatientSearchResponse(
+            patients=patients,
+            total_count=len(patients)
+        )
+        
+    except Exception as e:
+        logger.error(f"Error searching patients: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error searching patients"
+        )
+
+@app.post("/api/patients/create-new", response_model=StandardResponse)
+async def create_new_patient(
+    patient_request: NewPatientRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Create new patient with initial visit"""
+    try:
+        result = await patient_storage_db.create_patient(
+            doctor_id=current_user_id,
+            patient_info=patient_request.patient_info.dict(),
+            medical_history=patient_request.medical_history.dict(),
+            diagnosis=patient_request.diagnosis,
+            prognosis=patient_request.prognosis,
+            notes=patient_request.notes
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="New patient created successfully",
+            data={
+                "mrn": result["mrn"],
+                "visit_code": result["visit_code"],
+                "patient_name": result["patient"]["patient_info"]["name"]
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error creating new patient: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error creating new patient"
+        )
+
+@app.post("/api/patients/add-visit", response_model=StandardResponse)
+async def add_visit_to_existing_patient(
+    visit_request: ExistingPatientVisitRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Add new visit to existing patient"""
+    try:
+        result = await patient_storage_db.create_visit(
+            patient_mrn=visit_request.patient_mrn,
+            doctor_id=current_user_id,
+            medical_history=visit_request.medical_history.dict(),
+            diagnosis=visit_request.diagnosis,
+            prognosis=visit_request.prognosis,
+            notes=visit_request.notes,
+            visit_type="follow_up"
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="Visit added successfully",
+            data={
+                "visit_code": result["visit_code"],
+                "patient_mrn": visit_request.patient_mrn
+            }
+        )
+        
+    except Exception as e:
+        logger.error(f"Error adding visit: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error adding visit to patient"
+        )
+
+@app.get("/api/patients/{mrn}/details", response_model=PatientWithVisitsResponse)
+async def get_patient_details(
+    mrn: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Get patient details with all visits"""
+    try:
+        result = await patient_storage_db.get_patient_with_visits(mrn)
+        
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Patient not found"
+            )
+        
+        return PatientWithVisitsResponse(
+            patient=result["patient"],
+            visits=result["visits"],
+            visit_count=result["visit_count"]
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting patient details: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving patient details"
+        )
+
+@app.post("/api/visits/search", response_model=StandardResponse)
+async def search_visit_by_code(
+    search_request: VisitSearchRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Search visit by visit code"""
+    try:
+        result = await patient_storage_db.get_visit_by_code(search_request.visit_code)
+        
+        if not result:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Visit not found"
+            )
+        
+        return StandardResponse(
+            success=True,
+            message="Visit found",
+            data={
+                "visit": result["visit"],
+                "patient": result["patient"]
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error searching visit: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error searching visit"
+        )
+
+# ============ LEGACY ENDPOINTS (for backward compatibility) ============
 # Medication Template Endpoints
 @app.post("/api/templates/save", response_model=StandardResponse)
 async def save_medication_template(
