@@ -3830,13 +3830,28 @@ const Shrutapex = () => {
                 </div>
               )}
               
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+              <div className="flex gap-3 mb-8 flex-wrap justify-center">
                 <button 
                   onClick={runDemo} 
-                  className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl font-bold transition-all shadow-lg"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-bold transition-all shadow-lg"
                 >
                   🎬 Run Demo Consultation
                 </button>
+                
+                <button 
+                  onClick={() => setShowPatientStorage(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  👤 Load Patient
+                </button>
+                
+                <button 
+                  onClick={() => setShowMedicationTemplates(true)}
+                  className="px-6 py-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white rounded-xl font-bold transition-all shadow-lg"
+                >
+                  💊 Med Templates
+                </button>
+                
                 {isListening && (
                   <button 
                     onClick={toggleListening} 
