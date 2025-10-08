@@ -1,0 +1,234 @@
+{
+  "summary": {
+    "passed": 14,
+    "total": 17,
+    "success_rate": "82.4%",
+    "timestamp": "2025-10-08T16:15:04.271042"
+  },
+  "results": [
+    {
+      "test": "Health Check",
+      "success": true,
+      "message": "Backend is healthy",
+      "timestamp": "2025-10-08T16:15:03.395250",
+      "details": {
+        "status": "healthy",
+        "service": "SmartDoc Pro Backend",
+        "version": "1.0.0",
+        "timestamp": "2025-10-08T16:15:03.391809"
+      }
+    },
+    {
+      "test": "Doctor Login (Demo Account)",
+      "success": true,
+      "message": "Demo account login successful",
+      "timestamp": "2025-10-08T16:15:03.666161",
+      "details": {
+        "username": "drsmith",
+        "token_type": "bearer",
+        "user_id": "68dd53f5863240be876f18e5"
+      }
+    },
+    {
+      "test": "Search Patients Empty",
+      "success": true,
+      "message": "Empty search results returned correctly",
+      "timestamp": "2025-10-08T16:15:03.718710",
+      "details": {
+        "total_count": 0,
+        "patients_count": 0
+      }
+    },
+    {
+      "test": "Create New Patient",
+      "success": true,
+      "message": "New patient created successfully",
+      "timestamp": "2025-10-08T16:15:03.732750",
+      "details": {
+        "mrn": "MRN5562319",
+        "visit_code": "VFZ19356",
+        "patient_name": "Emily Sarah Johnson",
+        "mrn_format_valid": true,
+        "visit_code_format_valid": true
+      }
+    },
+    {
+      "test": "Search Patients by Name",
+      "success": true,
+      "message": "Found patient by name search",
+      "timestamp": "2025-10-08T16:15:03.782966",
+      "details": {
+        "total_count": 1,
+        "found_mrn": "MRN5562319",
+        "patient_name": "Emily Sarah Johnson",
+        "total_visits": 1
+      }
+    },
+    {
+      "test": "Search Patients by MRN",
+      "success": true,
+      "message": "Found patient by MRN search",
+      "timestamp": "2025-10-08T16:15:03.795333",
+      "details": {
+        "mrn": "MRN5562319",
+        "patient_name": "Emily Sarah Johnson",
+        "total_visits": 1
+      }
+    },
+    {
+      "test": "Get Patient Details",
+      "success": true,
+      "message": "Patient details retrieved successfully",
+      "timestamp": "2025-10-08T16:15:03.845997",
+      "details": {
+        "mrn": "MRN5562319",
+        "patient_name": "Emily Sarah Johnson",
+        "visit_count": 1,
+        "first_visit_code": "VFZ19356",
+        "visit_type": "initial_consultation"
+      }
+    },
+    {
+      "test": "Add Visit to Existing Patient",
+      "success": true,
+      "message": "New visit added successfully",
+      "timestamp": "2025-10-08T16:15:03.858309",
+      "details": {
+        "patient_mrn": "MRN5562319",
+        "new_visit_code": "VHK5940",
+        "visit_code_format_valid": true
+      }
+    },
+    {
+      "test": "Search Visit by Code",
+      "success": true,
+      "message": "Visit found successfully",
+      "timestamp": "2025-10-08T16:15:03.870022",
+      "details": {
+        "visit_code": "VFZ19356",
+        "patient_mrn": "MRN5562319",
+        "patient_name": "Emily Sarah Johnson",
+        "visit_type": "initial_consultation",
+        "diagnosis": "Annual wellness visit. Patient in good health with..."
+      }
+    },
+    {
+      "test": "Search Visit Invalid Code",
+      "success": false,
+      "message": "Expected HTTP 404, got 422",
+      "timestamp": "2025-10-08T16:15:03.919592",
+      "details": {
+        "response": "{\"detail\":[{\"type\":\"string_too_long\",\"loc\":[\"body\",\"visit_code\"],\"msg\":\"String should have at most 8 characters\",\"input\":\"VINVALID123\",\"ctx\":{\"max_length\":8},\"url\":\"https://errors.pydantic.dev/2.4/v/string_too_long\"}]}"
+      }
+    },
+    {
+      "test": "Patient Details Invalid MRN",
+      "success": true,
+      "message": "Correctly returned 404 for invalid MRN",
+      "timestamp": "2025-10-08T16:15:03.970793",
+      "details": {
+        "success": false,
+        "error": "Patient not found",
+        "status_code": 404
+      }
+    },
+    {
+      "test": "Auth Required - POST /patients/search-patients",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:03.978728",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - POST /patients/create-new",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:03.987434",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - POST /patients/add-visit",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.034935",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - GET /patients/MRN1234567/details",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.042552",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - POST /visits/search",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.089834",
+      "details": {}
+    },
+    {
+      "test": "Patient Save",
+      "success": true,
+      "message": "Patient saved successfully with code: GX817790",
+      "timestamp": "2025-10-08T16:15:04.100438",
+      "details": {
+        "patient_code": "GX817790",
+        "patient_id": "99f98296-ecd9-4b2d-bde1-ff52537821be",
+        "visit_date": "2025-10-08T16:15:04.096845+00:00",
+        "code_length": 8
+      }
+    },
+    {
+      "test": "Patient Search",
+      "success": false,
+      "message": "HTTP 422",
+      "timestamp": "2025-10-08T16:15:04.149874",
+      "details": {
+        "response": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"search_term\"],\"msg\":\"Field required\",\"input\":{\"patient_code\":\"GX817790\"},\"url\":\"https://errors.pydantic.dev/2.4/v/missing\"}]}"
+      }
+    },
+    {
+      "test": "Patient Search Invalid Code",
+      "success": false,
+      "message": "Expected HTTP 404, got 422",
+      "timestamp": "2025-10-08T16:15:04.157707",
+      "details": {
+        "response": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"search_term\"],\"msg\":\"Field required\",\"input\":{\"patient_code\":\"INVALID1\"},\"url\":\"https://errors.pydantic.dev/2.4/v/missing\"}]}"
+      }
+    },
+    {
+      "test": "Get My Patients",
+      "success": true,
+      "message": "Retrieved 1 patients including our saved patient",
+      "timestamp": "2025-10-08T16:15:04.207875",
+      "details": {
+        "total_patients": 1,
+        "found_our_patient": true,
+        "our_patient_code": "GX817790",
+        "our_patient_name": "John Michael Smith"
+      }
+    },
+    {
+      "test": "Auth Required - GET /patients/my-patients",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.214681",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - POST /patients/save",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.262783",
+      "details": {}
+    },
+    {
+      "test": "Auth Required - POST /patients/search",
+      "success": true,
+      "message": "Correctly requires authentication (HTTP 403)",
+      "timestamp": "2025-10-08T16:15:04.270826",
+      "details": {}
+    }
+  ]
+}
