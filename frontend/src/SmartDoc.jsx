@@ -505,6 +505,26 @@ const Shrutapex = () => {
   const [trainingHistory, setTrainingHistory] = useState([]);
   const [showTrainingPanel, setShowTrainingPanel] = useState(false);
   const [dynamicMedicationDB, setDynamicMedicationDB] = useState({});
+
+  // Patient Storage System
+  const [showPatientStorage, setShowPatientStorage] = useState(false);
+  const [patientCode, setPatientCode] = useState('');
+  const [savedPatients, setSavedPatients] = useState([]);
+  const [searchPatientCode, setSearchPatientCode] = useState('');
+  const [showSavePatientDialog, setShowSavePatientDialog] = useState(false);
+  const [isSavingPatient, setIsSavingPatient] = useState(false);
+
+  // Medication Templates System  
+  const [showMedicationTemplates, setShowMedicationTemplates] = useState(false);
+  const [medicationTemplates, setMedicationTemplates] = useState([]);
+  const [showCreateTemplate, setShowCreateTemplate] = useState(false);
+  const [templateData, setTemplateData] = useState({
+    name: '',
+    disease_condition: '',
+    description: '',
+    is_public: false
+  });
+  const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
   
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
