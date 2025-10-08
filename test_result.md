@@ -89,6 +89,51 @@ backend:
         agent: "testing"
         comment: "✅ PASS - Get EHR configurations endpoint working correctly. Successfully retrieves saved configurations for authenticated doctors. Returns proper JSON with provider information."
 
+  - task: "Patient Information Storage - Save Patient"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/patients/save endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Patient save endpoint working perfectly. Successfully saves complete patient data (patient info, medical history, diagnosis, prognosis) with unique 6-8 character patient code generation. Fixed ObjectId serialization issue in patient_storage.py."
+
+  - task: "Patient Information Storage - Search Patient"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/patients/search endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Patient search endpoint working correctly. Successfully retrieves patient data using unique patient code. Proper validation for invalid codes (returns 404). Doctor authentication and access control working."
+
+  - task: "Patient Information Storage - Get My Patients"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for GET /api/patients/my-patients endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Get my patients endpoint working correctly. Successfully retrieves all patients for authenticated doctor with proper sorting by visit date. Returns complete patient data with proper JSON serialization."
+
 frontend:
   - task: "SmartDoc Pro Speech Interface"
     implemented: true
