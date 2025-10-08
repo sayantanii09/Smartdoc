@@ -134,6 +134,141 @@ backend:
         agent: "testing"
         comment: "✅ PASS - Get my patients endpoint working correctly. Successfully retrieves all patients for authenticated doctor with proper sorting by visit date. Returns complete patient data with proper JSON serialization."
 
+  - task: "NEW Patient Management - Search Patients"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/patients/search-patients endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Patient search endpoint working perfectly. Successfully searches patients by name, MRN, and phone number. Returns proper patient data with visit counts and latest visit dates. Empty search results handled correctly."
+
+  - task: "NEW Patient Management - Create Patient"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/patients/create-new endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Create new patient endpoint working perfectly. Successfully generates unique MRN (format: MRN1234567), creates patient record in patients_new collection, and creates initial visit with unique visit code (format: VAB1234). Database verification shows correct data storage."
+
+  - task: "NEW Patient Management - Add Visit"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/patients/add-visit endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Add visit to existing patient endpoint working perfectly. Successfully creates new visit records linked to existing patients via MRN. Generates unique visit codes and stores in visits collection. Patient last_updated timestamp properly maintained."
+
+  - task: "NEW Patient Management - Patient Details"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for GET /api/patients/{mrn}/details endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Get patient details endpoint working perfectly. Successfully retrieves patient record with all associated visits. Returns complete patient information, visit history, and visit count. Proper error handling for invalid MRNs (404 response)."
+
+  - task: "NEW Patient Management - Visit Search"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for POST /api/visits/search endpoint"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Visit search by code endpoint working perfectly. Successfully retrieves visit records by visit code and returns associated patient information. Proper error handling for invalid visit codes (404 response). Minor: Visit code validation is strict (max 8 chars) but functional."
+
+  - task: "NEW Patient Management - Database Collections"
+    implemented: true
+    working: true
+    file: "backend/patient_storage.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for patients_new and visits collections"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Database collections working perfectly. patients_new collection stores core patient records with unique MRNs. visits collection stores visit records linked to patients via MRN. Proper indexes created for performance. MRN format: MRN1234567, Visit code format: VAB1234. Database verification shows 2 patients and 2 visits created during testing."
+
+  - task: "NEW Patient Management - MRN Generation"
+    implemented: true
+    working: true
+    file: "backend/patient_storage.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for MRN generation system"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - MRN generation working perfectly. Generates unique Medical Record Numbers in format MRN1234567 (MRN + 7 digits). Collision detection and retry logic implemented. Fixed incomplete generate_mrn() method during testing."
+
+  - task: "NEW Patient Management - Visit Code Generation"
+    implemented: true
+    working: true
+    file: "backend/patient_storage.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for visit code generation system"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Visit code generation working perfectly. Generates unique visit codes in format VAB1234 or VCD56789 (V + 2 letters + 4-5 digits). Collision detection and retry logic implemented. Codes are unique across all visits."
+
+  - task: "NEW Patient Management - Backward Compatibility"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for legacy patient_code system compatibility"
+      - working: true
+        agent: "testing"
+        comment: "✅ PASS - Backward compatibility maintained. Legacy saved_patients collection still functional with patient_code system. Both old and new systems coexist. Legacy endpoints continue to work for existing integrations. Minor: Legacy search endpoint expects search_term parameter instead of patient_code."
+
 frontend:
   - task: "SmartDoc Pro Speech Interface"
     implemented: true
