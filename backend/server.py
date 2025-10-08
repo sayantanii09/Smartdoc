@@ -75,7 +75,7 @@ app = FastAPI(
 # CORS configuration
 allowed_origins = [
     "http://localhost:3000",
-    "https://healthscribe-3.preview.emergentagent.com",
+    "https://shrutapex-dev.preview.emergentagent.com",
     os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 

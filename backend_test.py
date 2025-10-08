@@ -12,7 +12,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 # Test configuration
-BASE_URL = "https://healthscribe-3.preview.emergentagent.com"
+BASE_URL = "https://shrutapex-dev.preview.emergentagent.com"
 API_BASE = f"{BASE_URL}/api"
 
 class EHRBackendTester:
