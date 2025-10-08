@@ -348,6 +348,8 @@ const MEDICAL_ABBREVIATIONS = {
   'ac': 'Before meals',
   'before meals': 'Before meals',
   'pc': 'After meals',
+};
+
 // Recent Patients Component
 const RecentPatientsComponent = ({ authToken, onPatientSelect, selectedPatientMRN }) => {
   const [recentPatients, setRecentPatients] = useState([]);
