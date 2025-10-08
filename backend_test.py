@@ -1306,7 +1306,7 @@ class NewPatientManagementTester:
         print(f"🏁 Test Summary: {passed}/{total} tests passed")
         
         if passed == total:
-            print("✅ All Patient Storage and Backend tests PASSED!")
+            print("✅ All NEW Patient Management System tests PASSED!")
         else:
             print(f"❌ {total - passed} tests FAILED")
             
