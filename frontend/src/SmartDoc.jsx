@@ -1632,8 +1632,262 @@ const Shrutapex = () => {
       fetchEhrProviders();
       fetchEhrConfigurations();
       fetchEhrSubmissions();
+      fetchSavedPatients();
+      fetchMedicationTemplates();
     }
   }, [authToken, isLoggedIn]);
+
+  // Patient Storage Functions
+  const saveCurrentPatient = async () => {
+    setIsSavingPatient(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/save`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patient_info: {
+            name: patientName,
+            age: patientAge,
+            gender: patientGender,
+            height: patientHeight,
+            weight: patientWeight,
+            bp: patientBP,
+            heart_rate: heartRate,
+            temperature: temperature,
+            oxygen_saturation: oxygenSaturation
+          },
+          medical_history: {
+            past_conditions: pastConditions,
+            past_surgeries: pastSurgeries,
+            family_history: familyHistory,
+            social_history: {
+              smoking: smokingStatus,
+              alcohol: alcoholConsumption,
+              exercise: exerciseFrequency
+            },
+            allergies: allergies
+          },
+          diagnosis: diagnosis,
+          prognosis: prognosis,
+          notes: transcript
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPatientCode(data.data.patient_code);
+        alert(`✅ Patient saved successfully!\n\nPatient Code: ${data.data.patient_code}\n\n🔍 Use this code to retrieve patient information in future visits.`);
+        setShowSavePatientDialog(false);
+        await fetchSavedPatients();
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to save patient: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error saving patient:', error);
+      alert('❌ Error saving patient. Please try again.');
+    } finally {
+      setIsSavingPatient(false);
+    }
+  };
+
+  const searchPatientByCode = async () => {
+    if (!searchPatientCode.trim()) {
+      alert('Please enter a patient code');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/search`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          patient_code: searchPatientCode.toUpperCase()
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const patient = data.data.patient;
+        
+        // Populate form with patient data
+        setPatientName(patient.patient_info.name || '');
+        setPatientAge(patient.patient_info.age || '');
+        setPatientGender(patient.patient_info.gender || '');
+        setPatientHeight(patient.patient_info.height || '');
+        setPatientWeight(patient.patient_info.weight || '');
+        setPatientBP(patient.patient_info.bp || '');
+        setHeartRate(patient.patient_info.heart_rate || '');
+        setTemperature(patient.patient_info.temperature || '');
+        setOxygenSaturation(patient.patient_info.oxygen_saturation || '');
+        
+        setPastConditions(patient.medical_history.past_conditions || '');
+        setPastSurgeries(patient.medical_history.past_surgeries || '');
+        setFamilyHistory(patient.medical_history.family_history || '');
+        setAllergies(patient.medical_history.allergies || '');
+        setSmokingStatus(patient.medical_history.social_history?.smoking || 'Never');
+        setAlcoholConsumption(patient.medical_history.social_history?.alcohol || 'Never');
+        setExerciseFrequency(patient.medical_history.social_history?.exercise || 'Rarely');
+        
+        setDiagnosis(patient.diagnosis || '');
+        setPrognosis(patient.prognosis || '');
+        
+        alert(`✅ Patient loaded successfully!\n\nPatient: ${patient.patient_info.name}\nLast Visit: ${new Date(patient.visit_date).toLocaleDateString()}`);
+        setShowPatientStorage(false);
+        
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Patient not found: ${errorData.detail || 'Invalid patient code'}`);
+      }
+    } catch (error) {
+      console.error('Error searching patient:', error);
+      alert('❌ Error searching patient. Please try again.');
+    }
+  };
+
+  const fetchSavedPatients = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/my-patients`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSavedPatients(data.data.patients);
+      }
+    } catch (error) {
+      console.error('Error fetching saved patients:', error);
+    }
+  };
+
+  // Medication Template Functions
+  const saveMedicationTemplate = async () => {
+    if (!templateData.name || !templateData.disease_condition || medications.length === 0) {
+      alert('Please provide template name, disease condition, and at least one medication');
+      return;
+    }
+
+    setIsCreatingTemplate(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/save`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: templateData.name,
+          disease_condition: templateData.disease_condition,
+          description: templateData.description,
+          medications: medications,
+          is_public: templateData.is_public
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`✅ Medication template saved successfully!\n\nTemplate: ${templateData.name}\nFor: ${templateData.disease_condition}`);
+        
+        setTemplateData({
+          name: '',
+          disease_condition: '',
+          description: '',
+          is_public: false
+        });
+        setShowCreateTemplate(false);
+        await fetchMedicationTemplates();
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to save template: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error saving template:', error);
+      alert('❌ Error saving template. Please try again.');
+    } finally {
+      setIsCreatingTemplate(false);
+    }
+  };
+
+  const loadMedicationTemplate = async (templateId) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/use/${templateId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const templateMedications = data.data.medications;
+        
+        setMedications(templateMedications);
+        alert(`✅ Template loaded successfully!\n\nLoaded ${templateMedications.length} medications from "${data.data.template.name}"`);
+        setShowMedicationTemplates(false);
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to load template: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error loading template:', error);
+      alert('❌ Error loading template. Please try again.');
+    }
+  };
+
+  const fetchMedicationTemplates = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/search`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          disease_condition: null // Get all templates
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMedicationTemplates(data.data.templates);
+      }
+    } catch (error) {
+      console.error('Error fetching templates:', error);
+    }
+  };
+
+  const searchTemplatesByDisease = async (diseaseCondition) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/search`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          disease_condition: diseaseCondition
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMedicationTemplates(data.data.templates);
+      }
+    } catch (error) {
+      console.error('Error searching templates:', error);
+    }
+  };
 
   // Update speech recognition settings when changed
   useEffect(() => {
