@@ -4746,10 +4746,10 @@ const Shrutapex = () => {
                 </button>
                 
                 <button 
-                  onClick={() => setShowPatientSearch(true)}
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all shadow-lg"
+                  onClick={() => window.location.reload()}
+                  className="px-6 py-3 bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white rounded-xl font-bold transition-all shadow-lg"
                 >
-                  👤 Search & Load Patient
+                  🔄 New Patient Form
                 </button>
                 
                 <button 
