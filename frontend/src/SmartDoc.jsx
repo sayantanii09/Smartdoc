@@ -2799,6 +2799,193 @@ const Shrutapex = () => {
     );
   }
 
+  // Patient Storage Modal
+  if (showPatientStorage) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <User className="w-8 h-8 text-blue-400" />
+                  Patient Storage System
+                </h2>
+                <button 
+                  onClick={() => setShowPatientStorage(false)} 
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                >
+                  ← Back
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Search Patient */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-white mb-4">🔍 Load Patient Data</h3>
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-300 mb-2">Patient Code</label>
+                    <input
+                      type="text"
+                      value={searchPatientCode}
+                      onChange={(e) => setSearchPatientCode(e.target.value.toUpperCase())}
+                      placeholder="Enter 6-8 character patient code (e.g., AB1234)"
+                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button 
+                    onClick={searchPatientByCode}
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all"
+                  >
+                    Load Patient Data
+                  </button>
+                </div>
+
+                {/* Recent Patients */}
+                <div className="space-y-4">
+                  <h3 className="text-xl font-semibold text-white mb-4">📋 Recent Patients</h3>
+                  <div className="space-y-2 max-h-60 overflow-y-auto">
+                    {savedPatients.length > 0 ? (
+                      savedPatients.slice(0, 8).map((patient) => (
+                        <div key={patient.id} className="p-3 bg-slate-800/30 border border-slate-600/30 rounded-lg cursor-pointer hover:bg-slate-700/30 transition-all"
+                             onClick={() => {
+                               setSearchPatientCode(patient.patient_code);
+                               searchPatientByCode();
+                             }}>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="text-white font-medium">{patient.patient_info.name}</p>
+                              <p className="text-slate-400 text-sm">Code: {patient.patient_code}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-blue-300 text-sm">{new Date(patient.visit_date).toLocaleDateString()}</p>
+                              <p className="text-slate-500 text-xs">{patient.diagnosis || 'No diagnosis'}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="p-4 text-center text-slate-500">
+                        No saved patients yet
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                <h4 className="text-blue-300 font-semibold mb-2">💡 How Patient Storage Works:</h4>
+                <ul className="text-slate-300 text-sm space-y-1">
+                  <li>• Each patient gets a unique 6-8 character code (e.g., AB1234)</li>
+                  <li>• Use "Save Patient" after completing documentation to store all information</li>
+                  <li>• Enter the patient code here to instantly load all previous data</li>
+                  <li>• Perfect for follow-up visits and continuing care</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Medication Templates Modal
+  if (showMedicationTemplates) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-900 to-slate-900 p-4 md:p-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                  <Pill className="w-8 h-8 text-orange-400" />
+                  Medication Templates
+                </h2>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setShowCreateTemplate(true)}
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all"
+                  >
+                    + Create Template
+                  </button>
+                  <button 
+                    onClick={() => setShowMedicationTemplates(false)} 
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all"
+                  >
+                    ← Back
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                {medicationTemplates.length > 0 ? (
+                  medicationTemplates.map((template) => (
+                    <div key={template.id} className="p-4 bg-slate-800/50 border border-slate-600/50 rounded-xl hover:bg-slate-700/50 transition-all">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h4 className="text-white font-semibold">{template.name}</h4>
+                          <p className="text-orange-300 text-sm capitalize">{template.disease_condition}</p>
+                        </div>
+                        <span className="text-xs bg-orange-500/20 text-orange-300 px-2 py-1 rounded-full">
+                          {template.medications.length} meds
+                        </span>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <p className="text-slate-400 text-xs mb-2">Medications:</p>
+                        <div className="space-y-1">
+                          {template.medications.slice(0, 3).map((med, idx) => (
+                            <p key={idx} className="text-slate-300 text-xs">
+                              • {med.name} {med.dosage} {med.frequency}
+                            </p>
+                          ))}
+                          {template.medications.length > 3 && (
+                            <p className="text-slate-500 text-xs">+ {template.medications.length - 3} more...</p>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-slate-500">
+                          Used {template.usage_count} times
+                          {template.is_public && <span className="ml-2 text-blue-400">• Public</span>}
+                        </div>
+                        <button
+                          onClick={() => loadMedicationTemplate(template.id)}
+                          className="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white text-sm rounded transition-all"
+                        >
+                          Load
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-full p-8 text-center bg-slate-800/30 border border-slate-600/30 rounded-xl">
+                    <Pill className="w-12 h-12 text-slate-500 mx-auto mb-4" />
+                    <p className="text-slate-400 text-lg mb-2">No medication templates yet</p>
+                    <p className="text-slate-500 text-sm">Create your first template to speed up prescriptions</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-8 p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
+                <h4 className="text-orange-300 font-semibold mb-2">💊 Medication Templates Benefits:</h4>
+                <ul className="text-slate-300 text-sm space-y-1">
+                  <li>• Save time by creating preset medication combinations for common conditions</li>
+                  <li>• Ensure consistency in treatment protocols across patients</li>
+                  <li>• Share public templates with other doctors in the system</li>
+                  <li>• Most-used templates appear first for quick access</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Login Screen
   if (!isLoggedIn) {
     return (
