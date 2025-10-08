@@ -1527,8 +1527,8 @@ const Shrutapex = () => {
             oxygen_saturation: oxygenSaturation
           },
           medical_history: {
-            past_conditions: pastConditions,
-            past_surgeries: pastSurgeries,
+            past_conditions: pastMedicalHistory,
+            past_surgeries: pastMedications,
             family_history: familyHistory,
             social_history: {
               smoking: smokingStatus,
@@ -1660,8 +1660,8 @@ const Shrutapex = () => {
             oxygen_saturation: oxygenSaturation
           },
           medical_history: {
-            past_conditions: pastConditions,
-            past_surgeries: pastSurgeries,
+            past_conditions: pastMedicalHistory,
+            past_surgeries: pastMedications,
             family_history: familyHistory,
             social_history: {
               smoking: smokingStatus,
