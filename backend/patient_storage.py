@@ -320,7 +320,6 @@ class PatientStorageDB:
             raise Exception(f"Failed to get visit by code: {str(e)}")
     
     # ============ LEGACY PATIENT CODE SYSTEM (for backward compatibility) ============
-        return f"MRN{digits}"
     
     def generate_visit_code(self) -> str:
         """Generate unique 6-8 character visit code"""
