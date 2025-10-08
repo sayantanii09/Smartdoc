@@ -67,7 +67,51 @@ class EHRBackendTester:
             return False
     
     async def test_doctor_registration_and_login(self):
-        """Test 2: Doctor Registration and Authentication"""
+        """Test 2: Doctor Authentication with Demo Account"""
+        # Use demo account as specified in review request
+        demo_username = "drsmith"
+        demo_password = "password123"
+        
+        try:
+            # First try to login with demo account
+            login_data = {
+                "username": demo_username,
+                "password": demo_password
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/auth/login",
+                json=login_data,
+                headers={"Content-Type": "application/json"}
+            ) as response:
+                
+                if response.status == 200:
+                    login_response = await response.json()
+                    if login_response.get("access_token"):
+                        self.auth_token = login_response["access_token"]
+                        self.test_doctor_id = login_response["user"]["id"]
+                        self.log_test("Doctor Login (Demo Account)", True, "Demo account login successful", {
+                            "username": demo_username,
+                            "token_type": login_response.get("token_type"),
+                            "user_id": self.test_doctor_id
+                        })
+                        return True
+                    else:
+                        self.log_test("Doctor Login (Demo Account)", False, "No access token received", login_response)
+                        # Fall back to creating new account
+                        return await self._create_test_account()
+                else:
+                    text = await response.text()
+                    self.log_test("Doctor Login (Demo Account)", False, f"Demo account login failed - HTTP {response.status}", {"response": text})
+                    # Fall back to creating new account
+                    return await self._create_test_account()
+                    
+        except Exception as e:
+            self.log_test("Doctor Authentication", False, f"Error: {str(e)}")
+            return False
+    
+    async def _create_test_account(self):
+        """Fallback: Create a test account if demo account doesn't exist"""
         # Generate unique test doctor credentials
         test_username = f"test_doctor_{uuid.uuid4().hex[:8]}"
         test_password = "TestPassword123!"
@@ -96,16 +140,16 @@ class EHRBackendTester:
                 if response.status == 200:
                     reg_data = await response.json()
                     if reg_data.get("success"):
-                        self.log_test("Doctor Registration", True, "Registration successful", reg_data)
+                        self.log_test("Doctor Registration (Fallback)", True, "Registration successful", reg_data)
                     else:
-                        self.log_test("Doctor Registration", False, "Registration failed", reg_data)
+                        self.log_test("Doctor Registration (Fallback)", False, "Registration failed", reg_data)
                         return False
                 else:
                     text = await response.text()
-                    self.log_test("Doctor Registration", False, f"HTTP {response.status}", {"response": text})
+                    self.log_test("Doctor Registration (Fallback)", False, f"HTTP {response.status}", {"response": text})
                     return False
             
-            # Test login
+            # Test login with new account
             login_data = {
                 "username": test_username,
                 "password": test_password
@@ -122,21 +166,21 @@ class EHRBackendTester:
                     if login_response.get("access_token"):
                         self.auth_token = login_response["access_token"]
                         self.test_doctor_id = login_response["user"]["id"]
-                        self.log_test("Doctor Login", True, "Login successful", {
+                        self.log_test("Doctor Login (Fallback)", True, "Login successful", {
                             "token_type": login_response.get("token_type"),
                             "user_id": self.test_doctor_id
                         })
                         return True
                     else:
-                        self.log_test("Doctor Login", False, "No access token received", login_response)
+                        self.log_test("Doctor Login (Fallback)", False, "No access token received", login_response)
                         return False
                 else:
                     text = await response.text()
-                    self.log_test("Doctor Login", False, f"HTTP {response.status}", {"response": text})
+                    self.log_test("Doctor Login (Fallback)", False, f"HTTP {response.status}", {"response": text})
                     return False
                     
         except Exception as e:
-            self.log_test("Doctor Authentication", False, f"Error: {str(e)}")
+            self.log_test("Doctor Authentication (Fallback)", False, f"Error: {str(e)}")
             return False
     
     async def test_ehr_providers(self):
