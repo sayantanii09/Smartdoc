@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend Test Suite for SmartDoc Pro EHR Integration
-Tests all EHR integration endpoints with comprehensive scenarios
+Backend Test Suite for NEW Patient Management System
+Tests the redesigned patient/visit system with MRN and visit codes
 """
 
 import asyncio
@@ -15,7 +15,7 @@ from typing import Dict, Any
 BASE_URL = "https://shrutapex-dev.preview.emergentagent.com"
 API_BASE = f"{BASE_URL}/api"
 
-class EHRBackendTester:
+class NewPatientManagementTester:
     def __init__(self):
         self.session = None
         self.auth_token = None
