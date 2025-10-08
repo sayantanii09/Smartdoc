@@ -76,18 +76,19 @@ class PatientStorageDB:
         """Search patients by name, MRN, or phone number"""
         try:
             # Build search query
-            query = {
-                "is_active": True,
-                "$or": [
+            query = {"is_active": True}
+            
+            # If search term provided, add search conditions
+            if search_term and search_term.strip():
+                query["$or"] = [
                     {"mrn": {"$regex": search_term, "$options": "i"}},
                     {"patient_info.name": {"$regex": search_term, "$options": "i"}},
                     {"patient_info.phone": {"$regex": search_term, "$options": "i"}}
                 ]
-            }
             
-            # If doctor_id specified, limit to patients created by this doctor or shared
+            # If doctor_id specified, limit to patients created by this doctor
             if doctor_id:
-                query["$or"].append({"created_by_doctor_id": doctor_id})
+                query["created_by_doctor_id"] = doctor_id
             
             cursor = self.db[self.patients_collection].find(query).limit(20)
             patients = []
