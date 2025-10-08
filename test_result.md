@@ -356,6 +356,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "NEW Patient Management System"
     - "Patient Information Storage Frontend"
     - "Medication Recognition System"
   stuck_tasks:
