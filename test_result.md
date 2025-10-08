@@ -197,15 +197,18 @@ frontend:
 
   - task: "Patient Information Storage Frontend"
     implemented: true
-    working: "NA"
+    working: false
     file: "frontend/src/SmartDoc.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "testing"
         comment: "Initial testing required for Patient Information Storage frontend functionality including login, navigation, patient storage UI, save patient functionality, integration testing, and error handling"
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL BUG FOUND - Patient save functionality has JavaScript error: 'pastConditions is not defined' in saveCurrentPatient function. However, most UI components work correctly: ✅ Login/navigation working, ✅ Load Patient modal displays properly with Recent Patients section, ✅ Patient code input field functional, ✅ Patient information form accepts data, ✅ Review & Complete Prescription navigation works, ✅ Save Patient modal opens correctly, ✅ Error handling for invalid patient codes works (404 response). The save operation fails due to undefined variable reference in the code."
 
 metadata:
   created_by: "testing_agent"
