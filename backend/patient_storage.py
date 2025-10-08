@@ -20,7 +20,9 @@ class PatientStorageDB:
     
     def __init__(self):
         self.db = None
-        self.patients_collection = "saved_patients"
+        self.patients_collection = "patients_new"  # Core patient records
+        self.visits_collection = "visits"  # Visit records linked to patients
+        self.legacy_patients_collection = "saved_patients"  # Legacy saved patients
         self.templates_collection = "medication_templates"
     
     async def init_db(self):
