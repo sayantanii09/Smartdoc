@@ -733,6 +733,272 @@ async def delete_ehr_configuration(
             detail="Error deleting EHR configuration"
         )
 
+# Patient Storage Endpoints
+@app.post("/api/patients/save", response_model=StandardResponse)
+async def save_patient(
+    patient_info: PatientInfo,
+    medical_history: MedicalHistory,
+    diagnosis: Optional[str] = None,
+    prognosis: Optional[str] = None,
+    notes: Optional[str] = None,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Save patient information with unique code"""
+    try:
+        result = await patient_storage_db.save_patient(
+            doctor_id=current_user_id,
+            patient_info=patient_info,
+            medical_history=medical_history,
+            diagnosis=diagnosis,
+            prognosis=prognosis,
+            notes=notes
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="Patient saved successfully",
+            data={
+                "patient_code": result["patient_code"],
+                "id": result["id"],
+                "visit_date": result["visit_date"].isoformat()
+            }
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error saving patient: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error saving patient information"
+        )
+
+@app.post("/api/patients/search", response_model=StandardResponse)
+async def search_patient(
+    search_request: PatientSearchRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Search patient by unique code"""
+    try:
+        patient = await patient_storage_db.get_patient_by_code(search_request.patient_code)
+        
+        if not patient:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Patient not found with the provided code"
+            )
+        
+        # Verify access - either same doctor or public patient
+        if patient["doctor_id"] != current_user_id:
+            # Add logic here if you want to allow cross-doctor access for specific cases
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this patient record"
+            )
+        
+        return StandardResponse(
+            success=True,
+            message="Patient found successfully",
+            data={"patient": patient}
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error searching patient: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error searching patient"
+        )
+
+@app.get("/api/patients/my-patients")
+async def get_my_patients(
+    skip: int = 0,
+    limit: int = 50,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Get all patients for current doctor"""
+    try:
+        patients = await patient_storage_db.get_patients_by_doctor(
+            doctor_id=current_user_id,
+            skip=skip,
+            limit=limit
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="Patients retrieved successfully",
+            data={
+                "patients": patients,
+                "count": len(patients)
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error getting patients: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving patients"
+        )
+
+# Medication Template Endpoints
+@app.post("/api/templates/save", response_model=StandardResponse)
+async def save_medication_template(
+    template_request: TemplateSaveRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Save medication template for a disease"""
+    try:
+        medications_data = [med.model_dump() for med in template_request.medications]
+        
+        result = await medication_template_db.save_template(
+            doctor_id=current_user_id,
+            name=template_request.name,
+            disease_condition=template_request.disease_condition,
+            medications=medications_data,
+            description=template_request.description,
+            is_public=template_request.is_public
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="Medication template saved successfully",
+            data={
+                "template_id": result["id"],
+                "name": result["name"],
+                "disease_condition": result["disease_condition"]
+            }
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error saving medication template: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error saving medication template"
+        )
+
+@app.post("/api/templates/search")
+async def search_medication_templates(
+    search_request: TemplateSearchRequest,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Search medication templates by disease condition"""
+    try:
+        templates = await medication_template_db.get_templates_by_condition(
+            doctor_id=current_user_id,
+            disease_condition=search_request.disease_condition
+        )
+        
+        return StandardResponse(
+            success=True,
+            message="Templates found successfully",
+            data={
+                "templates": templates,
+                "count": len(templates)
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error searching templates: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error searching medication templates"
+        )
+
+@app.post("/api/templates/use/{template_id}")
+async def use_medication_template(
+    template_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Load medication template and return medications"""
+    try:
+        template = await medication_template_db.get_template_by_id(template_id)
+        
+        if not template:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Template not found"
+            )
+        
+        # Check access - either owned by user or is public
+        if template["doctor_id"] != current_user_id and not template["is_public"]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this template"
+            )
+        
+        # Increment usage count
+        await medication_template_db.use_template(template_id)
+        
+        return StandardResponse(
+            success=True,
+            message="Template loaded successfully",
+            data={
+                "template": template,
+                "medications": template["medications"]
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error using template: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error loading medication template"
+        )
+
+@app.get("/api/templates/popular")
+async def get_popular_templates(limit: int = 10):
+    """Get most popular public medication templates"""
+    try:
+        templates = await medication_template_db.get_popular_templates(limit=limit)
+        
+        return StandardResponse(
+            success=True,
+            message="Popular templates retrieved successfully",
+            data={
+                "templates": templates,
+                "count": len(templates)
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error getting popular templates: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error retrieving popular templates"
+        )
+
+@app.delete("/api/templates/{template_id}")
+async def delete_medication_template(
+    template_id: str,
+    current_user_id: str = Depends(get_current_user_id)
+):
+    """Delete medication template"""
+    try:
+        deleted = await medication_template_db.delete_template(template_id, current_user_id)
+        
+        if not deleted:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Template not found or access denied"
+            )
+        
+        return StandardResponse(
+            success=True,
+            message="Medication template deleted successfully"
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting medication template: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error deleting medication template"
+        )
+
 # Error handlers
 from fastapi.responses import JSONResponse
 
