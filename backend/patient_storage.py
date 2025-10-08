@@ -64,8 +64,21 @@ class PatientStorageDB:
         except Exception as e:
             logger.error(f"Error creating patient storage indexes: {e}")
     
+    def generate_mrn(self) -> str:
+        """Generate unique Medical Record Number (MRN)"""
+        # Format: MRN + 7 digits (e.g., MRN1234567)
+        digits = ''.join(random.choices(string.digits, k=7))
+        return f"MRN{digits}"
+    
+    def generate_visit_code(self) -> str:
+        """Generate unique 6-8 character visit code"""
+        # Format: V + 2 letters + 4-5 digits (e.g., VAB1234, VCD56789)
+        letters = ''.join(random.choices(string.ascii_uppercase, k=2))
+        digits = ''.join(random.choices(string.digits, k=random.choice([4, 5])))
+        return f"V{letters}{digits}"
+    
     def generate_patient_code(self) -> str:
-        """Generate unique 6-8 character patient code"""
+        """Generate unique 6-8 character patient code (legacy)"""
         # Format: 2 letters + 4-6 digits (e.g., AB1234, CD567890)
         letters = ''.join(random.choices(string.ascii_uppercase, k=2))
         digits = ''.join(random.choices(string.digits, k=random.choice([4, 5, 6])))
