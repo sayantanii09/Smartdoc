@@ -343,7 +343,7 @@ class SavedPatient(BaseModel):
 
 # Search and Request Models
 class PatientSearchRequest(BaseModel):
-    search_term: str = Field(..., min_length=2, description="Name, MRN, or phone number")
+    search_term: str = Field(default="", description="Name, MRN, or phone number (empty for all patients)")
     
 class VisitSearchRequest(BaseModel):
     visit_code: str = Field(..., min_length=6, max_length=8)
