@@ -348,6 +348,21 @@ frontend:
         agent: "testing"
         comment: "✅ FIXED - JavaScript bug resolved (pastConditions → pastMedicalHistory, pastSurgeries → pastMedications). Comprehensive testing completed: ✅ Login working (drsmith/password123), ✅ Patient information entry working (all fields accept data), ✅ Medical history text areas working, ✅ Demo mode triggers complete workflow, ✅ Review & Complete Prescription navigation working (appears after demo mode), ✅ Save Patient button found in review page, ✅ Load Patient Storage System accessible, ✅ Error handling for invalid patient codes working, ✅ No JavaScript errors detected. Minor: Save Patient modal functionality needs verification - button clicks but modal behavior unclear. Core patient storage workflow is functional."
 
+  - task: "NEW Patient Management System Frontend"
+    implemented: true
+    working: false
+    file: "frontend/src/SmartDoc.jsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing required for NEW Patient Management System frontend functionality including New vs Existing Patient Choice modal, Patient Search modal, MRN-based patient management, and Visit tracking system"
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE - Frontend login functionality is broken. Backend authentication API is working correctly (confirmed via curl test - returns valid JWT token and user data), but frontend login process fails to redirect to main interface after successful authentication. The login button click does not trigger proper state change or navigation. This blocks access to all NEW Patient Management System features including: New vs Existing Patient Choice modal, Patient Search functionality, MRN-based patient creation, and Visit tracking system. All NEW patient management features are implemented in code but cannot be tested due to login barrier. REQUIRES IMMEDIATE FRONTEND LOGIN FIX."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
