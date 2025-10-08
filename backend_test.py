@@ -675,15 +675,20 @@ class EHRBackendTester:
         print("🚀 Starting SmartDoc Pro EHR Integration Backend Tests")
         print("=" * 60)
         
-        # Test sequence
+        # Test sequence - Focus on Patient Storage as requested
         tests = [
             ("Health Check", self.test_health_check),
             ("Doctor Authentication", self.test_doctor_registration_and_login),
+            ("Patient Save", self.test_patient_save),
+            ("Patient Search", self.test_patient_search),
+            ("Patient Search Invalid Code", self.test_patient_search_invalid_code),
+            ("Get My Patients", self.test_get_my_patients),
+            ("Patient Auth Required", self.test_patient_endpoints_authentication),
             ("EHR Providers", self.test_ehr_providers),
             ("EHR Configuration", self.test_ehr_configuration),
             ("EHR Connection Test", self.test_ehr_connection_test),
             ("Get EHR Configurations", self.test_get_ehr_configurations),
-            ("Authentication Required", self.test_authentication_required_endpoints)
+            ("EHR Auth Required", self.test_authentication_required_endpoints)
         ]
         
         passed = 0
