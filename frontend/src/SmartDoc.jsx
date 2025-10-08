@@ -440,27 +440,6 @@ const RecentPatientsComponent = ({ authToken, onPatientSelect, selectedPatientMR
   );
 };
 
-  'after meals': 'After meals',
-  'with food': 'With food',
-  'without food': 'Without food',
-  'on empty stomach': 'On empty stomach',
-  'before breakfast': 'Before breakfast',
-  'after breakfast': 'After breakfast',
-  'before lunch': 'Before lunch',
-  'after lunch': 'After lunch',
-  'before dinner': 'Before dinner',
-  'after dinner': 'After dinner',
-  
-  // Unit abbreviations
-  'mg': 'mg',
-  'mcg': 'mcg',
-  'g': 'g',
-  'ml': 'ml',
-  'units': 'units',
-  'iu': 'International Units',
-  'meq': 'mEq'
-};
-
 // Formulation types
 const FORMULATION_TYPES = [
   'Tablet', 'Capsule', 'Syrup', 'Suspension', 'Injection', 'Cream', 'Ointment', 
