@@ -589,9 +589,9 @@ class EHRBackendTester:
                 "Content-Type": "application/json"
             }
             
-            # Test with non-existent patient code
+            # Test with non-existent patient code (8 characters max)
             search_data = {
-                "patient_code": "INVALID123"
+                "patient_code": "INVALID1"
             }
             
             async with self.session.post(
