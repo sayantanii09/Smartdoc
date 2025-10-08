@@ -1727,8 +1727,8 @@ const Shrutapex = () => {
         setTemperature(patient.patient_info.temperature || '');
         setOxygenSaturation(patient.patient_info.oxygen_saturation || '');
         
-        setPastConditions(patient.medical_history.past_conditions || '');
-        setPastSurgeries(patient.medical_history.past_surgeries || '');
+        setPastMedicalHistory(patient.medical_history.past_conditions || '');
+        setPastMedications(patient.medical_history.past_surgeries || '');
         setFamilyHistory(patient.medical_history.family_history || '');
         setAllergies(patient.medical_history.allergies || '');
         setSmokingStatus(patient.medical_history.social_history?.smoking || 'Never');
