@@ -21,6 +21,7 @@ class EHRBackendTester:
         self.auth_token = None
         self.test_doctor_id = None
         self.test_results = []
+        self.saved_patient_code = None  # Store patient code for search tests
         
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
