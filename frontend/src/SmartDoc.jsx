@@ -513,6 +513,15 @@ const Shrutapex = () => {
   const [searchPatientCode, setSearchPatientCode] = useState('');
   const [showSavePatientDialog, setShowSavePatientDialog] = useState(false);
   const [isSavingPatient, setIsSavingPatient] = useState(false);
+  // NEW Patient Management System
+  const [showPatientSearch, setShowPatientSearch] = useState(false);
+  const [patientSearchTerm, setPatientSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [currentPatientMRN, setCurrentPatientMRN] = useState('');
+  const [isNewPatient, setIsNewPatient] = useState(true);
+  const [showNewVsExisting, setShowNewVsExisting] = useState(false);
 
   // Medication Templates System  
   const [showMedicationTemplates, setShowMedicationTemplates] = useState(false);
