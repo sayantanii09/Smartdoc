@@ -143,6 +143,11 @@ class PatientStorageDB:
             
             patients = []
             async for patient in cursor:
+                # Convert MongoDB ObjectId to string and remove _id field
+                if "_id" in patient:
+                    if "id" not in patient:
+                        patient["id"] = str(patient["_id"])
+                    del patient["_id"]
                 patients.append(patient)
             
             return patients
