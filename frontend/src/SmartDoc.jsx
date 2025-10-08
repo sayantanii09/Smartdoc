@@ -889,6 +889,8 @@ const Shrutapex = () => {
   const processTranscript = (text) => {
     if (!text.trim()) return;
 
+    console.log('Processing transcript:', text);
+
     // Apply medication corrections first
     const cleanedText = cleanTranscript(text);
     const correctedText = correctMedicalTerms(cleanedText);
@@ -909,6 +911,10 @@ const Shrutapex = () => {
     if (text !== correctedText) {
       setTranscript(correctedText);
     }
+
+    // Extract information using trigger words
+    const extractedInfo = extractInformationByTriggers(correctedText);
+    console.log('Extracted information:', extractedInfo);
     
     // Extract diagnosis
     let extractedDiagnosis = '';
