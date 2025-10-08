@@ -1028,8 +1028,19 @@ const Shrutapex = () => {
       // Update live transcript for manual correction
       if (showLiveTranscript) {
         setLiveTranscript(prev => {
-          const updated = prev + (finalTranscript || interimTranscript);
+          const updated = prev + (finalTranscript || '');
+          console.log('Live transcript updated:', updated);
           return updated;
+        });
+      }
+      
+      // Also update interim results in live mode
+      if (showLiveTranscript && interimTranscript && !finalTranscript) {
+        setLiveTranscript(prev => {
+          // Replace the last interim part with new interim
+          const lastSpace = prev.lastIndexOf(' ');
+          const baseText = lastSpace > 0 ? prev.substring(0, lastSpace + 1) : '';
+          return baseText + interimTranscript;
         });
       }
       
