@@ -385,6 +385,291 @@ class EHRBackendTester:
         
         return all_passed
     
+    async def test_patient_save(self):
+        """Test 8: Save Patient Information"""
+        if not self.auth_token:
+            self.log_test("Patient Save", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Comprehensive patient data
+            patient_data = {
+                "patient_info": {
+                    "name": "John Michael Smith",
+                    "age": 45,
+                    "gender": "Male",
+                    "contact_number": "+1-555-0199",
+                    "email": "john.smith@email.com",
+                    "address": "123 Main Street, Springfield, IL 62701",
+                    "emergency_contact": "Jane Smith - Wife - +1-555-0200",
+                    "insurance_info": "Blue Cross Blue Shield - Policy: BC123456789"
+                },
+                "medical_history": {
+                    "allergies": ["Penicillin", "Shellfish"],
+                    "chronic_conditions": ["Type 2 Diabetes", "Hypertension"],
+                    "current_medications": [
+                        {
+                            "name": "Metformin",
+                            "dosage": "500mg",
+                            "frequency": "twice daily",
+                            "route": "oral"
+                        },
+                        {
+                            "name": "Lisinopril",
+                            "dosage": "10mg",
+                            "frequency": "once daily",
+                            "route": "oral"
+                        }
+                    ],
+                    "past_surgeries": ["Appendectomy (2015)"],
+                    "family_history": ["Diabetes (Father)", "Heart Disease (Mother)"],
+                    "social_history": "Non-smoker, occasional alcohol use",
+                    "vaccination_status": "COVID-19 vaccinated, Flu shot current"
+                },
+                "diagnosis": "Type 2 Diabetes Mellitus with good glycemic control. Essential Hypertension, well-controlled.",
+                "prognosis": "Good prognosis with continued medication compliance and lifestyle modifications. Regular monitoring recommended.",
+                "notes": "Patient is compliant with medications. Recommend quarterly HbA1c monitoring and annual eye exams."
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/save",
+                json=patient_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and data.get("data", {}).get("patient_code"):
+                        self.saved_patient_code = data["data"]["patient_code"]
+                        patient_id = data["data"]["id"]
+                        visit_date = data["data"]["visit_date"]
+                        
+                        # Validate patient code format (6-8 characters)
+                        code_length = len(self.saved_patient_code)
+                        if 6 <= code_length <= 8:
+                            self.log_test("Patient Save", True, f"Patient saved successfully with code: {self.saved_patient_code}", {
+                                "patient_code": self.saved_patient_code,
+                                "patient_id": patient_id,
+                                "visit_date": visit_date,
+                                "code_length": code_length
+                            })
+                            return True
+                        else:
+                            self.log_test("Patient Save", False, f"Invalid patient code length: {code_length} (expected 6-8)", data)
+                            return False
+                    else:
+                        self.log_test("Patient Save", False, "No patient code in response", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Patient Save", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Patient Save", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_patient_search(self):
+        """Test 9: Search Patient by Code"""
+        if not self.auth_token:
+            self.log_test("Patient Search", False, "No authentication token available")
+            return False
+        
+        if not self.saved_patient_code:
+            self.log_test("Patient Search", False, "No saved patient code available for search")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            search_data = {
+                "patient_code": self.saved_patient_code
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/search",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and data.get("data", {}).get("patient"):
+                        patient = data["data"]["patient"]
+                        
+                        # Verify patient data integrity
+                        expected_fields = ["patient_code", "patient_info", "medical_history", "diagnosis", "prognosis"]
+                        missing_fields = [field for field in expected_fields if field not in patient]
+                        
+                        if not missing_fields:
+                            # Verify patient code matches
+                            if patient["patient_code"] == self.saved_patient_code:
+                                # Verify patient name
+                                patient_name = patient.get("patient_info", {}).get("name")
+                                if patient_name == "John Michael Smith":
+                                    self.log_test("Patient Search", True, f"Patient found successfully with code: {self.saved_patient_code}", {
+                                        "patient_code": patient["patient_code"],
+                                        "patient_name": patient_name,
+                                        "doctor_id": patient.get("doctor_id"),
+                                        "visit_date": patient.get("visit_date")
+                                    })
+                                    return True
+                                else:
+                                    self.log_test("Patient Search", False, f"Patient name mismatch: expected 'John Michael Smith', got '{patient_name}'")
+                                    return False
+                            else:
+                                self.log_test("Patient Search", False, f"Patient code mismatch: expected '{self.saved_patient_code}', got '{patient['patient_code']}'")
+                                return False
+                        else:
+                            self.log_test("Patient Search", False, f"Missing required fields: {missing_fields}", patient)
+                            return False
+                    else:
+                        self.log_test("Patient Search", False, "No patient data in response", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Patient Search", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Patient Search", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_patient_search_invalid_code(self):
+        """Test 10: Search Patient with Invalid Code"""
+        if not self.auth_token:
+            self.log_test("Patient Search Invalid Code", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Test with non-existent patient code
+            search_data = {
+                "patient_code": "INVALID123"
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/search",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 404:
+                    data = await response.json()
+                    if not data.get("success"):
+                        self.log_test("Patient Search Invalid Code", True, "Correctly returned 404 for invalid patient code", data)
+                        return True
+                    else:
+                        self.log_test("Patient Search Invalid Code", False, "Expected success=false for invalid code", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Patient Search Invalid Code", False, f"Expected HTTP 404, got {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Patient Search Invalid Code", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_get_my_patients(self):
+        """Test 11: Get Doctor's Saved Patients"""
+        if not self.auth_token:
+            self.log_test("Get My Patients", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            
+            async with self.session.get(f"{API_BASE}/patients/my-patients", headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and "patients" in data.get("data", {}):
+                        patients = data["data"]["patients"]
+                        patient_count = data["data"]["count"]
+                        
+                        # Should have at least 1 patient (the one we saved)
+                        if patient_count >= 1:
+                            # Find our saved patient
+                            our_patient = None
+                            for patient in patients:
+                                if patient.get("patient_code") == self.saved_patient_code:
+                                    our_patient = patient
+                                    break
+                            
+                            if our_patient:
+                                self.log_test("Get My Patients", True, f"Retrieved {patient_count} patients including our saved patient", {
+                                    "total_patients": patient_count,
+                                    "found_our_patient": True,
+                                    "our_patient_code": self.saved_patient_code,
+                                    "our_patient_name": our_patient.get("patient_info", {}).get("name")
+                                })
+                                return True
+                            else:
+                                self.log_test("Get My Patients", False, f"Our saved patient (code: {self.saved_patient_code}) not found in results", {
+                                    "total_patients": patient_count,
+                                    "patient_codes": [p.get("patient_code") for p in patients]
+                                })
+                                return False
+                        else:
+                            self.log_test("Get My Patients", False, f"Expected at least 1 patient, got {patient_count}")
+                            return False
+                    else:
+                        self.log_test("Get My Patients", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Get My Patients", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Get My Patients", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_patient_endpoints_authentication(self):
+        """Test 12: Patient Endpoints Require Authentication"""
+        patient_endpoints = [
+            ("GET", "/patients/my-patients"),
+            ("POST", "/patients/save"),
+            ("POST", "/patients/search")
+        ]
+        
+        all_passed = True
+        
+        for method, endpoint in patient_endpoints:
+            try:
+                if method == "GET":
+                    async with self.session.get(f"{API_BASE}{endpoint}") as response:
+                        if response.status in [401, 403]:
+                            self.log_test(f"Auth Required - {method} {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
+                        else:
+                            self.log_test(f"Auth Required - {method} {endpoint}", False, f"Expected 401/403, got {response.status}")
+                            all_passed = False
+                else:  # POST
+                    async with self.session.post(f"{API_BASE}{endpoint}", json={}) as response:
+                        if response.status in [401, 403]:
+                            self.log_test(f"Auth Required - {method} {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
+                        else:
+                            self.log_test(f"Auth Required - {method} {endpoint}", False, f"Expected 401/403, got {response.status}")
+                            all_passed = False
+                            
+            except Exception as e:
+                self.log_test(f"Auth Required - {method} {endpoint}", False, f"Error: {str(e)}")
+                all_passed = False
+        
+        return all_passed
+    
     async def run_all_tests(self):
         """Run all EHR integration tests"""
         print("🚀 Starting SmartDoc Pro EHR Integration Backend Tests")
