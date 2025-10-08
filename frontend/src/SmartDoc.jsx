@@ -2103,7 +2103,13 @@ const Shrutapex = () => {
   };
   
   const handleSavePatient = () => {
-    setShowNewVsExisting(true);
+    if (currentPatientMRN) {
+      // Existing patient - add new visit
+      addVisitToExistingPatient();
+    } else {
+      // New patient - create patient and first visit
+      createNewPatientWithVisit();
+    }
   };
   
   const proceedWithNewPatient = () => {
