@@ -708,7 +708,7 @@ class EHRBackendTester:
         print(f"🏁 Test Summary: {passed}/{total} tests passed")
         
         if passed == total:
-            print("✅ All EHR integration tests PASSED!")
+            print("✅ All Patient Storage and Backend tests PASSED!")
         else:
             print(f"❌ {total - passed} tests FAILED")
             
