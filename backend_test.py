@@ -21,7 +21,9 @@ class NewPatientManagementTester:
         self.auth_token = None
         self.test_doctor_id = None
         self.test_results = []
-        self.saved_patient_code = None  # Store patient code for search tests
+        self.saved_patient_code = None  # Store patient code for search tests (legacy)
+        self.saved_patient_mrn = None   # Store MRN for new system tests
+        self.saved_visit_code = None    # Store visit code for new system tests
         
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
