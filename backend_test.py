@@ -726,7 +726,7 @@ async def main():
         passed, total, results = await tester.run_all_tests()
         
         # Save results to file
-        with open("/app/ehr_test_results.json", "w") as f:
+        with open("/app/patient_storage_test_results.json", "w") as f:
             json.dump({
                 "summary": {
                     "passed": passed,
