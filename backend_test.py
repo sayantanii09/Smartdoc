@@ -1320,7 +1320,7 @@ class NewPatientManagementTester:
 
 async def main():
     """Main test execution"""
-    async with EHRBackendTester() as tester:
+    async with NewPatientManagementTester() as tester:
         passed, total, results = await tester.run_all_tests()
         
         # Save results to file
