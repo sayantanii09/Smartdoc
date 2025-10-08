@@ -68,6 +68,7 @@ class PatientStorageDB:
         """Generate unique Medical Record Number (MRN)"""
         # Format: MRN + 7 digits (e.g., MRN1234567)
         digits = ''.join(random.choices(string.digits, k=7))
+        return f"MRN{digits}"
     
     # ============ NEW PATIENT MANAGEMENT SYSTEM ============
     
