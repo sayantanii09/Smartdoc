@@ -4673,6 +4673,21 @@ const Shrutapex = () => {
                 )}
               </div>
 
+              {/* Recent Patients Section */}
+              <div className="max-w-4xl mx-auto mb-6">
+                <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-xl p-6 border border-blue-500/30">
+                  <h3 className="text-blue-300 font-semibold mb-4 flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    Recent Patients {currentPatientMRN && <span className="text-green-400 text-sm">({selectedPatient?.patient_info?.name} - {currentPatientMRN})</span>}
+                  </h3>
+                  
+                  <RecentPatientsComponent 
+                    authToken={authToken}
+                    onPatientSelect={loadPatientIntoForm}
+                    selectedPatientMRN={currentPatientMRN}
+                  />
+                </div>
+              </div>
               {/* Additional Vitals Section */}
               <div className="max-w-4xl mx-auto">
                 <div className="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-xl p-6 border border-indigo-500/30">
