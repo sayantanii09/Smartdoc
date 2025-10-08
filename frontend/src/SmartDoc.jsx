@@ -3542,11 +3542,14 @@ const Shrutapex = () => {
                     Cancel
                   </button>
                   <button 
-                    onClick={saveCurrentPatient}
+                    onClick={isNewPatient ? createNewPatientWithVisit : addVisitToExistingPatient}
                     disabled={isSavingPatient || !patientName}
                     className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-bold transition-all disabled:cursor-not-allowed"
                   >
-                    {isSavingPatient ? 'Saving Patient...' : 'Save Patient'}
+                    {isSavingPatient ? 
+                      (isNewPatient ? 'Creating Patient...' : 'Adding Visit...') : 
+                      (isNewPatient ? 'Create Patient & Visit' : 'Add New Visit')
+                    }
                   </button>
                 </div>
               </div>
