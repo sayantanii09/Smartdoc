@@ -4353,7 +4353,7 @@ const Shrutapex = () => {
                   ← Back to Edit
                 </button>
                 <button 
-                  onClick={handleSavePatient}
+                  onClick={() => setShowSavePatientDialog(true)}
                   className="py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2"
                 >
                   <User className="w-5 h-5" />
