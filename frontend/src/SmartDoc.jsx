@@ -3477,7 +3477,7 @@ const Shrutapex = () => {
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
                   <Save className="w-8 h-8 text-green-400" />
-                  Save Patient Information
+                  {isNewPatient ? 'Create New Patient Record' : 'Add Visit to Existing Patient'}
                 </h2>
                 <button 
                   onClick={() => setShowSavePatientDialog(false)} 
