@@ -31,13 +31,28 @@ class PatientStorageDB:
         await self._create_indexes()
     
     async def _create_indexes(self):
-        """Create database indexes for optimal performance"""
+        """Initialize patient storage database and create indexes"""
         try:
-            # Patient storage indexes
-            await self.db[self.patients_collection].create_index("patient_code", unique=True)
-            await self.db[self.patients_collection].create_index("doctor_id")
-            await self.db[self.patients_collection].create_index("visit_date")
-            await self.db[self.patients_collection].create_index("is_active")
+            # Core Patient indexes
+            await self.db[self.patients_collection].create_index("mrn", unique=True)
+            await self.db[self.patients_collection].create_index("created_by_doctor_id")
+            await self.db[self.patients_collection].create_index([
+                ("patient_info.name", "text"),
+                ("patient_info.phone", "text")
+            ])
+            await self.db[self.patients_collection].create_index("created_date")
+            
+            # Visit indexes
+            await self.db[self.visits_collection].create_index("visit_code", unique=True)
+            await self.db[self.visits_collection].create_index("patient_mrn")
+            await self.db[self.visits_collection].create_index("doctor_id")
+            await self.db[self.visits_collection].create_index("visit_date")
+            await self.db[self.visits_collection].create_index("visit_type")
+            
+            # Legacy patient indexes (maintain compatibility)
+            await self.db[self.legacy_patients_collection].create_index("doctor_id")
+            await self.db[self.legacy_patients_collection].create_index("patient_code", unique=True)
+            await self.db[self.legacy_patients_collection].create_index("visit_date")
             
             # Medication template indexes
             await self.db[self.templates_collection].create_index("doctor_id")
