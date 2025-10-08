@@ -441,39 +441,29 @@ class EHRBackendTester:
                 "Content-Type": "application/json"
             }
             
-            # Comprehensive patient data
+            # Comprehensive patient data - matching PatientInfo and MedicalHistory models
             patient_data = {
                 "patient_info": {
                     "name": "John Michael Smith",
-                    "age": 45,
+                    "age": "45",
                     "gender": "Male",
-                    "contact_number": "+1-555-0199",
-                    "email": "john.smith@email.com",
-                    "address": "123 Main Street, Springfield, IL 62701",
-                    "emergency_contact": "Jane Smith - Wife - +1-555-0200",
-                    "insurance_info": "Blue Cross Blue Shield - Policy: BC123456789"
+                    "height": "5'10\"",
+                    "weight": "180 lbs",
+                    "blood_pressure": "130/85 mmHg",
+                    "temperature": "98.6°F",
+                    "heart_rate": "72 bpm",
+                    "respiratory_rate": "16/min",
+                    "oxygen_saturation": "98%"
                 },
                 "medical_history": {
-                    "allergies": ["Penicillin", "Shellfish"],
-                    "chronic_conditions": ["Type 2 Diabetes", "Hypertension"],
-                    "current_medications": [
-                        {
-                            "name": "Metformin",
-                            "dosage": "500mg",
-                            "frequency": "twice daily",
-                            "route": "oral"
-                        },
-                        {
-                            "name": "Lisinopril",
-                            "dosage": "10mg",
-                            "frequency": "once daily",
-                            "route": "oral"
-                        }
-                    ],
-                    "past_surgeries": ["Appendectomy (2015)"],
-                    "family_history": ["Diabetes (Father)", "Heart Disease (Mother)"],
-                    "social_history": "Non-smoker, occasional alcohol use",
-                    "vaccination_status": "COVID-19 vaccinated, Flu shot current"
+                    "allergies": "Penicillin, Shellfish",
+                    "past_medical_history": "Type 2 Diabetes (2018), Hypertension (2020)",
+                    "past_medications": "Metformin 500mg twice daily, Lisinopril 10mg once daily",
+                    "family_history": "Diabetes (Father), Heart Disease (Mother)",
+                    "smoking_status": "Non-smoker",
+                    "alcohol_use": "Occasional social drinking",
+                    "drug_use": "None",
+                    "exercise_level": "Moderate - walks 30 minutes daily"
                 },
                 "diagnosis": "Type 2 Diabetes Mellitus with good glycemic control. Essential Hypertension, well-controlled.",
                 "prognosis": "Good prognosis with continued medication compliance and lifestyle modifications. Regular monitoring recommended.",
