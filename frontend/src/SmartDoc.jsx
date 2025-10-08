@@ -915,8 +915,116 @@ const Shrutapex = () => {
     // Extract information using trigger words
     const extractedInfo = extractInformationByTriggers(correctedText);
     console.log('Extracted information:', extractedInfo);
+
+    // Populate fields based on trigger word extraction
+    if (extractedInfo.diagnosis.length > 0) {
+      const diagnosisText = extractedInfo.diagnosis.join(', ');
+      setDiagnosis(prev => prev ? `${prev}, ${diagnosisText}` : diagnosisText);
+      console.log('Diagnosis updated:', diagnosisText);
+    }
+
+    if (extractedInfo.prognosis.length > 0) {
+      const prognosisText = extractedInfo.prognosis.join(', ');
+      setPrognosis(prev => prev ? `${prev}, ${prognosisText}` : prognosisText);
+      console.log('Prognosis updated:', prognosisText);
+    }
+
+    if (extractedInfo.familyHistory.length > 0) {
+      const familyHistoryText = extractedInfo.familyHistory.join(', ');
+      setFamilyHistory(prev => prev ? `${prev}, ${familyHistoryText}` : familyHistoryText);
+      console.log('Family history updated:', familyHistoryText);
+    }
+
+    if (extractedInfo.allergies.length > 0) {
+      const allergiesText = extractedInfo.allergies.join(', ');
+      setAllergies(prev => prev ? `${prev}, ${allergiesText}` : allergiesText);
+      console.log('Allergies updated:', allergiesText);
+    }
+
+    if (extractedInfo.socialHistory.length > 0) {
+      const socialHistoryText = extractedInfo.socialHistory.join(', ');
+      // Update social history fields based on content
+      extractedInfo.socialHistory.forEach(item => {
+        if (item.includes('smok')) {
+          setSmokingStatus(item);
+        } else if (item.includes('drink') || item.includes('alcohol')) {
+          setAlcoholConsumption(item);
+        } else if (item.includes('exercis') || item.includes('physical')) {
+          setExerciseFrequency(item);
+        }
+      });
+      console.log('Social history updated:', socialHistoryText);
+    }
+
+    // Extract vitals information
+    if (extractedInfo.vitals.length > 0) {
+      extractedInfo.vitals.forEach(vital => {
+        if (vital.match(/\d+\/\d+/) || vital.includes('blood pressure') || vital.includes('bp')) {
+          const bpMatch = vital.match(/(\d+)\/(\d+)/);
+          if (bpMatch) {
+            setPatientBP(`${bpMatch[1]}/${bpMatch[2]}`);
+          }
+        } else if (vital.includes('heart rate') || vital.includes('hr') || vital.includes('bpm')) {
+          const hrMatch = vital.match(/(\d+)/);
+          if (hrMatch) {
+            setHeartRate(hrMatch[1]);
+          }
+        } else if (vital.includes('temperature') || vital.includes('temp')) {
+          const tempMatch = vital.match(/(\d+\.?\d*)/);
+          if (tempMatch) {
+            setTemperature(tempMatch[1]);
+          }
+        }
+      });
+    }
+
+    // Extract medications with enhanced trigger word processing
+    if (extractedInfo.medications.length > 0) {
+      const medicationTexts = extractedInfo.medications;
+      const extractedMeds = [];
+      
+      medicationTexts.forEach(medText => {
+        // Enhanced medication parsing from trigger word context
+        const medPatterns = [
+          /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(once|twice|three times|four times)?\s*(daily|od|bd|tds|qds)?/gi,
+          /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)/gi
+        ];
+        
+        medPatterns.forEach(pattern => {
+          let match;
+          while ((match = pattern.exec(medText)) !== null) {
+            const [fullMatch, drugName, dosage, unit, frequency1, frequency2] = match;
+            
+            // Validate it's a real medication
+            const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
+              medName.toLowerCase() === drugName.toLowerCase() || 
+              calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.7
+            );
+            
+            if (isValidMedication || drugName.length > 6) {
+              const frequency = frequency1 || frequency2 || 'once daily';
+              extractedMeds.push({
+                name: drugName.charAt(0).toUpperCase() + drugName.slice(1),
+                dosage: `${dosage}${unit}`,
+                formulation: 'Tablet',
+                route: 'Oral',
+                frequency: expandAbbreviation(frequency),
+                foodInstruction: 'With food',
+                duration: '30 days'
+              });
+              
+              console.log(`Trigger-extracted medication: ${drugName} ${dosage}${unit} ${frequency}`);
+            }
+          }
+        });
+      });
+      
+      if (extractedMeds.length > 0) {
+        setMedications(prev => [...prev, ...extractedMeds]);
+      }
+    }
     
-    // Extract diagnosis
+    // Extract diagnosis (fallback to original pattern matching)
     let extractedDiagnosis = '';
     if (lowerText.includes('diabetes') || lowerText.includes('diabetic')) {
       extractedDiagnosis = 'Type 2 Diabetes Mellitus';
