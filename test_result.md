@@ -352,7 +352,7 @@ frontend:
     implemented: true
     working: false
     file: "frontend/src/SmartDoc.jsx"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -362,6 +362,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUE - Frontend login functionality is broken. Backend authentication API is working correctly (confirmed via curl test - returns valid JWT token and user data), but frontend login process fails to redirect to main interface after successful authentication. The login button click does not trigger proper state change or navigation. This blocks access to all NEW Patient Management System features including: New vs Existing Patient Choice modal, Patient Search functionality, MRN-based patient creation, and Visit tracking system. All NEW patient management features are implemented in code but cannot be tested due to login barrier. REQUIRES IMMEDIATE FRONTEND LOGIN FIX."
+      - working: false
+        agent: "testing"
+        comment: "✅ LOGIN FIXED - Authentication now working correctly with drsmith/password123. ✅ CORE FUNCTIONALITY WORKING: Patient information form, medical history, demo mode, medication templates, and review section all functional. ❌ CRITICAL ISSUE - Save Patient workflow partially broken: Save Patient button found and clickable in review section, but save dialog doesn't appear and patients don't appear in Recent Patients section. Backend shows patient saved (code: GX817790) but frontend Recent Patients API calls return 422 errors from /api/patients/search-patients endpoint. The Recent Patients component cannot load due to API validation issues. Save functionality exists but integration between frontend save action and Recent Patients display is broken."
 
 metadata:
   created_by: "testing_agent"
