@@ -68,6 +68,257 @@ class PatientStorageDB:
         """Generate unique Medical Record Number (MRN)"""
         # Format: MRN + 7 digits (e.g., MRN1234567)
         digits = ''.join(random.choices(string.digits, k=7))
+    
+    # ============ NEW PATIENT MANAGEMENT SYSTEM ============
+    
+    async def search_patients(self, search_term: str, doctor_id: str = None) -> List[Dict]:
+        """Search patients by name, MRN, or phone number"""
+        try:
+            # Build search query
+            query = {
+                "is_active": True,
+                "$or": [
+                    {"mrn": {"$regex": search_term, "$options": "i"}},
+                    {"patient_info.name": {"$regex": search_term, "$options": "i"}},
+                    {"patient_info.phone": {"$regex": search_term, "$options": "i"}}
+                ]
+            }
+            
+            # If doctor_id specified, limit to patients created by this doctor or shared
+            if doctor_id:
+                query["$or"].append({"created_by_doctor_id": doctor_id})
+            
+            cursor = self.db[self.patients_collection].find(query).limit(20)
+            patients = []
+            
+            async for patient in cursor:
+                if "_id" in patient:
+                    patient["id"] = str(patient["_id"])
+                    del patient["_id"]
+                
+                # Get latest visit info
+                latest_visit = await self.db[self.visits_collection].find_one(
+                    {"patient_mrn": patient["mrn"]},
+                    sort=[("visit_date", -1)]
+                )
+                
+                patient["latest_visit_date"] = latest_visit["visit_date"] if latest_visit else patient["created_date"]
+                patient["total_visits"] = await self.db[self.visits_collection].count_documents(
+                    {"patient_mrn": patient["mrn"]}
+                )
+                
+                patients.append(patient)
+            
+            return patients
+            
+        except Exception as e:
+            logger.error(f"Error searching patients: {e}")
+            raise Exception(f"Failed to search patients: {str(e)}")
+    
+    async def create_patient(
+        self, 
+        doctor_id: str, 
+        patient_info: dict,
+        medical_history: dict,
+        diagnosis: str = None,
+        prognosis: str = None,
+        notes: str = None
+    ) -> Dict:
+        """Create new patient record and first visit"""
+        try:
+            # Generate unique MRN
+            mrn = None
+            max_attempts = 10
+            
+            for _ in range(max_attempts):
+                candidate_mrn = self.generate_mrn()
+                existing = await self.db[self.patients_collection].find_one({
+                    "mrn": candidate_mrn
+                })
+                if not existing:
+                    mrn = candidate_mrn
+                    break
+            
+            if not mrn:
+                raise Exception("Could not generate unique MRN")
+            
+            # Create patient record
+            now = datetime.now(timezone.utc)
+            patient_doc = {
+                "mrn": mrn,
+                "patient_info": patient_info,
+                "created_by_doctor_id": doctor_id,
+                "created_date": now,
+                "last_updated": now,
+                "is_active": True
+            }
+            
+            # Insert patient
+            await self.db[self.patients_collection].insert_one(patient_doc)
+            
+            # Create first visit
+            visit_result = await self.create_visit(
+                patient_mrn=mrn,
+                doctor_id=doctor_id,
+                medical_history=medical_history,
+                diagnosis=diagnosis,
+                prognosis=prognosis,
+                notes=notes,
+                visit_type="initial_consultation"
+            )
+            
+            return {
+                "mrn": mrn,
+                "visit_code": visit_result["visit_code"],
+                "patient": patient_doc,
+                "visit": visit_result["visit"]
+            }
+            
+        except Exception as e:
+            logger.error(f"Error creating patient: {e}")
+            raise Exception(f"Failed to create patient: {str(e)}")
+    
+    async def create_visit(
+        self,
+        patient_mrn: str,
+        doctor_id: str,
+        medical_history: dict,
+        diagnosis: str = None,
+        prognosis: str = None,
+        medications: List[dict] = None,
+        notes: str = None,
+        visit_type: str = "consultation"
+    ) -> Dict:
+        """Create new visit for existing patient"""
+        try:
+            # Verify patient exists
+            patient = await self.db[self.patients_collection].find_one({"mrn": patient_mrn})
+            if not patient:
+                raise Exception(f"Patient with MRN {patient_mrn} not found")
+            
+            # Generate unique visit code
+            visit_code = None
+            max_attempts = 10
+            
+            for _ in range(max_attempts):
+                candidate_code = self.generate_visit_code()
+                existing = await self.db[self.visits_collection].find_one({
+                    "visit_code": candidate_code
+                })
+                if not existing:
+                    visit_code = candidate_code
+                    break
+            
+            if not visit_code:
+                raise Exception("Could not generate unique visit code")
+            
+            # Create visit record
+            now = datetime.now(timezone.utc)
+            visit_doc = {
+                "visit_code": visit_code,
+                "patient_mrn": patient_mrn,
+                "doctor_id": doctor_id,
+                "visit_date": now,
+                "medical_history": medical_history,
+                "diagnosis": diagnosis,
+                "prognosis": prognosis,
+                "medications": medications or [],
+                "notes": notes,
+                "visit_type": visit_type,
+                "is_active": True
+            }
+            
+            # Insert visit
+            await self.db[self.visits_collection].insert_one(visit_doc)
+            
+            # Update patient last_updated
+            await self.db[self.patients_collection].update_one(
+                {"mrn": patient_mrn},
+                {"$set": {"last_updated": now}}
+            )
+            
+            return {
+                "visit_code": visit_code,
+                "visit": visit_doc
+            }
+            
+        except Exception as e:
+            logger.error(f"Error creating visit: {e}")
+            raise Exception(f"Failed to create visit: {str(e)}")
+    
+    async def get_patient_with_visits(self, mrn: str) -> Dict:
+        """Get patient record with all visits"""
+        try:
+            # Get patient
+            patient = await self.db[self.patients_collection].find_one({
+                "mrn": mrn,
+                "is_active": True
+            })
+            
+            if not patient:
+                return None
+            
+            if "_id" in patient:
+                patient["id"] = str(patient["_id"])
+                del patient["_id"]
+            
+            # Get all visits for this patient
+            cursor = self.db[self.visits_collection].find({
+                "patient_mrn": mrn,
+                "is_active": True
+            }).sort("visit_date", -1)
+            
+            visits = []
+            async for visit in cursor:
+                if "_id" in visit:
+                    visit["id"] = str(visit["_id"])
+                    del visit["_id"]
+                visits.append(visit)
+            
+            return {
+                "patient": patient,
+                "visits": visits,
+                "visit_count": len(visits)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting patient with visits: {e}")
+            raise Exception(f"Failed to get patient with visits: {str(e)}")
+    
+    async def get_visit_by_code(self, visit_code: str) -> Dict:
+        """Get visit by visit code"""
+        try:
+            visit = await self.db[self.visits_collection].find_one({
+                "visit_code": visit_code,
+                "is_active": True
+            })
+            
+            if not visit:
+                return None
+            
+            if "_id" in visit:
+                visit["id"] = str(visit["_id"])
+                del visit["_id"]
+            
+            # Get associated patient
+            patient = await self.db[self.patients_collection].find_one({
+                "mrn": visit["patient_mrn"]
+            })
+            
+            if patient and "_id" in patient:
+                patient["id"] = str(patient["_id"])
+                del patient["_id"]
+            
+            return {
+                "visit": visit,
+                "patient": patient
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting visit by code: {e}")
+            raise Exception(f"Failed to get visit by code: {str(e)}")
+    
+    # ============ LEGACY PATIENT CODE SYSTEM (for backward compatibility) ============
         return f"MRN{digits}"
     
     def generate_visit_code(self) -> str:
