@@ -3374,12 +3374,46 @@ const Shrutapex = () => {
               <p className="text-xl md:text-2xl font-bold text-white mb-2">
                 {isListening ? 'Recording Consultation...' : 'Start Voice Documentation'}
               </p>
-              <p className="text-slate-400 mb-3">
+              <p className="text-slate-400 mb-1">
                 {isListening 
                   ? 'Click microphone again to STOP recording and process' 
                   : 'Click the microphone to begin recording'
                 }
               </p>
+              
+              {/* Trigger Words Guide */}
+              <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                  <span className="text-blue-300 text-sm font-medium">Smart Trigger Words - Speak Naturally</span>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <span className="text-blue-400 font-medium">📋 Diagnosis:</span>
+                    <span className="text-slate-300 ml-1">"Patient has hypertension"</span>
+                  </div>
+                  <div>
+                    <span className="text-emerald-400 font-medium">💊 Medications:</span>
+                    <span className="text-slate-300 ml-1">"Prescribe cinnarizine 25mg"</span>
+                  </div>
+                  <div>
+                    <span className="text-purple-400 font-medium">🔮 Prognosis:</span>
+                    <span className="text-slate-300 ml-1">"Expected outcome is good"</span>
+                  </div>
+                  <div>
+                    <span className="text-yellow-400 font-medium">👨‍👩‍👧 Family History:</span>
+                    <span className="text-slate-300 ml-1">"Father had diabetes"</span>
+                  </div>
+                  <div>
+                    <span className="text-red-400 font-medium">⚠️ Allergies:</span>
+                    <span className="text-slate-300 ml-1">"Allergic to penicillin"</span>
+                  </div>
+                  <div>
+                    <span className="text-green-400 font-medium">📊 Vitals:</span>
+                    <span className="text-slate-300 ml-1">"Blood pressure 120/80"</span>
+                  </div>
+                </div>
+              </div>
               
               {/* Speech Quality Indicator removed per user request */}
 
