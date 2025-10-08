@@ -1778,6 +1778,56 @@ const Shrutapex = () => {
       console.error('Error fetching saved patients:', error);
     }
   };
+  // Fetch recent patients for main dashboard
+  const fetchRecentPatients = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/search-patients`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          search_term: '' // Empty search to get all patients
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.patients.slice(0, 8); // Return last 8 patients
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching recent patients:', error);
+      return [];
+    }
+  };
+
+  // Load existing patient data into form
+  const loadPatientIntoForm = async (patient) => {
+    try {
+      setSelectedPatient(patient);
+      setCurrentPatientMRN(patient.mrn);
+      setIsNewPatient(false);
+      
+      // Load patient info into form
+      setPatientName(patient.patient_info.name || '');
+      setPatientAge(patient.patient_info.age || '');
+      setPatientGender(patient.patient_info.gender || '');
+      setPatientHeight(patient.patient_info.height || '');
+      setPatientWeight(patient.patient_info.weight || '');
+      setPatientBP(patient.patient_info.blood_pressure || '');
+      setHeartRate(patient.patient_info.heart_rate || '');
+      setTemperature(patient.patient_info.temperature || '');
+      setOxygenSaturation(patient.patient_info.oxygen_saturation || '');
+      
+      alert(`✅ Loaded existing patient: ${patient.patient_info.name}\nMRN: ${patient.mrn}\nReady to add new visit`);
+      
+    } catch (error) {
+      console.error('Error loading patient:', error);
+      alert('❌ Error loading patient data');
+    }
+  };
   
   // ============ NEW PATIENT MANAGEMENT FUNCTIONS ============
   
