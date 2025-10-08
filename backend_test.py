@@ -706,6 +706,559 @@ class NewPatientManagementTester:
         
         return all_passed
     
+    # ============ NEW PATIENT MANAGEMENT SYSTEM TESTS ============
+    
+    async def test_search_patients_empty(self):
+        """Test 13: Search Patients (Empty Results)"""
+        if not self.auth_token:
+            self.log_test("Search Patients Empty", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            search_data = {
+                "search_term": "NonExistentPatient12345"
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/search-patients",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if "patients" in data and "total_count" in data:
+                        patients = data["patients"]
+                        total_count = data["total_count"]
+                        
+                        if total_count == 0 and len(patients) == 0:
+                            self.log_test("Search Patients Empty", True, "Empty search results returned correctly", {
+                                "total_count": total_count,
+                                "patients_count": len(patients)
+                            })
+                            return True
+                        else:
+                            self.log_test("Search Patients Empty", False, f"Expected empty results, got {total_count} patients")
+                            return False
+                    else:
+                        self.log_test("Search Patients Empty", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Search Patients Empty", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Search Patients Empty", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_create_new_patient(self):
+        """Test 14: Create New Patient with Initial Visit"""
+        if not self.auth_token:
+            self.log_test("Create New Patient", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Comprehensive patient data for new system
+            patient_data = {
+                "patient_info": {
+                    "name": "Emily Sarah Johnson",
+                    "age": "32",
+                    "gender": "Female",
+                    "height": "5'6\"",
+                    "weight": "140 lbs",
+                    "blood_pressure": "120/80 mmHg",
+                    "temperature": "98.4°F",
+                    "heart_rate": "68 bpm",
+                    "respiratory_rate": "14/min",
+                    "oxygen_saturation": "99%",
+                    "phone": "+1-555-0198"
+                },
+                "medical_history": {
+                    "allergies": "Latex, Peanuts",
+                    "past_medical_history": "Asthma (childhood), Appendectomy (2019)",
+                    "past_medications": "Albuterol inhaler as needed",
+                    "family_history": "Diabetes (Grandmother), Hypertension (Father)",
+                    "smoking_status": "Never smoked",
+                    "alcohol_use": "Social drinking, 1-2 drinks per week",
+                    "drug_use": "None",
+                    "exercise_level": "Regular - yoga 3x/week, running 2x/week"
+                },
+                "diagnosis": "Annual wellness visit. Patient in good health with well-controlled asthma.",
+                "prognosis": "Excellent prognosis. Continue current lifestyle and asthma management.",
+                "notes": "Patient reports no current concerns. Asthma well-controlled with PRN albuterol. Recommend annual follow-up."
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/create-new",
+                json=patient_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and data.get("data"):
+                        result_data = data["data"]
+                        
+                        # Validate MRN format (MRN + 7 digits)
+                        mrn = result_data.get("mrn")
+                        visit_code = result_data.get("visit_code")
+                        patient_name = result_data.get("patient_name")
+                        
+                        if mrn and mrn.startswith("MRN") and len(mrn) == 10:
+                            if visit_code and visit_code.startswith("V") and len(visit_code) >= 6:
+                                if patient_name == "Emily Sarah Johnson":
+                                    self.saved_patient_mrn = mrn
+                                    self.saved_visit_code = visit_code
+                                    
+                                    self.log_test("Create New Patient", True, f"New patient created successfully", {
+                                        "mrn": mrn,
+                                        "visit_code": visit_code,
+                                        "patient_name": patient_name,
+                                        "mrn_format_valid": True,
+                                        "visit_code_format_valid": True
+                                    })
+                                    return True
+                                else:
+                                    self.log_test("Create New Patient", False, f"Patient name mismatch: expected 'Emily Sarah Johnson', got '{patient_name}'")
+                                    return False
+                            else:
+                                self.log_test("Create New Patient", False, f"Invalid visit code format: {visit_code}")
+                                return False
+                        else:
+                            self.log_test("Create New Patient", False, f"Invalid MRN format: {mrn}")
+                            return False
+                    else:
+                        self.log_test("Create New Patient", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Create New Patient", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Create New Patient", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_search_patients_by_name(self):
+        """Test 15: Search Patients by Name"""
+        if not self.auth_token or not self.saved_patient_mrn:
+            self.log_test("Search Patients by Name", False, "No authentication token or saved patient available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Search by partial name
+            search_data = {
+                "search_term": "Emily"
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/search-patients",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if "patients" in data and "total_count" in data:
+                        patients = data["patients"]
+                        total_count = data["total_count"]
+                        
+                        # Should find our created patient
+                        found_patient = None
+                        for patient in patients:
+                            if patient.get("mrn") == self.saved_patient_mrn:
+                                found_patient = patient
+                                break
+                        
+                        if found_patient:
+                            self.log_test("Search Patients by Name", True, f"Found patient by name search", {
+                                "total_count": total_count,
+                                "found_mrn": found_patient["mrn"],
+                                "patient_name": found_patient.get("patient_info", {}).get("name"),
+                                "total_visits": found_patient.get("total_visits", 0)
+                            })
+                            return True
+                        else:
+                            self.log_test("Search Patients by Name", False, f"Created patient not found in search results", {
+                                "total_count": total_count,
+                                "expected_mrn": self.saved_patient_mrn,
+                                "found_mrns": [p.get("mrn") for p in patients]
+                            })
+                            return False
+                    else:
+                        self.log_test("Search Patients by Name", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Search Patients by Name", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Search Patients by Name", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_search_patients_by_mrn(self):
+        """Test 16: Search Patients by MRN"""
+        if not self.auth_token or not self.saved_patient_mrn:
+            self.log_test("Search Patients by MRN", False, "No authentication token or saved patient available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Search by MRN
+            search_data = {
+                "search_term": self.saved_patient_mrn
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/search-patients",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if "patients" in data and "total_count" in data:
+                        patients = data["patients"]
+                        total_count = data["total_count"]
+                        
+                        if total_count >= 1:
+                            found_patient = patients[0]  # Should be exact match
+                            if found_patient.get("mrn") == self.saved_patient_mrn:
+                                self.log_test("Search Patients by MRN", True, f"Found patient by MRN search", {
+                                    "mrn": found_patient["mrn"],
+                                    "patient_name": found_patient.get("patient_info", {}).get("name"),
+                                    "total_visits": found_patient.get("total_visits", 0)
+                                })
+                                return True
+                            else:
+                                self.log_test("Search Patients by MRN", False, f"MRN mismatch in results")
+                                return False
+                        else:
+                            self.log_test("Search Patients by MRN", False, f"No patients found for MRN: {self.saved_patient_mrn}")
+                            return False
+                    else:
+                        self.log_test("Search Patients by MRN", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Search Patients by MRN", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Search Patients by MRN", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_get_patient_details(self):
+        """Test 17: Get Patient Details with All Visits"""
+        if not self.auth_token or not self.saved_patient_mrn:
+            self.log_test("Get Patient Details", False, "No authentication token or saved patient available")
+            return False
+        
+        try:
+            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            
+            async with self.session.get(
+                f"{API_BASE}/patients/{self.saved_patient_mrn}/details",
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if "patient" in data and "visits" in data and "visit_count" in data:
+                        patient = data["patient"]
+                        visits = data["visits"]
+                        visit_count = data["visit_count"]
+                        
+                        # Validate patient data
+                        if patient.get("mrn") == self.saved_patient_mrn:
+                            if visit_count >= 1 and len(visits) >= 1:
+                                # Check first visit
+                                first_visit = visits[0]
+                                if first_visit.get("visit_code") == self.saved_visit_code:
+                                    self.log_test("Get Patient Details", True, f"Patient details retrieved successfully", {
+                                        "mrn": patient["mrn"],
+                                        "patient_name": patient.get("patient_info", {}).get("name"),
+                                        "visit_count": visit_count,
+                                        "first_visit_code": first_visit["visit_code"],
+                                        "visit_type": first_visit.get("visit_type")
+                                    })
+                                    return True
+                                else:
+                                    self.log_test("Get Patient Details", False, f"Visit code mismatch in details")
+                                    return False
+                            else:
+                                self.log_test("Get Patient Details", False, f"Expected at least 1 visit, got {visit_count}")
+                                return False
+                        else:
+                            self.log_test("Get Patient Details", False, f"MRN mismatch in patient details")
+                            return False
+                    else:
+                        self.log_test("Get Patient Details", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Get Patient Details", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Get Patient Details", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_add_visit_to_existing_patient(self):
+        """Test 18: Add New Visit to Existing Patient"""
+        if not self.auth_token or not self.saved_patient_mrn:
+            self.log_test("Add Visit to Existing Patient", False, "No authentication token or saved patient available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Follow-up visit data
+            visit_data = {
+                "patient_mrn": self.saved_patient_mrn,
+                "medical_history": {
+                    "allergies": "Latex, Peanuts",
+                    "past_medical_history": "Asthma (childhood), Appendectomy (2019)",
+                    "past_medications": "Albuterol inhaler as needed, Vitamin D3 1000 IU daily",
+                    "family_history": "Diabetes (Grandmother), Hypertension (Father)",
+                    "smoking_status": "Never smoked",
+                    "alcohol_use": "Social drinking, 1-2 drinks per week",
+                    "drug_use": "None",
+                    "exercise_level": "Regular - yoga 3x/week, running 2x/week"
+                },
+                "diagnosis": "Follow-up visit for asthma management. Patient reports good control with current regimen.",
+                "prognosis": "Excellent. Continue current management plan.",
+                "notes": "Patient doing well. No exacerbations since last visit. Continue albuterol PRN. Added Vitamin D supplementation."
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/patients/add-visit",
+                json=visit_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and data.get("data"):
+                        result_data = data["data"]
+                        new_visit_code = result_data.get("visit_code")
+                        patient_mrn = result_data.get("patient_mrn")
+                        
+                        if new_visit_code and patient_mrn == self.saved_patient_mrn:
+                            # Validate visit code format
+                            if new_visit_code.startswith("V") and len(new_visit_code) >= 6:
+                                self.log_test("Add Visit to Existing Patient", True, f"New visit added successfully", {
+                                    "patient_mrn": patient_mrn,
+                                    "new_visit_code": new_visit_code,
+                                    "visit_code_format_valid": True
+                                })
+                                return True
+                            else:
+                                self.log_test("Add Visit to Existing Patient", False, f"Invalid visit code format: {new_visit_code}")
+                                return False
+                        else:
+                            self.log_test("Add Visit to Existing Patient", False, "Missing visit code or MRN mismatch", result_data)
+                            return False
+                    else:
+                        self.log_test("Add Visit to Existing Patient", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Add Visit to Existing Patient", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Add Visit to Existing Patient", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_search_visit_by_code(self):
+        """Test 19: Search Visit by Visit Code"""
+        if not self.auth_token or not self.saved_visit_code:
+            self.log_test("Search Visit by Code", False, "No authentication token or saved visit code available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            search_data = {
+                "visit_code": self.saved_visit_code
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/visits/search",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 200:
+                    data = await response.json()
+                    if data.get("success") and data.get("data"):
+                        result_data = data["data"]
+                        visit = result_data.get("visit")
+                        patient = result_data.get("patient")
+                        
+                        if visit and patient:
+                            if visit.get("visit_code") == self.saved_visit_code:
+                                if patient.get("mrn") == self.saved_patient_mrn:
+                                    self.log_test("Search Visit by Code", True, f"Visit found successfully", {
+                                        "visit_code": visit["visit_code"],
+                                        "patient_mrn": patient["mrn"],
+                                        "patient_name": patient.get("patient_info", {}).get("name"),
+                                        "visit_type": visit.get("visit_type"),
+                                        "diagnosis": visit.get("diagnosis", "")[:50] + "..." if visit.get("diagnosis") else "None"
+                                    })
+                                    return True
+                                else:
+                                    self.log_test("Search Visit by Code", False, f"Patient MRN mismatch in visit search")
+                                    return False
+                            else:
+                                self.log_test("Search Visit by Code", False, f"Visit code mismatch in search results")
+                                return False
+                        else:
+                            self.log_test("Search Visit by Code", False, "Missing visit or patient data", result_data)
+                            return False
+                    else:
+                        self.log_test("Search Visit by Code", False, "Invalid response format", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Search Visit by Code", False, f"HTTP {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Search Visit by Code", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_search_visit_invalid_code(self):
+        """Test 20: Search Visit with Invalid Code"""
+        if not self.auth_token:
+            self.log_test("Search Visit Invalid Code", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.auth_token}",
+                "Content-Type": "application/json"
+            }
+            
+            search_data = {
+                "visit_code": "VINVALID123"
+            }
+            
+            async with self.session.post(
+                f"{API_BASE}/visits/search",
+                json=search_data,
+                headers=headers
+            ) as response:
+                
+                if response.status == 404:
+                    data = await response.json()
+                    if not data.get("success"):
+                        self.log_test("Search Visit Invalid Code", True, "Correctly returned 404 for invalid visit code", data)
+                        return True
+                    else:
+                        self.log_test("Search Visit Invalid Code", False, "Expected success=false for invalid code", data)
+                        return False
+                else:
+                    text = await response.text()
+                    self.log_test("Search Visit Invalid Code", False, f"Expected HTTP 404, got {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Search Visit Invalid Code", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_patient_details_invalid_mrn(self):
+        """Test 21: Get Patient Details with Invalid MRN"""
+        if not self.auth_token:
+            self.log_test("Patient Details Invalid MRN", False, "No authentication token available")
+            return False
+        
+        try:
+            headers = {"Authorization": f"Bearer {self.auth_token}"}
+            
+            invalid_mrn = "MRN9999999"
+            
+            async with self.session.get(
+                f"{API_BASE}/patients/{invalid_mrn}/details",
+                headers=headers
+            ) as response:
+                
+                if response.status == 404:
+                    data = await response.json()
+                    self.log_test("Patient Details Invalid MRN", True, "Correctly returned 404 for invalid MRN", data)
+                    return True
+                else:
+                    text = await response.text()
+                    self.log_test("Patient Details Invalid MRN", False, f"Expected HTTP 404, got {response.status}", {"response": text})
+                    return False
+                    
+        except Exception as e:
+            self.log_test("Patient Details Invalid MRN", False, f"Error: {str(e)}")
+            return False
+    
+    async def test_new_patient_endpoints_authentication(self):
+        """Test 22: New Patient Management Endpoints Require Authentication"""
+        new_patient_endpoints = [
+            ("POST", "/patients/search-patients"),
+            ("POST", "/patients/create-new"),
+            ("POST", "/patients/add-visit"),
+            ("GET", "/patients/MRN1234567/details"),
+            ("POST", "/visits/search")
+        ]
+        
+        all_passed = True
+        
+        for method, endpoint in new_patient_endpoints:
+            try:
+                if method == "GET":
+                    async with self.session.get(f"{API_BASE}{endpoint}") as response:
+                        if response.status in [401, 403]:
+                            self.log_test(f"Auth Required - {method} {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
+                        else:
+                            self.log_test(f"Auth Required - {method} {endpoint}", False, f"Expected 401/403, got {response.status}")
+                            all_passed = False
+                else:  # POST
+                    async with self.session.post(f"{API_BASE}{endpoint}", json={}) as response:
+                        if response.status in [401, 403]:
+                            self.log_test(f"Auth Required - {method} {endpoint}", True, f"Correctly requires authentication (HTTP {response.status})")
+                        else:
+                            self.log_test(f"Auth Required - {method} {endpoint}", False, f"Expected 401/403, got {response.status}")
+                            all_passed = False
+                            
+            except Exception as e:
+                self.log_test(f"Auth Required - {method} {endpoint}", False, f"Error: {str(e)}")
+                all_passed = False
+        
+        return all_passed
+    
     async def run_all_tests(self):
         """Run all EHR integration tests"""
         print("🚀 Starting Shrutapex Patient Storage Backend Tests")
