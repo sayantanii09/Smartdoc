@@ -348,6 +348,96 @@ const MEDICAL_ABBREVIATIONS = {
   'ac': 'Before meals',
   'before meals': 'Before meals',
   'pc': 'After meals',
+// Recent Patients Component
+const RecentPatientsComponent = ({ authToken, onPatientSelect, selectedPatientMRN }) => {
+  const [recentPatients, setRecentPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/patients/search-patients`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ search_term: '' }), // Empty search gets all patients
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setRecentPatients(data.patients.slice(0, 6)); // Show last 6 patients
+        }
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (authToken) {
+      fetchPatients();
+    }
+  }, [authToken]);
+
+  if (loading) {
+    return <div className="text-slate-400 text-center py-4">Loading recent patients...</div>;
+  }
+
+  if (recentPatients.length === 0) {
+    return (
+      <div className="text-center py-6">
+        <User className="w-12 h-12 text-slate-500 mx-auto mb-3" />
+        <p className="text-slate-400 mb-2">No recent patients yet</p>
+        <p className="text-slate-500 text-sm">Save your first patient to see them here</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {recentPatients.map((patient) => (
+        <div 
+          key={patient.mrn} 
+          className={`p-4 rounded-lg border transition-all cursor-pointer ${
+            selectedPatientMRN === patient.mrn 
+              ? 'bg-green-500/20 border-green-500/50' 
+              : 'bg-slate-800/30 border-slate-600/30 hover:bg-slate-700/40'
+          }`}
+          onClick={() => onPatientSelect(patient)}
+        >
+          <div className="flex items-start justify-between mb-2">
+            <h4 className="font-semibold text-white text-sm">{patient.patient_info?.name}</h4>
+            {selectedPatientMRN === patient.mrn && (
+              <CheckCircle className="w-4 h-4 text-green-400" />
+            )}
+          </div>
+          <p className="text-slate-400 text-xs mb-1">MRN: {patient.mrn}</p>
+          <p className="text-slate-400 text-xs mb-1">
+            {patient.patient_info?.age}yr, {patient.patient_info?.gender}
+          </p>
+          <p className="text-slate-400 text-xs">
+            Visits: {patient.total_visits} | Last: {new Date(patient.latest_visit_date).toLocaleDateString()}
+          </p>
+        </div>
+      ))}
+      
+      <div 
+        className="p-4 rounded-lg border border-dashed border-slate-500/50 hover:border-blue-500/50 cursor-pointer transition-all flex flex-col items-center justify-center text-center min-h-[100px]"
+        onClick={() => {
+          // Clear form for new patient
+          window.location.reload(); // Simple way to reset form
+        }}
+      >
+        <Plus className="w-6 h-6 text-slate-400 mb-2" />
+        <span className="text-slate-400 text-sm font-medium">New Patient</span>
+        <span className="text-slate-500 text-xs">Start fresh</span>
+      </div>
+    </div>
+  );
+};
+
   'after meals': 'After meals',
   'with food': 'With food',
   'without food': 'Without food',
