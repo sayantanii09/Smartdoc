@@ -4600,10 +4600,10 @@ const Shrutapex = () => {
                 </button>
                 
                 <button 
-                  onClick={() => setShowPatientStorage(true)}
+                  onClick={() => setShowPatientSearch(true)}
                   className="px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-xl font-bold transition-all shadow-lg"
                 >
-                  👤 Load Patient
+                  👤 Search & Load Patient
                 </button>
                 
                 <button 
