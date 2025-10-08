@@ -302,3 +302,42 @@ class FHIRBundle(BaseModel):
     type: str = "transaction"
     timestamp: Optional[str] = None
     entry: List[dict] = Field(default_factory=list)
+
+# Patient Storage System Models
+class SavedPatient(BaseModel):
+    patient_code: str = Field(..., description="Unique 6-8 character patient code")
+    patient_info: PatientInfo
+    medical_history: MedicalHistory
+    doctor_id: str
+    diagnosis: Optional[str] = None
+    prognosis: Optional[str] = None
+    visit_date: datetime
+    last_updated: datetime
+    notes: Optional[str] = None
+    is_active: bool = True
+
+class PatientSearchRequest(BaseModel):
+    patient_code: str = Field(..., min_length=6, max_length=8)
+
+# Medication Template System Models
+class MedicationTemplate(BaseModel):
+    name: str = Field(..., description="Template name (e.g., 'Hypertension Standard')")
+    disease_condition: str = Field(..., description="Associated disease/condition")
+    medications: List[Medication]
+    description: Optional[str] = None
+    doctor_id: str
+    is_public: bool = Field(False, description="Available to all doctors")
+    usage_count: int = Field(0, description="How many times this template has been used")
+    created_at: datetime
+    updated_at: datetime
+
+class TemplateSaveRequest(BaseModel):
+    name: str
+    disease_condition: str
+    medications: List[Medication]
+    description: Optional[str] = None
+    is_public: bool = False
+
+class TemplateSearchRequest(BaseModel):
+    disease_condition: Optional[str] = None
+    template_name: Optional[str] = None
