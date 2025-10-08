@@ -1335,7 +1335,7 @@ async def main():
                 "results": results
             }, f, indent=2)
         
-        print(f"\n💾 Results saved to /app/patient_storage_test_results.json")
+        print(f"\n💾 Results saved to /app/new_patient_management_test_results.json")
         
         return passed == total
 
