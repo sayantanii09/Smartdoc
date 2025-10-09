@@ -2947,6 +2947,43 @@ const Shrutapex = () => {
         yPosition += prognosisLines.length * 5 + 15;
       }
       
+      // Lab Tests & Investigations (if detected by AI)
+      if (extractedData && extractedData.labTests && extractedData.labTests.length > 0) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('LAB TESTS & INVESTIGATIONS:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        extractedData.labTests.forEach((test, index) => {
+          pdf.text(`${index + 1}. ${test}`, 25, yPosition);
+          yPosition += 4;
+        });
+        yPosition += 10;
+      }
+      
+      // Referrals (if detected by AI)
+      if (extractedData && extractedData.referrals && extractedData.referrals.length > 0) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('REFERRALS:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        extractedData.referrals.forEach((referral, index) => {
+          pdf.text(`${index + 1}. ${referral}`, 25, yPosition);
+          yPosition += 4;
+        });
+        yPosition += 10;
+      }
+      
+      // Follow-up Instructions
+      if (extractedData && extractedData.followUp) {
+        pdf.setFont('helvetica', 'bold');
+        pdf.text('FOLLOW-UP INSTRUCTIONS:', 20, yPosition);
+        yPosition += 5;
+        pdf.setFont('helvetica', 'normal');
+        const followUpLines = pdf.splitTextToSize(extractedData.followUp, pageWidth - 40);
+        pdf.text(followUpLines, 20, yPosition);
+        yPosition += followUpLines.length * 5 + 10;
+      }
+      
       // Doctor signature area
       yPosition = Math.max(yPosition, pageHeight - 40);
       pdf.line(120, yPosition, 180, yPosition); // Signature line
