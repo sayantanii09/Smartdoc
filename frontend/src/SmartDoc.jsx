@@ -2478,6 +2478,8 @@ const Shrutapex = () => {
       prognosis: [],
       familyHistory: [],
       referrals: [],
+      labTests: [],
+      followUp: [],
       vitals: [],
       allergies: [],
       socialHistory: []
