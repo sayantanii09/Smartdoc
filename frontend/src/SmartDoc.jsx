@@ -2507,6 +2507,16 @@ const Shrutapex = () => {
         /(?:refer|referral|refer to|see|consult|consultation):?\s*([^.;,]+)/gi,
         /(?:specialist|cardiologist|neurologist|dermatologist|psychiatrist):?\s*([^.;,]+)/gi
       ],
+      labTests: [
+        /(?:lab|laboratory|test|blood test|urine test|investigation|workup):?\s*([^.;,]+)/gi,
+        /(?:CBC|LFT|RFT|lipid profile|HbA1c|TSH|x-ray|CT|MRI|ultrasound|ECG|EKG):?\s*([^.;,]*)/gi,
+        /(?:order|request|get|do|perform):?\s*(blood|urine|stool|imaging|scan|test)?\s*([^.;,]+)/gi
+      ],
+      followUp: [
+        /(?:follow.*up|next visit|return|come back|revisit|review):?\s*([^.;,]+)/gi,
+        /(?:after|in)\s*(\d+\s*(?:days?|weeks?|months?)):?\s*([^.;,]*)/gi,
+        /(?:schedule|book|arrange):?\s*([^.;,]+)/gi
+      ],
       vitals: [
         /(?:vitals?|blood pressure|bp|heart rate|hr|temperature|temp|pulse|respiration|oxygen saturation):?\s*([^.;,]+)/gi,
         /(?:systolic|diastolic|\d+\/\d+|\d+\s*mmhg|\d+\s*bpm|\d+\s*degrees?):?\s*([^.;,]*)/gi
