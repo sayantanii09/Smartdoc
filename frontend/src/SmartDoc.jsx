@@ -2863,6 +2863,16 @@ const Shrutapex = () => {
       pdf.setFont('helvetica', 'normal');
       pdf.text(`Name: ${patientName || 'Not specified'}`, 20, yPosition);
       yPosition += 5;
+      
+      // Add MRN and Visit Code if available
+      if (currentPatientMRN) {
+        pdf.text(`Medical Record No.: ${currentPatientMRN}`, 20, yPosition);
+        yPosition += 5;
+      }
+      if (patientCode) {
+        pdf.text(`Visit Code: ${patientCode}`, 20, yPosition);
+        yPosition += 5;
+      }
       pdf.text(`Age: ${patientAge || 'N/A'}   Gender: ${patientGender || 'N/A'}   Height: ${patientHeight || 'N/A'}   Weight: ${patientWeight || 'N/A'}`, 20, yPosition);
       yPosition += 5;
       pdf.text(`Blood Pressure: ${patientBP || 'N/A'}   Temperature: ${temperature || 'N/A'}`, 20, yPosition);
