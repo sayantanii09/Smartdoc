@@ -2854,7 +2854,12 @@ const Shrutapex = () => {
       // Date and time
       pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, yPosition);
       pdf.text(`Time: ${new Date().toLocaleTimeString()}`, 120, yPosition);
-      yPosition += 15;
+      yPosition += 5;
+      
+      // Prescription ID (generate unique ID for this prescription)
+      const prescriptionId = 'RX' + Date.now().toString().slice(-8);
+      pdf.text(`Prescription ID: ${prescriptionId}`, 20, yPosition);
+      yPosition += 10;
       
       // Patient Information
       pdf.setFont('helvetica', 'bold');
