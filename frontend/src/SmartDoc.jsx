@@ -577,6 +577,11 @@ const Shrutapex = () => {
   const [showTrainingPanel, setShowTrainingPanel] = useState(false);
   const [dynamicMedicationDB, setDynamicMedicationDB] = useState({});
 
+  
+  // Medical Documentation Fields
+  const [labTests, setLabTests] = useState('');
+  const [referrals, setReferrals] = useState('');
+  const [followUpInstructions, setFollowUpInstructions] = useState('');
   // Patient Storage System
   const [showPatientStorage, setShowPatientStorage] = useState(false);
   const [patientCode, setPatientCode] = useState('');
