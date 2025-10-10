@@ -611,6 +611,21 @@ const Shrutapex = () => {
   });
   const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
   
+  // Enhanced template creation state
+  const [newTemplate, setNewTemplate] = useState({
+    name: '',
+    disease_condition: '',
+    custom_disease: '',
+    medications: [],
+    description: '',
+    is_public: false
+  });
+  const [newMedication, setNewMedication] = useState({
+    name: '',
+    dosage: '',
+    frequency: ''
+  });
+  
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
 
