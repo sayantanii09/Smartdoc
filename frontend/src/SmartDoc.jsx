@@ -3051,39 +3051,35 @@ const Shrutapex = () => {
         yPosition += prognosisLines.length * 5 + 15;
       }
       
-      // Lab Tests & Investigations (if detected by AI)
-      if (extractedData && extractedData.labTests && extractedData.labTests.length > 0) {
+      // Lab Tests & Investigations
+      if (labTests && labTests.trim()) {
         pdf.setFont('helvetica', 'bold');
         pdf.text('LAB TESTS & INVESTIGATIONS:', 20, yPosition);
         yPosition += 5;
         pdf.setFont('helvetica', 'normal');
-        extractedData.labTests.forEach((test, index) => {
-          pdf.text(`${index + 1}. ${test}`, 25, yPosition);
-          yPosition += 4;
-        });
-        yPosition += 10;
+        const labTestsLines = pdf.splitTextToSize(labTests, pageWidth - 40);
+        pdf.text(labTestsLines, 20, yPosition);
+        yPosition += labTestsLines.length * 5 + 10;
       }
       
-      // Referrals (if detected by AI)
-      if (extractedData && extractedData.referrals && extractedData.referrals.length > 0) {
+      // Referrals
+      if (referrals && referrals.trim()) {
         pdf.setFont('helvetica', 'bold');
-        pdf.text('REFERRALS:', 20, yPosition);
+        pdf.text('REFERRALS & CONSULTATIONS:', 20, yPosition);
         yPosition += 5;
         pdf.setFont('helvetica', 'normal');
-        extractedData.referrals.forEach((referral, index) => {
-          pdf.text(`${index + 1}. ${referral}`, 25, yPosition);
-          yPosition += 4;
-        });
-        yPosition += 10;
+        const referralsLines = pdf.splitTextToSize(referrals, pageWidth - 40);
+        pdf.text(referralsLines, 20, yPosition);
+        yPosition += referralsLines.length * 5 + 10;
       }
       
       // Follow-up Instructions
-      if (extractedData && extractedData.followUp) {
+      if (followUpInstructions && followUpInstructions.trim()) {
         pdf.setFont('helvetica', 'bold');
         pdf.text('FOLLOW-UP INSTRUCTIONS:', 20, yPosition);
         yPosition += 5;
         pdf.setFont('helvetica', 'normal');
-        const followUpLines = pdf.splitTextToSize(extractedData.followUp, pageWidth - 40);
+        const followUpLines = pdf.splitTextToSize(followUpInstructions, pageWidth - 40);
         pdf.text(followUpLines, 20, yPosition);
         yPosition += followUpLines.length * 5 + 10;
       }
