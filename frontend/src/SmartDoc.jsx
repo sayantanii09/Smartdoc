@@ -1159,6 +1159,88 @@ const Shrutapex = () => {
       extractedPrognosis = 'Favorable prognosis with appropriate treatment adherence';
     }
     setPrognosis(extractedPrognosis);
+    
+    // Extract lab tests and investigations
+    let extractedLabTests = '';
+    const labPatterns = [
+      /(?:order|get|do|perform|request)\s+(?:blood|lab|laboratory)?\s*(?:test|work|workup|investigation)/gi,
+      /(?:CBC|complete blood count|FBC|full blood count)/gi,
+      /(?:LFT|liver function test|liver panel)/gi,
+      /(?:RFT|renal function test|kidney function)/gi,
+      /(?:lipid profile|cholesterol test|lipid panel)/gi,
+      /(?:HbA1c|glycated hemoglobin|glucose test)/gi,
+      /(?:TSH|thyroid function|thyroid test)/gi,
+      /(?:x-?ray|chest x-ray|radiography)/gi,
+      /(?:CT|computed tomography|CAT scan)/gi,
+      /(?:MRI|magnetic resonance)/gi,
+      /(?:ultrasound|sonography|USG)/gi,
+      /(?:ECG|EKG|electrocardiogram)/gi,
+      /(?:echo|echocardiogram)/gi
+    ];
+    
+    const labMatches = [];
+    labPatterns.forEach(pattern => {
+      const matches = lowerText.match(pattern);
+      if (matches) {
+        labMatches.push(...matches);
+      }
+    });
+    
+    if (labMatches.length > 0) {
+      extractedLabTests = [...new Set(labMatches)].join(', ');
+    }
+    setLabTests(extractedLabTests);
+    
+    // Extract referrals
+    let extractedReferrals = '';
+    const referralPatterns = [
+      /(?:refer|referral|refer to|see)\s+(?:a\s+)?(?:specialist|consultant|doctor)/gi,
+      /(?:cardiology|cardiologist)/gi,
+      /(?:neurology|neurologist)/gi,
+      /(?:dermatology|dermatologist)/gi,
+      /(?:orthopedic|orthopedist|orthopedics)/gi,
+      /(?:psychiatrist|psychiatry|mental health)/gi,
+      /(?:ENT|otolaryngology)/gi,
+      /(?:ophthalmology|eye doctor|optometrist)/gi,
+      /(?:gastroenterology|GI specialist)/gi
+    ];
+    
+    const referralMatches = [];
+    referralPatterns.forEach(pattern => {
+      const matches = lowerText.match(pattern);
+      if (matches) {
+        referralMatches.push(...matches);
+      }
+    });
+    
+    if (referralMatches.length > 0) {
+      extractedReferrals = [...new Set(referralMatches)].join(', ');
+    }
+    setReferrals(extractedReferrals);
+    
+    // Extract follow-up instructions
+    let extractedFollowUp = '';
+    const followUpPatterns = [
+      /(?:follow.?up|return|come back|revisit)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
+      /(?:next visit|next appointment)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
+      /(?:review|recheck|reassess)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
+      /(?:monitor|watch|observe)\s+(?:for|over)\s+(\d+\s*(?:days?|weeks?|months?))/gi
+    ];
+    
+    const followUpMatches = [];
+    followUpPatterns.forEach(pattern => {
+      const matches = lowerText.match(pattern);
+      if (matches) {
+        followUpMatches.push(...matches);
+      }
+    });
+    
+    if (followUpMatches.length > 0) {
+      extractedFollowUp = [...new Set(followUpMatches)].join(', ');
+    } else if (lowerText.includes('follow up') || lowerText.includes('return')) {
+      extractedFollowUp = 'Follow-up as needed';
+    }
+    setFollowUpInstructions(extractedFollowUp);
 
     checkInteractions(extractedMeds);
   };
