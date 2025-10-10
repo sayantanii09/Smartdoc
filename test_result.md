@@ -304,7 +304,7 @@ frontend:
     implemented: true
     working: false
     file: "frontend/src/SmartDoc.jsx"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -314,6 +314,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "❌ TEMPLATE LOADING ISSUE - Load Disease Template section not found in prescription workflow. Browse All Templates button not accessible during prescribing. Template creation works but integration with prescription workflow is missing. Created templates are not visible/loadable when writing prescriptions for matching diagnoses."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE CONFIRMED - Comprehensive testing shows Load Disease Template section is completely missing from HTML in prescription workflow. Root cause: Template section is conditionally rendered based on (diagnosis || medications.length > 0) but these state variables are not properly populated when navigating to review page. Console logs show diagnosis and medications are extracted during demo consultation, but React state is not updated. Fixed QuickTemplateLoader API response handling, but main issue is state management during navigation. Template section exists in code (lines 5527-5554) but condition fails at runtime."
 
   - task: "SmartDoc Pro Speech Interface"
     implemented: true
