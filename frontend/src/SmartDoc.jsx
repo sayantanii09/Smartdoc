@@ -546,10 +546,6 @@ const Shrutapex = () => {
     clientId: '',
     clientSecret: '',
     authUrl: '',
-  // Medical Documentation Fields
-  const [labTests, setLabTests] = useState('');
-  const [referrals, setReferrals] = useState('');
-  const [followUpInstructions, setFollowUpInstructions] = useState('');
     tokenUrl: '',
     scope: 'patient/*.read patient/*.write',
     useOauth: true,
