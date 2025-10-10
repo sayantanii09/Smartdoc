@@ -5596,6 +5596,47 @@ const Shrutapex = () => {
             </div>
           </div>
         )}
+        
+        {/* Load Medication Template - Always Visible */}
+        <div className="max-w-4xl mx-auto mb-6">
+          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-slate-700/50">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                  <Pill className="w-7 h-7 text-orange-400" />
+                  🏥 Load Disease Template
+                </h3>
+                <button
+                  onClick={() => setShowMedicationTemplates(true)}
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-all"
+                >
+                  Browse All Templates
+                </button>
+              </div>
+              
+              {diagnosis ? (
+                <QuickTemplateLoader 
+                  diagnosis={diagnosis}
+                  authToken={authToken}
+                  onLoadTemplate={loadMedicationTemplate}
+                />
+              ) : (
+                <div className="text-center py-6">
+                  <Pill className="w-12 h-12 text-orange-500 mx-auto mb-3" />
+                  <p className="text-orange-300 font-medium mb-2">💊 Ready to Load Templates</p>
+                  <p className="text-orange-400 text-sm">Run demo consultation or enter diagnosis to see relevant medication templates</p>
+                </div>
+              )}
+              
+              <div className="mt-4 p-3 bg-orange-500/10 rounded-lg border border-orange-500/30">
+                <p className="text-orange-300 text-sm">
+                  💡 <strong>Disease Templates:</strong> Load pre-configured medication sets for common conditions like Hypertension, Diabetes, UTI, etc.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
