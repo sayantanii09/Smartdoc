@@ -3560,97 +3560,230 @@ const Shrutapex = () => {
     );
   }
 
-  // Create Template Modal
+  // Create Template Modal - Enhanced Version
   if (showCreateTemplate) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 p-4 md:p-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-slate-700/50">
             <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/5"></div>
             <div className="relative">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                  <Plus className="w-8 h-8 text-emerald-400" />
-                  Create Medication Template
-                </h2>
-                <button 
-                  onClick={() => {
-                    setShowCreateTemplate(false);
-                    setShowMedicationTemplates(true);
-                  }}
-                  className="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all font-medium"
-                >
-                  ← Back
-                </button>
+              <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                <Plus className="w-8 h-8 text-emerald-400" />
+                Create Disease-Specific Medication Template
+              </h2>
+              
+              {/* Template Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label className="block text-emerald-300 font-semibold text-sm mb-2 uppercase tracking-wide">Template Name</label>
+                  <input
+                    type="text"
+                    value={newTemplate.name}
+                    onChange={(e) => setNewTemplate({...newTemplate, name: e.target.value})}
+                    placeholder="e.g., HTN First Line Treatment"
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-emerald-300 font-semibold text-sm mb-2 uppercase tracking-wide">Disease/Condition</label>
+                  <select
+                    value={newTemplate.disease_condition}
+                    onChange={(e) => setNewTemplate({...newTemplate, disease_condition: e.target.value})}
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  >
+                    <option value="" style={{color: 'black', backgroundColor: 'white'}}>Select Disease</option>
+                    <option value="Hypertension" style={{color: 'black', backgroundColor: 'white'}}>Hypertension</option>
+                    <option value="Type 2 Diabetes" style={{color: 'black', backgroundColor: 'white'}}>Type 2 Diabetes</option>
+                    <option value="Upper Respiratory Infection" style={{color: 'black', backgroundColor: 'white'}}>Upper Respiratory Infection</option>
+                    <option value="Urinary Tract Infection" style={{color: 'black', backgroundColor: 'white'}}>Urinary Tract Infection</option>
+                    <option value="Bronchial Asthma" style={{color: 'black', backgroundColor: 'white'}}>Bronchial Asthma</option>
+                    <option value="Gastritis/GERD" style={{color: 'black', backgroundColor: 'white'}}>Gastritis/GERD</option>
+                    <option value="Anxiety/Depression" style={{color: 'black', backgroundColor: 'white'}}>Anxiety/Depression</option>
+                    <option value="Arthritis/Joint Pain" style={{color: 'black', backgroundColor: 'white'}}>Arthritis/Joint Pain</option>
+                    <option value="Custom" style={{color: 'black', backgroundColor: 'white'}}>Custom (Enter below)</option>
+                  </select>
+                  
+                  {newTemplate.disease_condition === 'Custom' && (
+                    <input
+                      type="text"
+                      value={newTemplate.custom_disease}
+                      onChange={(e) => setNewTemplate({...newTemplate, custom_disease: e.target.value})}
+                      placeholder="Enter custom disease/condition"
+                      className="w-full mt-2 px-4 py-2 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Template Name</label>
-                  <input
-                    type="text"
-                    value={templateData.name}
-                    onChange={(e) => setTemplateData({...templateData, name: e.target.value})}
-                    placeholder="e.g., 'Hypertension Standard Protocol'"
-                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
+              {/* Add Medications from Scratch */}
+              <div className="mb-6">
+                <label className="block text-emerald-300 font-semibold text-sm mb-3 uppercase tracking-wide">
+                  Add Medications to Template
+                </label>
+                
+                {/* Add New Medication Form */}
+                <div className="bg-slate-900/30 rounded-xl p-4 border border-slate-600/50 mb-4">
+                  <p className="text-slate-300 font-medium mb-3">➕ Add New Medication</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <input
+                      type="text"
+                      value={newMedication.name}
+                      onChange={(e) => setNewMedication({...newMedication, name: e.target.value})}
+                      placeholder="Drug name"
+                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                    />
+                    <input
+                      type="text"
+                      value={newMedication.dosage}
+                      onChange={(e) => setNewMedication({...newMedication, dosage: e.target.value})}
+                      placeholder="Dosage (e.g., 5mg)"
+                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                    />
+                    <select
+                      value={newMedication.frequency}
+                      onChange={(e) => setNewMedication({...newMedication, frequency: e.target.value})}
+                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+                    >
+                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Frequency</option>
+                      <option value="Once daily" style={{color: 'black', backgroundColor: 'white'}}>Once daily</option>
+                      <option value="Twice daily" style={{color: 'black', backgroundColor: 'white'}}>Twice daily</option>
+                      <option value="Three times daily" style={{color: 'black', backgroundColor: 'white'}}>Three times daily</option>
+                      <option value="Four times daily" style={{color: 'black', backgroundColor: 'white'}}>Four times daily</option>
+                      <option value="As needed" style={{color: 'black', backgroundColor: 'white'}}>As needed</option>
+                    </select>
+                    <button
+                      onClick={() => {
+                        if (newMedication.name && newMedication.dosage && newMedication.frequency) {
+                          const templateMed = `${newMedication.name} ${newMedication.dosage} ${newMedication.frequency}`;
+                          setNewTemplate({
+                            ...newTemplate,
+                            medications: [...newTemplate.medications, templateMed]
+                          });
+                          setNewMedication({name: '', dosage: '', frequency: ''});
+                        }
+                      }}
+                      disabled={!newMedication.name || !newMedication.dosage || !newMedication.frequency}
+                      className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-600 text-white rounded-lg text-sm font-medium transition-all disabled:cursor-not-allowed"
+                    >
+                      Add Med
+                    </button>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Disease/Condition</label>
-                  <input
-                    type="text"
-                    value={templateData.disease_condition}
-                    onChange={(e) => setTemplateData({...templateData, disease_condition: e.target.value})}
-                    placeholder="e.g., 'Hypertension', 'Diabetes Type 2', 'Anxiety'"
-                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-emerald-300 mb-2">Description (Optional)</label>
-                  <textarea
-                    value={templateData.description}
-                    onChange={(e) => setTemplateData({...templateData, description: e.target.value})}
-                    placeholder="Brief description of this treatment protocol..."
-                    className="w-full h-24 px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    id="isPublic"
-                    checked={templateData.is_public}
-                    onChange={(e) => setTemplateData({...templateData, is_public: e.target.checked})}
-                    className="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500"
-                  />
-                  <label htmlFor="isPublic" className="text-emerald-300 text-sm">
-                    Make this template public (available to all doctors)
-                  </label>
-                </div>
-
-                <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-                  <h4 className="text-blue-300 font-semibold mb-2">Current Medications ({medications.length})</h4>
-                  {medications.length > 0 ? (
-                    <div className="space-y-2">
+                {/* Copy from Current Prescription */}
+                {medications.length > 0 && (
+                  <div className="bg-slate-900/30 rounded-xl p-4 border border-slate-600/50 mb-4">
+                    <p className="text-slate-300 font-medium mb-3">📋 Copy from Current Prescription</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-32 overflow-y-auto">
                       {medications.map((med, index) => (
-                        <div key={index} className="p-2 bg-slate-800/30 rounded text-sm text-slate-300">
-                          {med.name} - {med.dosage} - {med.frequency} - {med.duration}
+                        <div key={index} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <span className="text-white font-medium text-sm truncate block">{med.name}</span>
+                            <span className="text-slate-400 text-xs">{med.dosage} - {med.frequency}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const templateMed = `${med.name} ${med.dosage} ${med.frequency}`;
+                              if (!newTemplate.medications.includes(templateMed)) {
+                                setNewTemplate({
+                                  ...newTemplate,
+                                  medications: [...newTemplate.medications, templateMed]
+                                });
+                              }
+                            }}
+                            className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-all ml-2"
+                          >
+                            Copy
+                          </button>
                         </div>
                       ))}
                     </div>
-                  ) : (
-                    <p className="text-slate-500 text-sm">No medications added yet. Add medications in the main prescription form first.</p>
-                  )}
-                </div>
+                  </div>
+                )}
 
+                {/* Template Medications List */}
+                {newTemplate.medications.length > 0 && (
+                  <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-500/30">
+                    <p className="text-emerald-300 font-medium mb-3">💊 Template Medications ({newTemplate.medications.length})</p>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {newTemplate.medications.map((med, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                          <span className="text-white text-sm">{med}</span>
+                          <button
+                            onClick={() => {
+                              setNewTemplate({
+                                ...newTemplate,
+                                medications: newTemplate.medications.filter((_, i) => i !== index)
+                              });
+                            }}
+                            className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-all"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Template Settings */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <label className="block text-emerald-300 font-semibold text-sm mb-2 uppercase tracking-wide">Description</label>
+                  <textarea
+                    value={newTemplate.description}
+                    onChange={(e) => setNewTemplate({...newTemplate, description: e.target.value})}
+                    placeholder="Template usage notes, special instructions, or contraindications..."
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                    rows="3"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-emerald-300 font-semibold text-sm mb-2 uppercase tracking-wide">Template Visibility</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={newTemplate.is_public}
+                        onChange={(e) => setNewTemplate({...newTemplate, is_public: e.target.checked})}
+                        className="mr-3 w-4 h-4 text-emerald-600 bg-slate-700 border-slate-600 rounded focus:ring-emerald-500 focus:ring-2"
+                      />
+                      <span className="text-white text-sm">Make template public (accessible to other doctors)</span>
+                    </label>
+                    <p className="text-slate-400 text-xs ml-7">Public templates help build a community knowledge base</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-4">
                 <button 
-                  onClick={saveMedicationTemplate}
-                  disabled={isCreatingTemplate || !templateData.name || !templateData.disease_condition || medications.length === 0}
-                  className="w-full py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-xl font-bold transition-all disabled:cursor-not-allowed"
+                  onClick={() => {
+                    setShowCreateTemplate(false);
+                    setNewTemplate({
+                      name: '',
+                      disease_condition: '',
+                      custom_disease: '',
+                      medications: [],
+                      description: '',
+                      is_public: false
+                    });
+                    setNewMedication({name: '', dosage: '', frequency: ''});
+                  }}
+                  className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all font-medium"
                 >
-                  {isCreatingTemplate ? 'Creating Template...' : 'Create Template'}
+                  ← Cancel
+                </button>
+                <button
+                  onClick={createMedicationTemplate}
+                  disabled={!newTemplate.name || (!newTemplate.disease_condition || newTemplate.disease_condition === 'Custom' && !newTemplate.custom_disease) || newTemplate.medications.length === 0 || isCreatingTemplate}
+                  className="flex-1 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-lg font-bold transition-all disabled:cursor-not-allowed"
+                >
+                  {isCreatingTemplate ? 'Creating Template...' : `Create Template (${newTemplate.medications.length} medications)`}
                 </button>
               </div>
             </div>
