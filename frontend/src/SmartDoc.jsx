@@ -5523,35 +5523,6 @@ const Shrutapex = () => {
                   </button>
                 </div>
               )}
-              
-              {/* Load Medication Template - Always Visible */}
-              <div className="mt-6 p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-orange-300 font-semibold">🏥 Load Disease Template</h4>
-                  <button
-                    onClick={() => setShowMedicationTemplates(true)}
-                    className="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-sm transition-all"
-                  >
-                    Browse All Templates
-                  </button>
-                </div>
-                
-                {diagnosis ? (
-                  <QuickTemplateLoader 
-                    diagnosis={diagnosis}
-                    authToken={authToken}
-                    onLoadTemplate={loadMedicationTemplate}
-                  />
-                ) : (
-                  <div className="text-orange-400 text-sm">
-                    💊 Enter diagnosis first to see relevant templates
-                  </div>
-                )}
-                
-                <p className="text-orange-200 text-xs mt-2">
-                  💡 Load pre-configured medication sets for common conditions
-                </p>
-              </div>
 
               {prognosis && (
                 <div className="mb-6">
