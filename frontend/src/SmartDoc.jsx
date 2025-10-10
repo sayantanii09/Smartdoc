@@ -458,7 +458,11 @@ const QuickTemplateLoader = ({ diagnosis, authToken, onLoadTemplate }) => {
 
         if (response.ok) {
           const data = await response.json();
-          setMatchingTemplates(data.templates.slice(0, 3)); // Show top 3 matches
+          // Handle both direct templates array and StandardResponse format
+          const templates = data.templates || data.data?.templates || [];
+          setMatchingTemplates(templates.slice(0, 3)); // Show top 3 matches
+        } else {
+          console.error('Template search failed:', response.status, response.statusText);
         }
       } catch (error) {
         console.error('Error fetching templates:', error);
