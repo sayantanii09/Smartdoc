@@ -2149,6 +2149,9 @@ const Shrutapex = () => {
           },
           diagnosis: diagnosis,
           prognosis: prognosis,
+          lab_tests: labTests,
+          referrals: referrals,
+          follow_up_instructions: followUpInstructions,
           notes: ''
         }),
       });
