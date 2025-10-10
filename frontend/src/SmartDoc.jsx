@@ -2739,6 +2739,18 @@ const Shrutapex = () => {
         /(?:diagnosis|diagnosed with|suffering from|presents with|chief complaint|cc):?\s*([^.;,]+)/gi,
         /(?:patient has|patient is|condition is|condition):?\s*([^.;,]+)/gi
       ],
+      pastMedicalHistory: [
+        /(?:past medical history|medical history|history of|previous history|past history):?\s*([^.;,]+)/gi,
+        /(?:previously diagnosed|previous diagnosis|past diagnosis|history includes):?\s*([^.;,]+)/gi,
+        /(?:past conditions|previous conditions|chronic conditions|comorbidities):?\s*([^.;,]+)/gi,
+        /(?:has a history of|history of|previously had|past medical|medical background):?\s*([^.;,]+)/gi
+      ],
+      pastMedications: [
+        /(?:past medications|previous medications|medication history|previously on|past meds):?\s*([^.;,]+)/gi,
+        /(?:previous surgery|past surgery|surgical history|operations):?\s*([^.;,]+)/gi,
+        /(?:previously taking|was taking|used to take|past treatment):?\s*([^.;,]+)/gi,
+        /(?:hospitalizations|previous admission|past admission):?\s*([^.;,]+)/gi
+      ],
       medications: [
         /(?:medications?|prescribe|prescribed|give|start|medication list|meds?):?\s*([^.;,]+)/gi,
         /(?:take|taking|on):?\s*([^.;,]*(?:mg|mcg|ml|tablet|capsule)[^.;,]*)/gi
