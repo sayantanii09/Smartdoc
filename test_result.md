@@ -270,6 +270,51 @@ backend:
         comment: "✅ PASS - Backward compatibility maintained. Legacy saved_patients collection still functional with patient_code system. Both old and new systems coexist. Legacy endpoints continue to work for existing integrations. Minor: Legacy search endpoint expects search_term parameter instead of patient_code."
 
 frontend:
+  - task: "Med Templates System - Navigation Testing"
+    implemented: true
+    working: true
+    file: "frontend/src/SmartDoc.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing required for completely redesigned Med Templates System navigation bug fixes"
+      - working: true
+        agent: "testing"
+        comment: "✅ NAVIGATION BUG FIXED - Med Templates button correctly opens templates interface. Create Template button opens create form (not back button). Back button returns to main dashboard (not create form). All navigation flows work as expected."
+
+  - task: "Med Templates System - Enhanced Create Template Functionality"
+    implemented: true
+    working: true
+    file: "frontend/src/SmartDoc.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing required for disease-specific dropdown, custom disease input, medication builder, and template creation from scratch"
+      - working: true
+        agent: "testing"
+        comment: "✅ ENHANCED FUNCTIONALITY WORKING - Disease-specific dropdown with Hypertension/Diabetes/UTI options available. Template name field functional. Medication builder with Drug name, Dosage, and Frequency fields working. Add Med button successfully adds medications to template. Template visibility settings (public/private) available. Successfully created Hypertension template with Amlodipine 5mg Once daily and Metoprolol 25mg Twice daily."
+
+  - task: "Med Templates System - Template Loading During Prescription"
+    implemented: true
+    working: false
+    file: "frontend/src/SmartDoc.jsx"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Testing required for Load Disease Template section and Browse All Templates functionality during prescription workflow"
+      - working: false
+        agent: "testing"
+        comment: "❌ TEMPLATE LOADING ISSUE - Load Disease Template section not found in prescription workflow. Browse All Templates button not accessible during prescribing. Template creation works but integration with prescription workflow is missing. Created templates are not visible/loadable when writing prescriptions for matching diagnoses."
+
   - task: "SmartDoc Pro Speech Interface"
     implemented: true
     working: true
