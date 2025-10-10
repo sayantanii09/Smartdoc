@@ -3836,6 +3836,7 @@ const Shrutapex = () => {
                 <button 
                   onClick={() => {
                     setShowCreateTemplate(false);
+                    setShowMedicationTemplates(true);
                     setNewTemplate({
                       name: '',
                       disease_condition: '',
@@ -3848,7 +3849,7 @@ const Shrutapex = () => {
                   }}
                   className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all font-medium"
                 >
-                  ← Cancel
+                  ← Back to Templates
                 </button>
                 <button
                   onClick={createMedicationTemplate}
