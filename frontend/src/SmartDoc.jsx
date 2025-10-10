@@ -439,6 +439,71 @@ const RecentPatientsComponent = ({ authToken, onPatientSelect, selectedPatientMR
     </div>
   );
 };
+// Quick Template Loader Component
+const QuickTemplateLoader = ({ diagnosis, authToken, onLoadTemplate }) => {
+  const [matchingTemplates, setMatchingTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMatchingTemplates = async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/search`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ disease_condition: diagnosis }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setMatchingTemplates(data.templates.slice(0, 3)); // Show top 3 matches
+        }
+      } catch (error) {
+        console.error('Error fetching templates:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (authToken && diagnosis) {
+      fetchMatchingTemplates();
+    }
+  }, [authToken, diagnosis]);
+
+  if (loading) {
+    return <div className="text-orange-400 text-sm">Searching templates for "{diagnosis}"...</div>;
+  }
+
+  if (matchingTemplates.length === 0) {
+    return (
+      <div className="text-orange-400 text-sm">
+        No templates found for "{diagnosis}". You can create one!
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <p className="text-orange-300 text-sm font-medium">Found {matchingTemplates.length} template(s) for "{diagnosis}":</p>
+      {matchingTemplates.map((template) => (
+        <div key={template._id} className="flex items-center justify-between p-2 bg-slate-800/50 rounded-lg">
+          <div>
+            <span className="text-white font-medium text-sm">{template.name}</span>
+            <span className="text-orange-400 text-xs ml-2">({template.medications.length} meds)</span>
+          </div>
+          <button
+            onClick={() => onLoadTemplate(template._id)}
+            className="px-3 py-1 bg-orange-600 hover:bg-orange-700 text-white rounded text-xs transition-all"
+          >
+            Load
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 // Formulation types
 const FORMULATION_TYPES = [
