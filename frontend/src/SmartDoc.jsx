@@ -1130,6 +1130,20 @@ const Shrutapex = () => {
       console.log('Allergies updated:', allergiesText);
     }
 
+    // Extract past medical history
+    if (extractedInfo.pastMedicalHistory.length > 0) {
+      const pastMedHistoryText = extractedInfo.pastMedicalHistory.join(', ');
+      setPastMedicalHistory(prev => prev ? `${prev}, ${pastMedHistoryText}` : pastMedHistoryText);
+      console.log('Past medical history updated:', pastMedHistoryText);
+    }
+
+    // Extract past medications/surgeries
+    if (extractedInfo.pastMedications.length > 0) {
+      const pastMedsText = extractedInfo.pastMedications.join(', ');
+      setPastMedications(prev => prev ? `${prev}, ${pastMedsText}` : pastMedsText);
+      console.log('Past medications updated:', pastMedsText);
+    }
+
     if (extractedInfo.socialHistory.length > 0) {
       const socialHistoryText = extractedInfo.socialHistory.join(', ');
       // Update social history fields based on content
