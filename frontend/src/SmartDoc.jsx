@@ -2261,6 +2261,77 @@ const Shrutapex = () => {
     }
   };
 
+  // Enhanced template creation function
+  const createMedicationTemplate = async () => {
+    const diseaseCondition = newTemplate.disease_condition === 'Custom' ? newTemplate.custom_disease : newTemplate.disease_condition;
+    
+    if (!newTemplate.name || !diseaseCondition || newTemplate.medications.length === 0) {
+      alert('Please provide template name, disease condition, and at least one medication');
+      return;
+    }
+
+    setIsCreatingTemplate(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/save`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: newTemplate.name,
+          disease_condition: diseaseCondition,
+          description: newTemplate.description,
+          medications: newTemplate.medications.map(medString => {
+            // Parse medication string back to object format
+            const parts = medString.split(' ');
+            const name = parts[0];
+            const dosage = parts[1];
+            const frequency = parts.slice(2).join(' ');
+            
+            return {
+              name: name,
+              dosage: dosage,
+              formulation: 'Tablet',
+              route: 'Oral',
+              frequency: frequency,
+              foodInstruction: 'With food',
+              duration: '30 days'
+            };
+          }),
+          is_public: newTemplate.is_public
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(`✅ Medication template created successfully!\n\nTemplate: ${newTemplate.name}\nFor: ${diseaseCondition}\nMedications: ${newTemplate.medications.length}`);
+        
+        // Reset form
+        setNewTemplate({
+          name: '',
+          disease_condition: '',
+          custom_disease: '',
+          medications: [],
+          description: '',
+          is_public: false
+        });
+        setNewMedication({name: '', dosage: '', frequency: ''});
+        setShowCreateTemplate(false);
+        setShowMedicationTemplates(true);
+        await fetchMedicationTemplates();
+      } else {
+        const errorData = await response.json();
+        alert(`❌ Failed to create template: ${errorData.detail || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error creating template:', error);
+      alert('❌ Error creating template. Please try again.');
+    } finally {
+      setIsCreatingTemplate(false);
+    }
+  };
+
   const loadMedicationTemplate = async (templateId) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/templates/use/${templateId}`, {
