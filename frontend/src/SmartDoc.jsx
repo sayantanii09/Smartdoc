@@ -3548,7 +3548,10 @@ const Shrutapex = () => {
                 </h2>
                 <div className="flex gap-4">
                   <button 
-                    onClick={() => setShowCreateTemplate(true)}
+                    onClick={() => {
+                      setShowMedicationTemplates(false);
+                      setShowCreateTemplate(true);
+                    }}
                     className="px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all font-medium"
                   >
                     + Create Template
