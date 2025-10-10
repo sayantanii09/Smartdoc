@@ -5515,12 +5515,20 @@ const Shrutapex = () => {
                       </div>
                     ))}
                   </div>
-                  <button 
-                    onClick={addMedication} 
-                    className="mt-4 px-6 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl font-semibold transition-all border border-blue-500/30"
-                  >
-                    + Add Medication
-                  </button>
+                  <div className="flex gap-3 mt-4">
+                    <button 
+                      onClick={addMedication} 
+                      className="flex-1 px-6 py-3 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 rounded-xl font-semibold transition-all border border-blue-500/30"
+                    >
+                      + Add Medication
+                    </button>
+                    <button
+                      onClick={() => setShowMedicationTemplates(true)}
+                      className="px-6 py-3 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 rounded-xl font-semibold transition-all border border-orange-500/30"
+                    >
+                      📋 Use Template
+                    </button>
+                  </div>
                 </div>
               )}
 
