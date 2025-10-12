@@ -2059,6 +2059,76 @@ const Shrutapex = () => {
     }
   };
   
+  
+  // AI LEARNING: Track user corrections
+  const trackCorrection = async (fieldName, originalText, correctedText) => {
+    if (!originalText || !correctedText || originalText === correctedText) return;
+    
+    console.log(`🧠 AI Learning: ${originalText} → ${correctedText}`);
+    
+    // Store correction locally
+    setVoiceCorrections(prev => ({
+      ...prev,
+      [fieldName]: {
+        ...prev[fieldName],
+        [originalText.toLowerCase()]: correctedText
+      }
+    }));
+    
+    // Save to backend for persistent learning
+    try {
+      await apiCall('/api/voice-corrections', {
+        method: 'POST',
+        body: JSON.stringify({
+          field: fieldName,
+          original: originalText,
+          corrected: correctedText,
+          doctor_id: currentDoctor?.id
+        })
+      });
+      console.log('✅ Correction saved to AI learning database');
+    } catch (error) {
+      console.error('Failed to save correction:', error);
+    }
+  };
+  
+  // AI LEARNING: Apply learned corrections
+  const applyLearnedCorrections = (text, fieldName) => {
+    if (!text) return text;
+    
+    let correctedText = text;
+    const corrections = voiceCorrections[fieldName] || {};
+    
+    // Apply all learned corrections for this field
+    Object.keys(corrections).forEach(original => {
+      const regex = new RegExp(original, 'gi');
+      correctedText = correctedText.replace(regex, corrections[original]);
+    });
+    
+    if (correctedText !== text) {
+      console.log(`🤖 AI Auto-correction applied: ${text} → ${correctedText}`);
+    }
+    
+    return correctedText;
+  };
+  
+  // Load learned corrections from backend on mount
+  useEffect(() => {
+    const loadLearnedCorrections = async () => {
+      if (!currentDoctor?.id) return;
+      
+      try {
+        const corrections = await apiCall(`/api/voice-corrections?doctor_id=${currentDoctor.id}`);
+        setLearnedCorrections(corrections);
+        setVoiceCorrections(corrections);
+        console.log('🧠 Loaded AI learned corrections:', corrections);
+      } catch (error) {
+        console.error('Failed to load corrections:', error);
+      }
+    };
+    
+    loadLearnedCorrections();
+  }, [currentDoctor]);
   const addCompletedMedicine = () => {
     if (currentMedicineData.name && currentMedicineData.dosage) {
       setMedications(prev => [...prev, {
