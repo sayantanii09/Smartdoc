@@ -292,6 +292,370 @@ const COMPREHENSIVE_DRUG_DATABASE = {
     warnings: 'Monitor liver enzymes and creatine kinase. Risk of myopathy.',
     contraindications: ['active liver disease', 'pregnancy'],
     sideEffects: ['myalgia', 'elevated liver enzymes', 'headache']
+  },
+
+  // More Antibiotics
+  azithromycin: {
+    class: 'Macrolide Antibiotic',
+    interactions: ['warfarin', 'digoxin', 'ergotamine', 'cyclosporine'],
+    foodInteractions: ['antacids'],
+    warnings: 'QT prolongation risk. Monitor in patients with cardiac conditions.',
+    contraindications: ['history of cholestatic jaundice', 'severe liver disease'],
+    sideEffects: ['diarrhea', 'nausea', 'abdominal pain', 'QT prolongation']
+  },
+  doxycycline: {
+    class: 'Tetracycline Antibiotic',
+    interactions: ['warfarin', 'antacids', 'iron supplements', 'penicillins', 'barbiturates'],
+    foodInteractions: ['dairy products', 'calcium supplements', 'iron supplements'],
+    warnings: 'Photosensitivity. Tooth discoloration in children.',
+    contraindications: ['pregnancy', 'children under 8 years'],
+    sideEffects: ['photosensitivity', 'esophagitis', 'nausea', 'diarrhea']
+  },
+  cephalexin: {
+    class: 'Cephalosporin Antibiotic',
+    interactions: ['warfarin', 'metformin', 'probenecid'],
+    foodInteractions: [],
+    warnings: 'Cross-reactivity with penicillin allergies (5-10%).',
+    contraindications: ['severe penicillin allergy'],
+    sideEffects: ['diarrhea', 'nausea', 'rash', 'vaginitis']
+  },
+  metronidazole: {
+    class: 'Nitroimidazole Antibiotic',
+    interactions: ['warfarin', 'lithium', 'phenytoin', 'busulfan', 'disulfiram'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Disulfiram-like reaction with alcohol. Avoid alcohol during and 3 days after treatment.',
+    contraindications: ['first trimester pregnancy', 'alcohol use'],
+    sideEffects: ['metallic taste', 'nausea', 'headache', 'dark urine']
+  },
+  levofloxacin: {
+    class: 'Fluoroquinolone Antibiotic',
+    interactions: ['warfarin', 'nsaids', 'antacids', 'iron supplements', 'theophylline'],
+    foodInteractions: ['dairy products', 'calcium supplements'],
+    warnings: 'Tendon rupture risk. QT prolongation. C. diff risk.',
+    contraindications: ['myasthenia gravis', 'tendon disorders'],
+    sideEffects: ['nausea', 'diarrhea', 'tendinitis', 'QT prolongation']
+  },
+
+  // More Diabetes Medications
+  glyburide: {
+    class: 'Sulfonylurea',
+    interactions: ['warfarin', 'fluconazole', 'miconazole', 'beta blockers'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Risk of severe hypoglycemia, especially in elderly.',
+    contraindications: ['type 1 diabetes', 'diabetic ketoacidosis'],
+    sideEffects: ['hypoglycemia', 'weight gain', 'nausea']
+  },
+  sitagliptin: {
+    class: 'DPP-4 Inhibitor',
+    interactions: ['digoxin', 'insulin', 'sulfonylureas'],
+    foodInteractions: [],
+    warnings: 'Risk of pancreatitis. Adjust dose in renal impairment.',
+    contraindications: ['type 1 diabetes'],
+    sideEffects: ['nasopharyngitis', 'headache', 'pancreatitis']
+  },
+  empagliflozin: {
+    class: 'SGLT2 Inhibitor',
+    interactions: ['insulin', 'diuretics', 'hypotensive agents'],
+    foodInteractions: [],
+    warnings: 'Risk of DKA, genital infections, dehydration. Monitor kidney function.',
+    contraindications: ['severe renal impairment', 'dialysis'],
+    sideEffects: ['genital infections', 'UTI', 'dehydration', 'DKA']
+  },
+
+  // More Cardiovascular
+  diltiazem: {
+    class: 'Calcium Channel Blocker',
+    interactions: ['simvastatin', 'beta blockers', 'digoxin', 'cyclosporine'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Monitor heart rate and blood pressure. AV block risk.',
+    contraindications: ['sick sinus syndrome', 'severe bradycardia', 'acute MI'],
+    sideEffects: ['bradycardia', 'edema', 'dizziness', 'headache']
+  },
+  verapamil: {
+    class: 'Calcium Channel Blocker',
+    interactions: ['beta blockers', 'digoxin', 'simvastatin', 'cyclosporine'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Monitor heart rate. Severe bradycardia risk with beta blockers.',
+    contraindications: ['severe heart failure', 'sick sinus syndrome', 'AV block'],
+    sideEffects: ['constipation', 'bradycardia', 'hypotension', 'edema']
+  },
+  enalapril: {
+    class: 'ACE Inhibitor',
+    interactions: ['potassium supplements', 'nsaids', 'lithium', 'aliskiren'],
+    foodInteractions: ['salt substitutes', 'potassium-rich foods'],
+    warnings: 'Monitor kidney function and potassium. Risk of angioedema.',
+    contraindications: ['pregnancy', 'angioedema history'],
+    sideEffects: ['dry cough', 'hyperkalemia', 'hypotension', 'dizziness']
+  },
+  carvedilol: {
+    class: 'Alpha/Beta Blocker',
+    interactions: ['diltiazem', 'verapamil', 'rifampin', 'insulin', 'diabetes medications'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Take with food. Monitor blood pressure and heart rate.',
+    contraindications: ['severe bradycardia', 'heart block', 'decompensated heart failure'],
+    sideEffects: ['bradycardia', 'hypotension', 'dizziness', 'fatigue']
+  },
+  isosorbide: {
+    class: 'Nitrate',
+    interactions: ['phosphodiesterase inhibitors', 'alcohol', 'antihypertensives'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Severe hypotension with PDE5 inhibitors. Tolerance with continuous use.',
+    contraindications: ['use of PDE5 inhibitors', 'severe anemia'],
+    sideEffects: ['headache', 'hypotension', 'dizziness', 'flushing']
+  },
+
+  // More Pain Medications
+  tramadol: {
+    class: 'Opioid-like Analgesic',
+    interactions: ['ssris', 'mao inhibitors', 'warfarin', 'carbamazepine', 'cns depressants'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Serotonin syndrome risk. Seizure risk. Dependence potential.',
+    contraindications: ['acute intoxication', 'mao inhibitor use'],
+    sideEffects: ['nausea', 'constipation', 'dizziness', 'seizures']
+  },
+  acetaminophen: {
+    class: 'Analgesic/Antipyretic',
+    interactions: ['warfarin', 'isoniazid', 'phenytoin', 'carbamazepine'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Hepatotoxicity with overdose. Maximum 4g/day. Caution with alcohol.',
+    contraindications: ['severe liver disease', 'acute liver failure'],
+    sideEffects: ['hepatotoxicity', 'rash', 'nausea']
+  },
+  celecoxib: {
+    class: 'COX-2 Selective NSAID',
+    interactions: ['warfarin', 'ace inhibitors', 'lithium', 'fluconazole'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Increased cardiovascular risk. Monitor blood pressure.',
+    contraindications: ['sulfa allergy', 'CABG surgery', 'active GI bleeding'],
+    sideEffects: ['hypertension', 'edema', 'GI upset', 'cardiovascular events']
+  },
+
+  // More Psychiatric Medications
+  escitalopram: {
+    class: 'SSRI Antidepressant',
+    interactions: ['mao inhibitors', 'warfarin', 'triptans', 'tramadol', 'nsaids'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Serotonin syndrome risk. QT prolongation. Suicidal thoughts monitoring.',
+    contraindications: ['mao inhibitor use', 'pimozide use'],
+    sideEffects: ['nausea', 'insomnia', 'sexual dysfunction', 'fatigue']
+  },
+  venlafaxine: {
+    class: 'SNRI Antidepressant',
+    interactions: ['mao inhibitors', 'triptans', 'warfarin', 'aspirin', 'tramadol'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Serotonin syndrome risk. Monitor blood pressure. Withdrawal symptoms.',
+    contraindications: ['mao inhibitor use', 'uncontrolled hypertension'],
+    sideEffects: ['nausea', 'hypertension', 'insomnia', 'sexual dysfunction']
+  },
+  lorazepam: {
+    class: 'Benzodiazepine',
+    interactions: ['opioids', 'alcohol', 'cns depressants', 'valproate'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Risk of dependence. Respiratory depression with opioids. Avoid abrupt discontinuation.',
+    contraindications: ['severe respiratory insufficiency', 'myasthenia gravis'],
+    sideEffects: ['sedation', 'dependence', 'confusion', 'respiratory depression']
+  },
+  alprazolam: {
+    class: 'Benzodiazepine',
+    interactions: ['opioids', 'alcohol', 'ketoconazole', 'itraconazole', 'cns depressants'],
+    foodInteractions: ['grapefruit juice', 'alcohol'],
+    warnings: 'High abuse potential. Severe withdrawal. Respiratory depression with opioids.',
+    contraindications: ['narrow-angle glaucoma', 'ketoconazole use'],
+    sideEffects: ['sedation', 'dependence', 'memory impairment', 'confusion']
+  },
+  quetiapine: {
+    class: 'Atypical Antipsychotic',
+    interactions: ['cns depressants', 'antihypertensives', 'azole antifungals', 'erythromycin'],
+    foodInteractions: ['alcohol', 'grapefruit juice'],
+    warnings: 'QT prolongation. Weight gain. Metabolic syndrome. Orthostatic hypotension.',
+    contraindications: ['dementia-related psychosis'],
+    sideEffects: ['sedation', 'weight gain', 'hyperglycemia', 'orthostatic hypotension']
+  },
+
+  // Anticoagulants/Antiplatelets
+  apixaban: {
+    class: 'Direct Oral Anticoagulant (DOAC)',
+    interactions: ['aspirin', 'nsaids', 'other anticoagulants', 'ketoconazole', 'rifampin'],
+    foodInteractions: [],
+    warnings: 'Bleeding risk. No routine monitoring needed. Avoid in severe liver disease.',
+    contraindications: ['active bleeding', 'severe liver disease', 'mechanical heart valve'],
+    sideEffects: ['bleeding', 'anemia', 'nausea', 'bruising']
+  },
+  rivaroxaban: {
+    class: 'Direct Oral Anticoagulant (DOAC)',
+    interactions: ['aspirin', 'nsaids', 'other anticoagulants', 'ketoconazole', 'rifampin'],
+    foodInteractions: [],
+    warnings: 'Take 15mg and 20mg doses with food. Bleeding risk. Renal dose adjustment.',
+    contraindications: ['active bleeding', 'severe renal impairment'],
+    sideEffects: ['bleeding', 'anemia', 'nausea']
+  },
+  enoxaparin: {
+    class: 'Low Molecular Weight Heparin',
+    interactions: ['anticoagulants', 'antiplatelets', 'nsaids'],
+    foodInteractions: [],
+    warnings: 'Monitor platelets. Bleeding risk. Renal dose adjustment.',
+    contraindications: ['active bleeding', 'heparin-induced thrombocytopenia'],
+    sideEffects: ['bleeding', 'thrombocytopenia', 'injection site reactions']
+  },
+
+  // Respiratory Medications
+  montelukast: {
+    class: 'Leukotriene Receptor Antagonist',
+    interactions: ['phenobarbital', 'rifampin'],
+    foodInteractions: [],
+    warnings: 'Neuropsychiatric events reported. Monitor mood changes.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['headache', 'abdominal pain', 'neuropsychiatric events']
+  },
+  fluticasone: {
+    class: 'Inhaled Corticosteroid',
+    interactions: ['ketoconazole', 'ritonavir', 'itraconazole'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Rinse mouth after use to prevent thrush. Adrenal suppression with high doses.',
+    contraindications: ['primary treatment of status asthmaticus'],
+    sideEffects: ['thrush', 'hoarseness', 'cough', 'adrenal suppression']
+  },
+  budesonide: {
+    class: 'Inhaled Corticosteroid',
+    interactions: ['ketoconazole', 'itraconazole', 'clarithromycin'],
+    foodInteractions: ['grapefruit juice'],
+    warnings: 'Rinse mouth after use. Monitor growth in children.',
+    contraindications: ['acute bronchospasm'],
+    sideEffects: ['thrush', 'hoarseness', 'cough', 'growth suppression']
+  },
+
+  // Proton Pump Inhibitors
+  esomeprazole: {
+    class: 'Proton Pump Inhibitor',
+    interactions: ['clopidogrel', 'warfarin', 'digoxin', 'ketoconazole', 'atazanavir'],
+    foodInteractions: [],
+    warnings: 'Long-term use increases fracture risk. C. diff risk. Monitor magnesium.',
+    contraindications: ['hypersensitivity to PPIs'],
+    sideEffects: ['headache', 'nausea', 'diarrhea', 'hypomagnesemia']
+  },
+  pantoprazole: {
+    class: 'Proton Pump Inhibitor',
+    interactions: ['warfarin', 'digoxin', 'ketoconazole', 'atazanavir'],
+    foodInteractions: [],
+    warnings: 'Long-term use risks include fractures and infections.',
+    contraindications: ['hypersensitivity to PPIs'],
+    sideEffects: ['headache', 'diarrhea', 'nausea', 'vitamin B12 deficiency']
+  },
+
+  // Antihistamines
+  cetirizine: {
+    class: 'Second Generation Antihistamine',
+    interactions: ['cns depressants', 'alcohol'],
+    foodInteractions: ['alcohol'],
+    warnings: 'May cause drowsiness despite being second generation.',
+    contraindications: ['severe renal impairment'],
+    sideEffects: ['drowsiness', 'fatigue', 'dry mouth', 'headache']
+  },
+  loratadine: {
+    class: 'Second Generation Antihistamine',
+    interactions: ['ketoconazole', 'erythromycin', 'cimetidine'],
+    foodInteractions: [],
+    warnings: 'Minimal sedation. Safe in most patients.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['headache', 'drowsiness', 'fatigue', 'dry mouth']
+  },
+  diphenhydramine: {
+    class: 'First Generation Antihistamine',
+    interactions: ['mao inhibitors', 'cns depressants', 'anticholinergics'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Significant sedation. Anticholinergic effects. Avoid in elderly.',
+    contraindications: ['narrow-angle glaucoma', 'urinary retention'],
+    sideEffects: ['sedation', 'dry mouth', 'urinary retention', 'confusion']
+  },
+
+  // Antifungals
+  fluconazole: {
+    class: 'Azole Antifungal',
+    interactions: ['warfarin', 'statins', 'sulfonylureas', 'phenytoin', 'cyclosporine'],
+    foodInteractions: [],
+    warnings: 'QT prolongation. Hepatotoxicity. Multiple drug interactions.',
+    contraindications: ['hypersensitivity', 'terfenadine use'],
+    sideEffects: ['nausea', 'headache', 'rash', 'hepatotoxicity']
+  },
+  ketoconazole: {
+    class: 'Azole Antifungal',
+    interactions: ['statins', 'warfarin', 'cyclosporine', 'digoxin', 'rifampin'],
+    foodInteractions: ['antacids', 'proton pump inhibitors'],
+    warnings: 'Severe hepatotoxicity. QT prolongation. Many drug interactions.',
+    contraindications: ['acute or chronic liver disease'],
+    sideEffects: ['hepatotoxicity', 'nausea', 'QT prolongation', 'adrenal insufficiency']
+  },
+
+  // Antivirals
+  acyclovir: {
+    class: 'Antiviral',
+    interactions: ['nephrotoxic drugs', 'probenecid'],
+    foodInteractions: [],
+    warnings: 'Maintain hydration. Adjust dose in renal impairment.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['nausea', 'headache', 'renal impairment', 'neurological effects']
+  },
+  oseltamivir: {
+    class: 'Neuraminidase Inhibitor',
+    interactions: ['live attenuated influenza vaccine'],
+    foodInteractions: [],
+    warnings: 'Start within 48 hours of symptom onset. Neuropsychiatric events reported.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['nausea', 'vomiting', 'headache', 'neuropsychiatric events']
+  },
+
+  // Muscle Relaxants
+  cyclobenzaprine: {
+    class: 'Muscle Relaxant',
+    interactions: ['mao inhibitors', 'tramadol', 'ssris', 'cns depressants'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Anticholinergic effects. Sedation. Avoid with MAOIs.',
+    contraindications: ['mao inhibitor use', 'acute MI', 'hyperthyroidism'],
+    sideEffects: ['drowsiness', 'dry mouth', 'dizziness', 'confusion']
+  },
+  baclofen: {
+    class: 'Muscle Relaxant',
+    interactions: ['cns depressants', 'tricyclic antidepressants'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Do not discontinue abruptly. Risk of seizures with withdrawal.',
+    contraindications: ['hypersensitivity'],
+    sideEffects: ['drowsiness', 'weakness', 'dizziness', 'seizures on withdrawal']
+  },
+
+  // Corticosteroids
+  hydrocortisone: {
+    class: 'Corticosteroid',
+    interactions: ['nsaids', 'warfarin', 'diabetes medications', 'vaccines'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Do not stop abruptly. Monitor blood glucose and bone density.',
+    contraindications: ['systemic fungal infections'],
+    sideEffects: ['hyperglycemia', 'hypertension', 'immunosuppression', 'osteoporosis']
+  },
+  dexamethasone: {
+    class: 'Corticosteroid',
+    interactions: ['nsaids', 'warfarin', 'phenytoin', 'rifampin', 'vaccines'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Potent corticosteroid. Monitor blood glucose. Avoid abrupt discontinuation.',
+    contraindications: ['systemic fungal infections', 'live vaccines'],
+    sideEffects: ['hyperglycemia', 'immunosuppression', 'mood changes', 'osteoporosis']
+  },
+
+  // Antiemetics
+  ondansetron: {
+    class: 'Serotonin 5-HT3 Receptor Antagonist',
+    interactions: ['apomorphine', 'tramadol', 'ssris', 'qt prolonging drugs'],
+    foodInteractions: [],
+    warnings: 'QT prolongation risk. Avoid with apomorphine.',
+    contraindications: ['concomitant apomorphine use'],
+    sideEffects: ['headache', 'constipation', 'QT prolongation', 'dizziness']
+  },
+  metoclopramide: {
+    class: 'Dopamine Antagonist',
+    interactions: ['cns depressants', 'anticholinergics', 'mao inhibitors'],
+    foodInteractions: ['alcohol'],
+    warnings: 'Risk of tardive dyskinesia with long-term use. Avoid in GI obstruction.',
+    contraindications: ['GI obstruction', 'pheochromocytoma', 'seizure disorders'],
+    sideEffects: ['tardive dyskinesia', 'drowsiness', 'restlessness', 'depression']
   }
 };
 
