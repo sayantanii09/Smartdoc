@@ -6551,6 +6551,68 @@ const Shrutapex = () => {
           </div>
         </div>
 
+        {/* Clinical Documentation Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5"></div>
+          <div className="relative">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <FileText className="w-7 h-7 text-teal-400" />
+              Clinical Documentation
+              <span className="text-sm font-normal text-slate-400 ml-2">(Auto-populated from voice)</span>
+            </h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Lab Tests & Investigations */}
+              <div>
+                <label className="block text-teal-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                  🔬 Lab Tests & Investigations
+                </label>
+                <textarea 
+                  value={labTests} 
+                  onChange={(e) => setLabTests(e.target.value)} 
+                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm resize-none" 
+                  placeholder="CBC, LFT, RFT, X-ray chest, ECG, etc." 
+                  rows="4"
+                />
+              </div>
+              
+              {/* Referrals */}
+              <div>
+                <label className="block text-cyan-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                  🏥 Referrals & Consultations
+                </label>
+                <textarea 
+                  value={referrals} 
+                  onChange={(e) => setReferrals(e.target.value)} 
+                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm resize-none" 
+                  placeholder="Cardiology, Neurology, Orthopedics, etc." 
+                  rows="4"
+                />
+              </div>
+              
+              {/* Follow-up Instructions */}
+              <div>
+                <label className="block text-blue-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                  📅 Follow-up Instructions
+                </label>
+                <textarea 
+                  value={followUpInstructions} 
+                  onChange={(e) => setFollowUpInstructions(e.target.value)} 
+                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
+                  placeholder="Follow-up in 2 weeks, Monitor BP, Return if symptoms worsen, etc." 
+                  rows="4"
+                />
+              </div>
+            </div>
+            
+            <div className="mt-4 p-3 bg-teal-500/10 rounded-lg border border-teal-500/30">
+              <p className="text-teal-300 text-sm">
+                💡 <strong>Auto-Detection:</strong> These fields are automatically populated from your voice consultation using AI pattern recognition
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* AI-Extracted Clinical Data */}
         {(diagnosis || medications.length > 0) && (
           <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
