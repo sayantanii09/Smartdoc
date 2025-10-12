@@ -3659,14 +3659,49 @@ const Shrutapex = () => {
     });
 
     // Second pass: Fuzzy matching for unmatched words
+    // Define words that should NEVER be corrected (medical context words)
+    const doNotCorrectWords = [
+      // Disease names
+      'diabetes', 'hypertension', 'asthma', 'copd', 'pneumonia', 'bronchitis', 'arthritis', 'migraine', 
+      'depression', 'anxiety', 'insomnia', 'epilepsy', 'fever', 'cold', 'flu', 'headache', 'pain',
+      'infection', 'allergy', 'cancer', 'tumor', 'fracture', 'wound', 'injury', 'bleeding',
+      
+      // Dosage forms
+      'tablet', 'tablets', 'capsule', 'capsules', 'syrup', 'suspension', 'injection', 'injections',
+      'cream', 'ointment', 'drops', 'inhaler', 'patch', 'gel', 'lotion', 'powder',
+      
+      // Frequencies
+      'once', 'twice', 'thrice', 'daily', 'weekly', 'monthly', 'hourly', 'morning', 'evening',
+      'night', 'bedtime', 'before', 'after', 'with', 'without', 'needed', 'required',
+      
+      // Routes
+      'oral', 'topical', 'nasal', 'rectal', 'vaginal', 'sublingual', 'buccal',
+      
+      // Units and measurements
+      'milligrams', 'micrograms', 'grams', 'milliliters', 'liters', 'units', 'doses',
+      
+      // Common medical verbs/words
+      'prescribe', 'prescribed', 'give', 'take', 'administer', 'continue', 'stop', 'start',
+      'patient', 'doctor', 'nurse', 'pharmacy', 'hospital', 'clinic', 'treatment',
+      
+      // Body parts and vitals
+      'blood', 'pressure', 'sugar', 'glucose', 'heart', 'rate', 'temperature', 'weight',
+      'height', 'pulse', 'oxygen', 'saturation', 'level', 'count'
+    ];
+    
     const words = corrected.split(' ');
     const correctedWords = words.map(word => {
       const cleanWord = word.replace(/[^a-zA-Z]/g, '');
-      if (cleanWord.length < 4) return word; // Skip very short words
+      if (cleanWord.length < 5) return word; // Skip short words (increased from 4 to 5)
+      
+      // Don't correct if it's in the exclusion list
+      if (doNotCorrectWords.includes(cleanWord.toLowerCase())) {
+        return word;
+      }
       
       // Check if word might be a medication name
       let bestMatch = null;
-      let bestScore = 0.6; // Minimum similarity threshold
+      let bestScore = 0.85; // Increased minimum similarity threshold from 0.6 to 0.85 (more strict)
       
       Object.keys(dynamicMedicationDB).forEach(medication => {
         const similarity = calculateSimilarity(cleanWord, medication);
@@ -3685,7 +3720,8 @@ const Shrutapex = () => {
         });
       });
       
-      if (bestMatch && bestScore > 0.7) {
+      // Only correct if similarity is very high (>90%) to avoid false corrections
+      if (bestMatch && bestScore > 0.90) {
         console.log(`Corrected "${cleanWord}" to "${bestMatch}" (similarity: ${(bestScore * 100).toFixed(1)}%)`);
         return word.replace(cleanWord, bestMatch);
       }
