@@ -3439,6 +3439,11 @@ const Shrutapex = () => {
       });
     });
 
+    // Deduplicate all arrays to prevent repeated entries
+    Object.keys(extracted).forEach(key => {
+      extracted[key] = [...new Set(extracted[key])];
+    });
+
     return extracted;
   };
 
