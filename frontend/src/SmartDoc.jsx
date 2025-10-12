@@ -1622,7 +1622,7 @@ const Shrutapex = () => {
         
         if (possibleMed && !commonWords.includes(drugName.toLowerCase())) {
           medications.push({
-            name: possibleMed.charAt(0).toUpperCase() + possibleMed.slice(1),
+            name: possibleMed.toUpperCase(), // CAPITALIZE medicine names
             dosage: `${dosage}${unit}`,
             formulation: 'Tablet',
             route: 'Oral',
