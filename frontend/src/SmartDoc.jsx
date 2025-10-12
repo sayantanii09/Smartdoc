@@ -1660,6 +1660,39 @@ const Shrutapex = () => {
     checkInteractions(updatedMeds);
   };
 
+  const addMedicationToReview = () => {
+    if (!newMedication.name || !newMedication.dosage || !newMedication.form || !newMedication.frequency || !newMedication.duration) {
+      return;
+    }
+
+    const medicationToAdd = {
+      name: newMedication.name,
+      dosage: newMedication.dosage,
+      formulation: newMedication.form,
+      route: 'Oral',
+      frequency: newMedication.frequency,
+      foodInstruction: newMedication.foodInstruction,
+      duration: newMedication.duration,
+      instructions: newMedication.instructions
+    };
+
+    setMedications([...medications, medicationToAdd]);
+    
+    // Reset form
+    setNewMedication({
+      name: '',
+      dosage: '',
+      form: '',
+      frequency: '',
+      duration: '',
+      foodInstruction: 'With or without food',
+      instructions: ''
+    });
+
+    // Check interactions
+    checkInteractions([...medications, medicationToAdd]);
+  };
+
   const addMedication = () => {
     setMedications([...medications, { 
       name: '', 
