@@ -2149,6 +2149,8 @@ const Shrutapex = () => {
           const newTranscript = prev + correctedTranscript + ' ';
           // Process in real-time for continuous updates
           processTranscript(newTranscript);
+          // Handle guided voice flow
+          handleGuidedVoiceCapture(correctedTranscript);
           return newTranscript;
         });
         
