@@ -1493,14 +1493,34 @@ const Shrutapex = () => {
     
     console.log('Extracting medications from text:', text);
     
+    // First, extract only text after "new prescription:" or "prescribe" keywords to avoid picking up "currently taking" medications
+    let prescriptionText = text;
+    const prescriptionMarkers = ['new prescription:', 'prescribe', 'start on', 'treatment plan:'];
+    const avoidMarkers = ['currently taking', 'previous medications', 'past medications', 'current medications'];
+    
+    // Find if there's a prescription marker
+    let prescriptionStartIndex = -1;
+    prescriptionMarkers.forEach(marker => {
+      const index = text.toLowerCase().indexOf(marker);
+      if (index !== -1 && (prescriptionStartIndex === -1 || index < prescriptionStartIndex)) {
+        prescriptionStartIndex = index;
+      }
+    });
+    
+    // If prescription marker found, only use text after it
+    if (prescriptionStartIndex !== -1) {
+      prescriptionText = text.substring(prescriptionStartIndex);
+      console.log('Extracting medications from prescription section only');
+    }
+    
     // Enhanced pattern matching for medications with all details
     const medicationPatterns = [
       // Pattern: drug name dosage unit formulation route frequency food_instruction
-      /(?:prescribe|give|start|administer|needs?|prescribed?)\s+(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
+      /(?:prescribe|give|start|administer|needs?|prescribed?|new prescription:|treatment plan:)\s*(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
+      // Pattern with tablet/capsule between dosage and route
+      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(?:tablet|capsule|injection|syrup|drops?)\s+(\w+)\s+(once daily|twice daily|three times daily|four times daily|od|bd|tds|qds|as needed|prn)/gi,
       // Simpler pattern: drug dosage frequency
-      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi,
-      // More flexible pattern for medication mentions
-      /(?:^|\s)(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s*(?:tablet|capsule|injection|syrup|drops?)?\s*(once|twice|three times|four times|daily|od|bd|tds|qds)/gi
+      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi
     ];
 
     medicationPatterns.forEach(pattern => {
