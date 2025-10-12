@@ -1988,8 +1988,11 @@ const Shrutapex = () => {
     };
     
     const setter = fieldSetters[step.field];
+    console.log(`📌 Field name from step: "${step.field}"`);
+    console.log(`📌 Setter found:`, setter ? 'YES' : 'NO');
     if (setter) {
       setter(text);
+      console.log(`✅ Called setter for field: ${step.field}`);
     } else {
       console.error('❌ No setter found for field:', step.field);
     }
