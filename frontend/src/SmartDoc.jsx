@@ -2254,14 +2254,16 @@ const Shrutapex = () => {
           }
         }
         
-        console.log('📥 Final transcript received:', correctedTranscript);
-        console.log('🎯 Current guided step:', guidedFlowStep, GUIDED_STEPS[guidedFlowStep]?.name);
-        console.log('🎤 About to call handleGuidedVoiceCapture...');
+        console.log('📥 FINAL:', correctedTranscript, 'Step:', guidedFlowStep, GUIDED_STEPS[guidedFlowStep]?.name);
         
-        // Handle guided voice flow - ONLY on final, complete phrases
+        // CRITICAL: Call handler IMMEDIATELY with current step
+        const currentStep = guidedFlowStep;
+        const currentStepInfo = GUIDED_STEPS[currentStep];
+        
+        console.log('✍️ Processing for field:', currentStepInfo?.field);
+        
+        // Handle guided voice flow
         handleGuidedVoiceCapture(correctedTranscript);
-        
-        console.log('✅ handleGuidedVoiceCapture completed');
         
         setTranscript(prev => {
           const newTranscript = prev + correctedTranscript + ' ';
