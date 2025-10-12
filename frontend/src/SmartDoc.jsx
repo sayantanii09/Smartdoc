@@ -6567,29 +6567,7 @@ const Shrutapex = () => {
           </div>
         </div>
 
-        {/* AI-Extracted Clinical Data */}
-        {(diagnosis || medications.length > 0) && (
-          <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5"></div>
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="bg-gradient-to-br from-emerald-500 to-blue-500 p-3 rounded-xl shadow-lg">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">AI-Extracted Clinical Data</h2>
-              </div>
-
-              {diagnosis && (
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-blue-300 mb-3 uppercase tracking-wide">Diagnosis</label>
-                  <input 
-                    type="text" 
-                    value={diagnosis} 
-                    onChange={(e) => setDiagnosis(e.target.value)} 
-                    className="w-full px-5 py-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg" 
-                  />
-                </div>
-              )}
+        {/* AI-Extracted Clinical Data section REMOVED - redundant with other fields */}
 
               {medications.length > 0 && (
                 <div className="mb-6">
