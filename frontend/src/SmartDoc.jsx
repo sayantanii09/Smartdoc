@@ -2030,11 +2030,11 @@ const Shrutapex = () => {
           const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
           recognitionRef.current = new SpeechRecognition();
           
-          // Reapply all settings
+          // Reapply all settings for Indian accent support
           recognitionRef.current.continuous = true;
           recognitionRef.current.interimResults = true;
-          recognitionRef.current.lang = speechLanguage;
-          recognitionRef.current.maxAlternatives = 3;
+          recognitionRef.current.lang = 'en-IN'; // Indian English for better accent recognition
+          recognitionRef.current.maxAlternatives = 5; // More alternatives for accent variations
           
           // Reattach all event handlers
           setupSpeechRecognitionHandlers();
