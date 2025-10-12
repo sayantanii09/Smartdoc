@@ -6109,7 +6109,7 @@ const Shrutapex = () => {
               )}
 
               {/* Enhanced Action Buttons */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button 
                   onClick={() => setCurrentView('input')} 
                   className="py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition-all border border-slate-600"
