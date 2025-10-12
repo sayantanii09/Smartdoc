@@ -7359,7 +7359,7 @@ const Shrutapex = () => {
             <div className="flex items-center gap-2">
               {/* Pause/Resume Button */}
               <button
-                onClick={() => {
+                onClick={async () => {
                   if (isListening) {
                     // Pause voice
                     if (recognitionRef.current) {
@@ -7368,9 +7368,35 @@ const Shrutapex = () => {
                     setIsListening(false);
                     console.log('⏸️ Voice paused by user');
                   } else {
-                    // Resume voice
-                    toggleListening();
-                    console.log('▶️ Voice resumed by user');
+                    // Resume voice - explicitly restart
+                    console.log('▶️ Resuming voice...');
+                    try {
+                      if (!recognitionRef.current) {
+                        console.error('❌ No recognition object found');
+                        // Reinitialize
+                        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        recognitionRef.current = new SpeechRecognition();
+                        recognitionRef.current.continuous = true;
+                        recognitionRef.current.interimResults = true;
+                        recognitionRef.current.lang = 'en-IN';
+                        recognitionRef.current.maxAlternatives = 5;
+                        setupSpeechRecognitionHandlers();
+                      }
+                      
+                      // Start recognition
+                      recognitionRef.current.start();
+                      setIsListening(true);
+                      console.log('✅ Voice resumed successfully');
+                    } catch (error) {
+                      console.error('❌ Failed to resume voice:', error);
+                      // If error is "already started", just set state
+                      if (error.message.includes('already')) {
+                        setIsListening(true);
+                        console.log('✅ Voice was already running, updated state');
+                      } else {
+                        alert('Failed to resume voice. Please refresh the page.');
+                      }
+                    }
                   }
                 }}
                 className={`text-white text-xs px-3 py-1 rounded font-semibold ${
