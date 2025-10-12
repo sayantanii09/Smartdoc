@@ -2138,6 +2138,7 @@ const Shrutapex = () => {
         }
       }
       
+      // Update the transcript state - ONLY for final results to avoid duplicates
       if (finalTranscript) {
         // Clean and correct the transcript using dynamic database
         const cleanedTranscript = cleanTranscript(finalTranscript);
@@ -2145,7 +2146,7 @@ const Shrutapex = () => {
         
         // Apply user corrections first, then built-in corrections
         const userCorrectedTranscript = applyCorrectionToText(cleanedTranscript, userCorrections);
-        const correctedTranscript = correctMedicalTermsWithDynamicDB(userCorrectedTranscript);
+        const correctedTranscript = correctMedicalTermsWithDynamicDB(userCorrectedTranscript.trim());
         
         // Track medication corrections for user feedback
         if (originalTranscript !== correctedTranscript) {
@@ -2156,12 +2157,11 @@ const Shrutapex = () => {
           }
         }
         
+        // Handle guided voice flow - ONLY on final, complete phrases
+        handleGuidedVoiceCapture(correctedTranscript);
+        
         setTranscript(prev => {
           const newTranscript = prev + correctedTranscript + ' ';
-          // Process in real-time for continuous updates
-          processTranscript(newTranscript);
-          // Handle guided voice flow
-          handleGuidedVoiceCapture(correctedTranscript);
           return newTranscript;
         });
         
