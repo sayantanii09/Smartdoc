@@ -2271,10 +2271,7 @@ const Shrutapex = () => {
           return newTranscript;
         });
         
-        console.log(`Speech processed with confidence: ${(bestConfidence * 100).toFixed(1)}%`);
-        if (originalTranscript !== correctedTranscript) {
-          console.log(`Medication corrected: "${originalTranscript}" → "${correctedTranscript}"`);
-        }
+        // Removed excessive logging for better performance
       }
       
       // Show interim results for better user feedback
