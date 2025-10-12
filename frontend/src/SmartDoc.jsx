@@ -2369,13 +2369,11 @@ const Shrutapex = () => {
             setAllergies(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
             console.log('✅ Updated allergies INLINE');
           } else if (stepInfo && stepInfo.field === 'socialHistory') {
-            console.log('⚠️ Social History uses dropdowns - AUTO-SKIPPING');
-            // Auto-skip since voice can't fill dropdowns
-            setTimeout(() => moveToNextStep(), 100);
+            console.log('⚠️ Social History uses dropdowns - say NEXT to skip or fill manually');
+            // Just log, user says NEXT to skip
           } else if (stepInfo && stepInfo.field === 'vitals') {
-            console.log('⚠️ Vitals use structured fields - AUTO-SKIPPING');
-            // Auto-skip since voice can't fill structured fields
-            setTimeout(() => moveToNextStep(), 100);
+            console.log('⚠️ Vitals use structured fields - say NEXT to skip or fill manually');
+            // Just log, user says NEXT to skip
           } else if (stepInfo && stepInfo.field === 'prescription') {
             console.log('💊 Prescription sub-flow active');
             const currentSubStep = prescriptionSubStepRef.current;
