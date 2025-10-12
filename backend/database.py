@@ -40,6 +40,16 @@ class MongoDB:
             logger.info(f"Database name: '{db_name}' (length: {len(db_name)} chars)")
             logger.info(f"MONGO_URL pattern: {mongo_url[:50]}...")
             
+            # Test database permissions by trying to list collections
+            try:
+                collections = await cls.database.list_collection_names()
+                logger.info(f"Database '{db_name}' accessible - found {len(collections)} collections")
+            except Exception as db_error:
+                logger.error(f"Database authorization error for '{db_name}': {db_error}")
+                # Try to extract correct database name from MONGO_URL
+                logger.info(f"Full MONGO_URL for debugging: {mongo_url}")
+                raise Exception(f"Database authorization failed for '{db_name}' - check MONGO_URL and permissions")
+            
             # Create indexes for better performance and data integrity
             await cls.create_indexes()
             
