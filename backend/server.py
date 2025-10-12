@@ -81,6 +81,15 @@ allowed_origins = [
     os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 
+# Add production domain patterns
+app_name = os.getenv("APP_NAME", "shrutapex")
+if app_name:
+    allowed_origins.extend([
+        f"https://{app_name}.emergent.host",
+        f"https://{app_name}-prod.emergent.host",
+        f"https://{app_name}.preview.emergentagent.com"
+    ])
+
 # Get additional origins from environment
 env_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
 allowed_origins.extend([origin.strip() for origin in env_origins if origin.strip()])
