@@ -1693,6 +1693,11 @@ const Shrutapex = () => {
     checkInteractions([...medications, medicationToAdd]);
   };
 
+  const removeMedication = (indexToRemove) => {
+    const updatedMedications = medications.filter((_, index) => index !== indexToRemove);
+    setMedications(updatedMedications);
+    checkInteractions(updatedMedications);
+  };
   const addMedication = () => {
     setMedications([...medications, { 
       name: '', 
