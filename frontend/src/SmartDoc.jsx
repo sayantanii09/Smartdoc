@@ -1576,18 +1576,20 @@ const Shrutapex = () => {
         'suffering', 'migraine', 'headache', 'pain', 'fever'
       ];
       
+      const lowerPrescriptionText = prescriptionText.toLowerCase();
+      
       Object.keys(dynamicMedicationDB).forEach(medName => {
-        if (lowerText.includes(medName) && !excludeWords.includes(medName.toLowerCase())) {
-          console.log(`Found valid medication: ${medName} in text`);
+        if (lowerPrescriptionText.includes(medName) && !excludeWords.includes(medName.toLowerCase())) {
+          console.log(`Found valid medication: ${medName} in prescription text`);
           
-          // Look for dosage, frequency, and route patterns
+          // Look for dosage, frequency, and route patterns in prescription text only
           const dosagePattern = new RegExp(`${medName}\\s+(\\d+\\.?\\d*)\\s?(mg|mcg|g|ml|units?)`, 'i');
           const frequencyPattern = new RegExp(`${medName}.*?(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)`, 'i');
           const routePattern = new RegExp(`${medName}.*?(oral|iv|im|sc|topical|sublingual|by mouth|intravenous)`, 'i');
           
-          const dosageMatch = dosagePattern.exec(text);
-          const frequencyMatch = frequencyPattern.exec(text);
-          const routeMatch = routePattern.exec(text);
+          const dosageMatch = dosagePattern.exec(prescriptionText);
+          const frequencyMatch = frequencyPattern.exec(prescriptionText);
+          const routeMatch = routePattern.exec(prescriptionText);
           
           medications.push({
             name: medName.charAt(0).toUpperCase() + medName.slice(1),
