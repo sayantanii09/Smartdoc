@@ -1923,10 +1923,15 @@ const Shrutapex = () => {
   };
   
   const captureToCurrentField = (text) => {
-    const step = GUIDED_STEPS[guidedFlowStep];
-    if (!step) return;
+    // Use ref to get current step (avoids stale closure)
+    const currentStep = guidedFlowStepRef.current;
+    const step = GUIDED_STEPS[currentStep];
+    if (!step) {
+      console.error('❌ Invalid step:', currentStep);
+      return;
+    }
     
-    console.log(`📝 Capturing "${text}" to field: ${step.field}`);
+    console.log(`📝 Capturing "${text}" to field: ${step.field} (Step ${currentStep})`);
     
     // APPEND mode - add to existing text, don't replace
     const fieldSetters = {
