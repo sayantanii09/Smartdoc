@@ -440,13 +440,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Med Templates System - Template Loading During Prescription"
     - "NEW Patient Management System"
     - "Patient Information Storage Frontend"
-    - "Medication Recognition System"
   stuck_tasks:
-    - "Medication Recognition System"
-    - "Med Templates System - Template Loading During Prescription"
+    - "NEW Patient Management System Frontend"
   test_all: false
   test_priority: "high_first"
 
