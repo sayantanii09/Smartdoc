@@ -1878,7 +1878,8 @@ const Shrutapex = () => {
     const currentStep = guidedFlowStepRef.current;
     
     console.log('🎤 Voice captured:', transcript);
-    console.log('🔍 Checking for commands... Current step:', GUIDED_STEPS[currentStep]?.name, 'Step #:', currentStep);
+    console.log('🔍 READING guidedFlowStepRef.current =', guidedFlowStepRef.current);
+    console.log('🔍 Current step:', GUIDED_STEPS[currentStep]?.name, 'Step #:', currentStep);
     
     // STRICT command detection - must be exact match or standalone word
     const words = lowerTranscript.split(' ');
