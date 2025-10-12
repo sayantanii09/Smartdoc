@@ -2082,22 +2082,26 @@ const Shrutapex = () => {
   };
   
   const moveToNextStep = () => {
-    console.log('➡️ Moving to next step from:', guidedFlowStep, 'Ref before:', guidedFlowStepRef.current);
+    // USE REF NOT STATE! State is stale in closures
+    const currentStep = guidedFlowStepRef.current;
+    const currentSubStep = prescriptionSubStepRef.current;
     
-    if (guidedFlowStep === 8 && prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+    console.log('➡️ Moving to next step from REF:', currentStep, 'State is:', guidedFlowStep);
+    
+    if (currentStep === 8 && currentSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
       // In prescription sub-flow
-      const nextSubStep = prescriptionSubStep + 1;
+      const nextSubStep = currentSubStep + 1;
       setPrescriptionSubStep(nextSubStep);
       prescriptionSubStepRef.current = nextSubStep; // Update ref
       setCurrentPrompt(PRESCRIPTION_SUB_STEPS[nextSubStep].prompt);
       console.log('📌 Prescription sub-step ref updated to:', prescriptionSubStepRef.current);
-    } else if (guidedFlowStep < GUIDED_STEPS.length - 1) {
+    } else if (currentStep < GUIDED_STEPS.length - 1) {
       // Move to next main step
-      if (guidedFlowStep === 8 && currentMedicineData.name) {
+      if (currentStep === 8 && currentMedicineData.name) {
         addCompletedMedicine();
       }
       
-      const nextStep = guidedFlowStep + 1;
+      const nextStep = currentStep + 1; // USE REF VALUE!
       setGuidedFlowStep(nextStep);
       guidedFlowStepRef.current = nextStep; // Update ref immediately
       setPrescriptionSubStep(0);
@@ -2107,7 +2111,6 @@ const Shrutapex = () => {
       console.log('✅ Moved to step:', nextStep, GUIDED_STEPS[nextStep].name);
       console.log('🎤 Voice recognition should CONTINUE - no stop!');
       console.log('📌 CRITICAL: guidedFlowStepRef.current NOW =', guidedFlowStepRef.current);
-      console.log('📌 VERIFY: Reading ref again =', guidedFlowStepRef.current);
       
       // CRITICAL: Keep voice recognition ON - don't stop it
       // It should continue listening for the next field
