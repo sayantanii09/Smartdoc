@@ -2022,9 +2022,12 @@ const Shrutapex = () => {
   
   const handlePrescriptionSubFlow = (transcript) => {
     const lowerTranscript = transcript.toLowerCase().trim();
-    const subStep = PRESCRIPTION_SUB_STEPS[prescriptionSubStep];
+    const currentSubStep = prescriptionSubStepRef.current;
+    const subStep = PRESCRIPTION_SUB_STEPS[currentSubStep];
     
     if (!subStep) return;
+    
+    console.log(`💊 Prescription sub-step ${currentSubStep}: ${subStep.field} = "${transcript}"`);
     
     // Update current medicine data
     setCurrentMedicineData(prev => ({
@@ -2033,9 +2036,11 @@ const Shrutapex = () => {
     }));
     
     // Move to next sub-step or finish medicine
-    if (prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
-      setPrescriptionSubStep(prescriptionSubStep + 1);
-      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep + 1].prompt);
+    if (currentSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+      const nextSubStep = currentSubStep + 1;
+      setPrescriptionSubStep(nextSubStep);
+      prescriptionSubStepRef.current = nextSubStep;
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[nextSubStep].prompt);
     } else {
       // Completed all fields for current medicine
       // Ask if they want to add another
