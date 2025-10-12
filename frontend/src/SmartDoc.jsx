@@ -5875,9 +5875,36 @@ const Shrutapex = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
+      
+      {/* Guided Voice Prompt - Always visible when listening */}
+      {isListening && currentPrompt && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 shadow-2xl border-b-4 border-emerald-400">
+          <div className="px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 backdrop-blur-lg p-3 rounded-xl animate-pulse">
+                  <Mic className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/80 text-xs font-semibold uppercase tracking-wide">Step {guidedFlowStep + 1} of {GUIDED_STEPS.length}</p>
+                  <p className="text-white text-lg font-bold mt-1">{currentPrompt}</p>
+                  <p className="text-emerald-100 text-xs mt-1">Say "SKIP" to skip • "Previous" to go back • "ADD [text]" to append</p>
+                </div>
+              </div>
+              <button
+                onClick={() => moveToNextStep()}
+                className="px-6 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg font-semibold transition-all"
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="max-w-6xl mx-auto">
         {/* Header with Doctor Info and Logout */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-2xl p-6 md:p-8 mb-6 border border-blue-500/20">
+        <div className={`relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-2xl p-6 md:p-8 mb-6 border border-blue-500/20 ${isListening && currentPrompt ? 'mt-24' : ''}`}>
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl"></div>
           <div className="relative flex flex-col md:flex-row items-center justify-between gap-4">
