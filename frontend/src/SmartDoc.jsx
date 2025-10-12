@@ -695,6 +695,22 @@ const Shrutapex = () => {
     frequency: ''
   });
   
+  
+  // Helper function to detect medical terms
+  const isMedicalTerm = (text) => {
+    const lowerText = text.toLowerCase();
+    const medicalKeywords = [
+      'mg', 'ml', 'tablet', 'capsule', 'syrup', 'injection', 'cream', 'ointment',
+      'hypertension', 'diabetes', 'asthma', 'fever', 'pain', 'infection',
+      'blood', 'pressure', 'sugar', 'cholesterol', 'heart', 'kidney', 'liver',
+      'diagnosis', 'symptoms', 'treatment', 'prescription', 'medication'
+    ];
+    
+    return medicalKeywords.some(keyword => lowerText.includes(keyword)) ||
+           Object.keys(MEDICATION_DATABASE).some(med => 
+             calculateSimilarity(lowerText, med) > 0.6
+           );
+  };
   const recognitionRef = useRef(null);
   const [supportStatus, setSupportStatus] = useState('checking');
 
