@@ -23,6 +23,9 @@ from models import (
     VoiceCorrection
 )
 from database import MongoDB, user_db, prescription_db, drug_db, ehr_db, patient_storage_db, medication_template_db
+
+# Voice corrections database
+voice_corrections_db = MongoDB().get_collection('voice_corrections')
 from auth import auth_handler, get_current_user, get_current_user_id, validate_password_strength
 from ehr_service import EHRIntegrationService
 
