@@ -2298,8 +2298,20 @@ const Shrutapex = () => {
     };
 
     recognitionRef.current.onend = () => {
-      console.log('Speech recognition ended');
-      setIsListening(false);
+      console.log('🛑 Speech recognition ended');
+      
+      // If we're still in guided mode and user didn't manually stop, restart it
+      if (isListening && guidedFlowStep < GUIDED_STEPS.length - 1) {
+        console.log('🔄 Auto-restarting speech recognition for next field...');
+        try {
+          recognitionRef.current.start();
+        } catch (error) {
+          console.error('Error restarting recognition:', error);
+          setIsListening(false);
+        }
+      } else {
+        setIsListening(false);
+      }
       
       // Auto-restart if it was supposed to be continuous
       if (isListening) {
