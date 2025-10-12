@@ -2130,6 +2130,20 @@ const Shrutapex = () => {
     
     loadLearnedCorrections();
   }, [currentDoctor]);
+  
+  // Smart onChange wrapper that detects and learns from corrections
+  const handleSmartChange = (fieldName, newValue, setter) => {
+    setter(newValue);
+    
+    // If there was original voice input and user edited it, learn the correction
+    const original = originalVoiceText[fieldName];
+    if (original && original !== newValue) {
+      // User made a correction! Track it
+      trackCorrection(fieldName, original, newValue);
+      // Clear original after tracking
+      setOriginalVoiceText(prev => ({ ...prev, [fieldName]: null }));
+    }
+  };
   const addCompletedMedicine = () => {
     if (currentMedicineData.name && currentMedicineData.dosage) {
       setMedications(prev => [...prev, {
