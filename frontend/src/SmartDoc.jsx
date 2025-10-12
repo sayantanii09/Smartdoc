@@ -348,6 +348,151 @@ const MEDICAL_ABBREVIATIONS = {
   'ac': 'Before meals',
   'before meals': 'Before meals',
   'pc': 'After meals',
+// Comprehensive Drug Interaction Database (CIMS/MedRA Style)
+const DRUG_INTERACTIONS = {
+  // ACE Inhibitors
+  'lisinopril': {
+    'potassium': { severity: 'major', description: 'Risk of hyperkalemia' },
+    'lithium': { severity: 'major', description: 'Increased lithium levels' },
+    'nsaids': { severity: 'moderate', description: 'Reduced antihypertensive effect' },
+    'alcohol': { severity: 'moderate', description: 'Enhanced hypotensive effect' }
+  },
+  'enalapril': {
+    'potassium': { severity: 'major', description: 'Risk of hyperkalemia' },
+    'lithium': { severity: 'major', description: 'Increased lithium levels' }
+  },
+  
+  // Beta Blockers
+  'metoprolol': {
+    'verapamil': { severity: 'major', description: 'Risk of severe bradycardia and heart block' },
+    'insulin': { severity: 'moderate', description: 'May mask hypoglycemic symptoms' },
+    'alcohol': { severity: 'moderate', description: 'Enhanced hypotensive effect' }
+  },
+  'atenolol': {
+    'verapamil': { severity: 'major', description: 'Risk of severe bradycardia' },
+    'clonidine': { severity: 'major', description: 'Rebound hypertension on withdrawal' }
+  },
+  
+  // Calcium Channel Blockers
+  'amlodipine': {
+    'simvastatin': { severity: 'moderate', description: 'Increased risk of myopathy' },
+    'grapefruit': { severity: 'moderate', description: 'Increased drug levels' },
+    'alcohol': { severity: 'moderate', description: 'Enhanced hypotensive effect' }
+  },
+  'verapamil': {
+    'digoxin': { severity: 'major', description: 'Increased digoxin levels' },
+    'metoprolol': { severity: 'major', description: 'Risk of severe bradycardia' },
+    'grapefruit': { severity: 'major', description: 'Significantly increased drug levels' }
+  },
+  
+  // Antibiotics
+  'amoxicillin': {
+    'warfarin': { severity: 'moderate', description: 'Enhanced anticoagulant effect' },
+    'methotrexate': { severity: 'major', description: 'Increased methotrexate toxicity' },
+    'alcohol': { severity: 'mild', description: 'May reduce effectiveness' }
+  },
+  'azithromycin': {
+    'warfarin': { severity: 'moderate', description: 'Enhanced anticoagulant effect' },
+    'digoxin': { severity: 'moderate', description: 'Increased digoxin levels' },
+    'antacids': { severity: 'moderate', description: 'Reduced absorption' }
+  },
+  'ciprofloxacin': {
+    'theophylline': { severity: 'major', description: 'Increased theophylline levels and toxicity' },
+    'warfarin': { severity: 'major', description: 'Enhanced anticoagulant effect' },
+    'caffeine': { severity: 'moderate', description: 'Increased caffeine levels' },
+    'dairy': { severity: 'moderate', description: 'Reduced absorption with calcium' }
+  },
+  
+  // Anticoagulants
+  'warfarin': {
+    'aspirin': { severity: 'major', description: 'Increased bleeding risk' },
+    'amoxicillin': { severity: 'moderate', description: 'Enhanced anticoagulant effect' },
+    'paracetamol': { severity: 'moderate', description: 'Enhanced anticoagulant effect with high doses' },
+    'alcohol': { severity: 'major', description: 'Increased bleeding risk' },
+    'cranberry': { severity: 'moderate', description: 'Enhanced anticoagulant effect' },
+    'vitamin_k': { severity: 'major', description: 'Antagonizes anticoagulant effect' }
+  },
+  
+  // NSAIDs
+  'aspirin': {
+    'warfarin': { severity: 'major', description: 'Increased bleeding risk' },
+    'methotrexate': { severity: 'major', description: 'Increased methotrexate toxicity' },
+    'lisinopril': { severity: 'moderate', description: 'Reduced antihypertensive effect' },
+    'alcohol': { severity: 'major', description: 'Increased GI bleeding risk' }
+  },
+  'ibuprofen': {
+    'warfarin': { severity: 'major', description: 'Increased bleeding risk' },
+    'lithium': { severity: 'major', description: 'Increased lithium levels' },
+    'methotrexate': { severity: 'major', description: 'Increased methotrexate toxicity' },
+    'lisinopril': { severity: 'moderate', description: 'Reduced antihypertensive effect' }
+  },
+  
+  // Diabetes Medications
+  'metformin': {
+    'alcohol': { severity: 'major', description: 'Increased risk of lactic acidosis' },
+    'contrast_dye': { severity: 'major', description: 'Risk of lactic acidosis' }
+  },
+  'insulin': {
+    'alcohol': { severity: 'major', description: 'Risk of severe hypoglycemia' },
+    'metoprolol': { severity: 'moderate', description: 'May mask hypoglycemic symptoms' }
+  },
+  'glipizide': {
+    'alcohol': { severity: 'major', description: 'Risk of hypoglycemia' },
+    'fluconazole': { severity: 'moderate', description: 'Increased hypoglycemic risk' }
+  },
+  
+  // Statins
+  'simvastatin': {
+    'amlodipine': { severity: 'moderate', description: 'Increased risk of myopathy' },
+    'grapefruit': { severity: 'major', description: 'Significantly increased drug levels and myopathy risk' },
+    'gemfibrozil': { severity: 'major', description: 'Severe myopathy and rhabdomyolysis risk' }
+  },
+  'atorvastatin': {
+    'grapefruit': { severity: 'moderate', description: 'Increased drug levels' },
+    'gemfibrozil': { severity: 'major', description: 'Increased myopathy risk' }
+  },
+  
+  // Analgesics
+  'paracetamol': {
+    'warfarin': { severity: 'moderate', description: 'Enhanced anticoagulant effect with high doses' },
+    'alcohol': { severity: 'major', description: 'Increased hepatotoxicity risk' }
+  },
+  'tramadol': {
+    'sertraline': { severity: 'major', description: 'Increased serotonin syndrome risk' },
+    'alcohol': { severity: 'major', description: 'Enhanced CNS depression' }
+  },
+  
+  // Antidepressants
+  'sertraline': {
+    'tramadol': { severity: 'major', description: 'Serotonin syndrome risk' },
+    'warfarin': { severity: 'moderate', description: 'Enhanced anticoagulant effect' },
+    'alcohol': { severity: 'major', description: 'Enhanced CNS effects' }
+  },
+  'fluoxetine': {
+    'tramadol': { severity: 'major', description: 'Serotonin syndrome risk' },
+    'warfarin': { severity: 'major', description: 'Enhanced anticoagulant effect' }
+  }
+};
+
+// Food-Drug Interaction Database
+const FOOD_DRUG_INTERACTIONS = {
+  'warfarin': ['vitamin_k', 'cranberry', 'alcohol', 'grapefruit'],
+  'simvastatin': ['grapefruit', 'alcohol'],
+  'atorvastatin': ['grapefruit'],
+  'verapamil': ['grapefruit'],
+  'amlodipine': ['grapefruit', 'alcohol'],
+  'ciprofloxacin': ['dairy', 'caffeine'],
+  'metformin': ['alcohol'],
+  'insulin': ['alcohol'],
+  'glipizide': ['alcohol'],
+  'aspirin': ['alcohol'],
+  'ibuprofen': ['alcohol'],
+  'paracetamol': ['alcohol'],
+  'tramadol': ['alcohol'],
+  'sertraline': ['alcohol'],
+  'lisinopril': ['alcohol'],
+  'metoprolol': ['alcohol']
+};
 };
 
 // Recent Patients Component
