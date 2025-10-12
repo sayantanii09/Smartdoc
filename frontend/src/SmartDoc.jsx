@@ -1465,21 +1465,24 @@ const Shrutapex = () => {
       
       // Update live transcript for manual correction
       if (showLiveTranscript) {
-        setLiveTranscript(prev => {
-          const updated = prev + (finalTranscript || '');
-          console.log('Live transcript updated:', updated);
-          return updated;
-        });
-      }
-      
-      // Also update interim results in live mode
-      if (showLiveTranscript && interimTranscript && !finalTranscript) {
-        setLiveTranscript(prev => {
-          // Replace the last interim part with new interim
-          const lastSpace = prev.lastIndexOf(' ');
-          const baseText = lastSpace > 0 ? prev.substring(0, lastSpace + 1) : '';
-          return baseText + interimTranscript;
-        });
+        if (finalTranscript) {
+          setLiveTranscript(prev => {
+            const updated = prev + finalTranscript;
+            console.log('Live transcript updated (final):', updated.slice(-50));
+            return updated;
+          });
+        } else if (interimTranscript) {
+          setLiveTranscript(prev => {
+            // Find the last complete sentence and append interim
+            const sentences = prev.split(/[.!?]\s*/);
+            if (sentences.length > 0) {
+              const lastComplete = sentences.slice(0, -1).join('. ');
+              const withInterim = lastComplete + (lastComplete ? '. ' : '') + interimTranscript;
+              return withInterim;
+            }
+            return prev + interimTranscript;
+          });
+        }
       }
       
       if (finalTranscript) {
