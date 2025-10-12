@@ -7289,7 +7289,7 @@ const Shrutapex = () => {
       </div>
       
       {/* Live Transcript Box with DEBUG INFO - Bottom Chat Style */}
-      {showFloatingTranscript && isListening && (
+      {showFloatingTranscript && (
         <div className="fixed bottom-4 right-4 w-96 bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-600/50 overflow-hidden z-40">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
