@@ -1136,7 +1136,7 @@ const Shrutapex = () => {
   });
 
   // Enhanced Speech Recognition Settings
-  const [speechLanguage, setSpeechLanguage] = useState('en-US');
+  const [speechLanguage, setSpeechLanguage] = useState('en-IN');
   const [speechQuality, setSpeechQuality] = useState('high');
   const [enableNoiseReduction, setEnableNoiseReduction] = useState(true);
   const [confidenceThreshold, setConfidenceThreshold] = useState(0.7);
