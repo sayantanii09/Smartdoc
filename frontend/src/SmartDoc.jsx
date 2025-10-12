@@ -1825,36 +1825,12 @@ const Shrutapex = () => {
     }
     setPrognosis(extractedPrognosis);
     
-    // Extract lab tests and investigations
-    let extractedLabTests = '';
-    const labPatterns = [
-      /(?:order|get|do|perform|request)\s+(?:blood|lab|laboratory)?\s*(?:test|work|workup|investigation)/gi,
-      /(?:CBC|complete blood count|FBC|full blood count)/gi,
-      /(?:LFT|liver function test|liver panel)/gi,
-      /(?:RFT|renal function test|kidney function)/gi,
-      /(?:lipid profile|cholesterol test|lipid panel)/gi,
-      /(?:HbA1c|glycated hemoglobin|glucose test)/gi,
-      /(?:TSH|thyroid function|thyroid test)/gi,
-      /(?:x-?ray|chest x-ray|radiography)/gi,
-      /(?:CT|computed tomography|CAT scan)/gi,
-      /(?:MRI|magnetic resonance)/gi,
-      /(?:ultrasound|sonography|USG)/gi,
-      /(?:ECG|EKG|electrocardiogram)/gi,
-      /(?:echo|echocardiogram)/gi
-    ];
-    
-    const labMatches = [];
-    labPatterns.forEach(pattern => {
-      const matches = lowerText.match(pattern);
-      if (matches) {
-        labMatches.push(...matches);
-      }
-    });
-    
-    if (labMatches.length > 0) {
-      extractedLabTests = [...new Set(labMatches)].join(', ');
+    // Extract lab tests - ONLY if lab test keywords are present
+    if (extractedInfo.labTests && extractedInfo.labTests.length > 0) {
+      const labTestsText = extractedInfo.labTests.join(', ');
+      setLabTests(prev => prev ? `${prev}, ${labTestsText}` : labTestsText);
+      console.log('Lab tests updated:', labTestsText);
     }
-    setLabTests(extractedLabTests);
     
     // Extract referrals - ONLY if referral keywords are present
     if (extractedInfo.referrals && extractedInfo.referrals.length > 0) {
