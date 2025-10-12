@@ -2045,6 +2045,16 @@ const Shrutapex = () => {
           setCurrentPrompt(GUIDED_STEPS[0].prompt);
         }
         
+        // Auto-scroll to active field
+        setTimeout(() => {
+          const currentStep = GUIDED_STEPS[guidedFlowStep];
+          const element = document.getElementById(`field-${currentStep.field}`);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            console.log(`📍 Scrolled to: ${currentStep.name}`);
+          }
+        }, 500);
+        
         recognitionRef.current.start();
         setIsListening(true);
         console.log('🎤 Guided speech recognition started');
