@@ -1335,6 +1335,8 @@ async def get_voice_corrections(
 ):
     """Get all learned voice corrections for a doctor"""
     try:
+        # Access voice_corrections collection
+        voice_corrections_db = MongoDB.database.voice_corrections
         corrections = await voice_corrections_db.find({"doctor_id": doctor_id}).to_list(length=None)
         
         # Format corrections into a structured dict for frontend
