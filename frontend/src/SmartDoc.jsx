@@ -2132,7 +2132,7 @@ const Shrutapex = () => {
     }
 
     const medicationToAdd = {
-      name: newMedication.name,
+      name: newMedication.name.toUpperCase(), // CAPITALIZE medicine names
       dosage: newMedication.dosage,
       formulation: newMedication.form,
       route: newMedication.route,
