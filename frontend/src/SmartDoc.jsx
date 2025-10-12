@@ -1165,7 +1165,8 @@ const Shrutapex = () => {
   const [currentMedicineData, setCurrentMedicineData] = useState({
     name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
   });
-  const [showFloatingTranscript, setShowFloatingTranscript] = useState(true); // Controls visibility
+  const [showFloatingTranscript, setShowFloatingTranscript] = useState(false); // Controls visibility - starts hidden
+  const [hasStartedVoice, setHasStartedVoice] = useState(false); // Track if voice has been started
   const [floatingTranscriptCollapsed, setFloatingTranscriptCollapsed] = useState(false);
   
   // Guided flow steps definition
