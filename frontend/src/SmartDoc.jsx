@@ -7195,16 +7195,16 @@ const Shrutapex = () => {
         </div>
       </div>
       
-      {/* Live Transcript Box - Bottom Chat Style */}
+      {/* Live Transcript Box with DEBUG INFO - Bottom Chat Style */}
       {isListening && (
         <div className="fixed bottom-4 right-4 w-96 bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-600/50 overflow-hidden z-40">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Mic className="w-4 h-4 text-white animate-pulse" />
-              <span className="text-white font-semibold text-sm">Live Transcript</span>
+              <span className="text-white font-semibold text-sm">Live Transcript & Debug</span>
             </div>
             <button
-              onClick={() => setShowFloatingTranscript(!showFloatingTranscript)}
+              onClick={() => setFloatingTranscriptCollapsed(!floatingTranscriptCollapsed)}
               className="text-white/80 hover:text-white text-xs"
             >
               {floatingTranscriptCollapsed ? '▲' : '▼'}
@@ -7212,19 +7212,40 @@ const Shrutapex = () => {
           </div>
           
           {!floatingTranscriptCollapsed && (
-            <div className="p-4 max-h-48 overflow-y-auto">
-              <div className="mb-3">
-                <p className="text-blue-300 text-xs font-semibold mb-1">Current Field:</p>
-                <p className="text-white text-sm">{GUIDED_STEPS[guidedFlowStep]?.name}</p>
+            <div className="p-4 max-h-96 overflow-y-auto">
+              {/* Current Step */}
+              <div className="mb-3 p-3 bg-blue-500/20 rounded-lg border border-blue-500/30">
+                <p className="text-blue-300 text-xs font-semibold mb-1">📍 Current Step:</p>
+                <p className="text-white text-sm font-bold">Step {guidedFlowStep + 1} of {GUIDED_STEPS.length}: {GUIDED_STEPS[guidedFlowStep]?.name}</p>
+                <p className="text-blue-200 text-xs mt-1">Field: {GUIDED_STEPS[guidedFlowStep]?.field}</p>
               </div>
               
+              {/* Live Transcript */}
               <div className="mb-3">
-                <p className="text-emerald-300 text-xs font-semibold mb-1">You said:</p>
+                <p className="text-emerald-300 text-xs font-semibold mb-1">🎤 You said:</p>
                 <div className="bg-slate-900/50 rounded-lg p-3 min-h-[60px]">
                   <p className="text-white text-sm">
                     {transcript.split(' ').slice(-20).join(' ') || 'Listening...'}
                   </p>
                 </div>
+              </div>
+              
+              {/* Field Value Preview */}
+              <div className="mb-3 p-3 bg-emerald-500/20 rounded-lg border border-emerald-500/30">
+                <p className="text-emerald-300 text-xs font-semibold mb-1">✍️ Field Value:</p>
+                <p className="text-white text-xs">
+                  {guidedFlowStep === 0 && symptoms ? symptoms : 
+                   guidedFlowStep === 1 && pastMedicalHistory ? pastMedicalHistory :
+                   guidedFlowStep === 2 && familyHistory ? familyHistory :
+                   guidedFlowStep === 4 && pastMedications ? pastMedications :
+                   guidedFlowStep === 5 && allergies ? allergies :
+                   guidedFlowStep === 7 && diagnosis ? diagnosis :
+                   guidedFlowStep === 9 && labTests ? labTests :
+                   guidedFlowStep === 10 && advice ? advice :
+                   guidedFlowStep === 11 && referrals ? referrals :
+                   guidedFlowStep === 12 && followUpInstructions ? followUpInstructions :
+                   '(empty)'}
+                </p>
               </div>
               
               <div className="flex gap-2">
