@@ -1377,6 +1377,14 @@ const Shrutapex = () => {
     }
   }, [isListening]);
 
+  // Update speech recognition handlers when guidedFlowStep changes
+  useEffect(() => {
+    if (recognitionRef.current && isListening) {
+      console.log('🔄 Updating handlers for step:', guidedFlowStep);
+      setupSpeechRecognitionHandlers();
+    }
+  }, [guidedFlowStep]);
+
   // Auto-generate UNIQUE MRN for new patients when entering review
   useEffect(() => {
     if (currentView === 'review' && isNewPatient && !currentPatientMRN) {
