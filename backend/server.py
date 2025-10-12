@@ -1281,6 +1281,76 @@ if os.getenv("ENVIRONMENT") == "development":
             logger.error(f"Error resetting database: {e}")
             raise HTTPException(status_code=500, detail="Error resetting database")
 
+# ========================
+# AI LEARNING - VOICE CORRECTIONS
+# ========================
+
+@app.post("/api/voice-corrections", response_model=StandardResponse)
+async def save_voice_correction(
+    correction: VoiceCorrection,
+    user_id: str = Depends(get_current_user_id)
+):
+    """Save a voice transcription correction for AI learning"""
+    try:
+        # Check if this correction already exists
+        existing = await voice_corrections_db.find_one({
+            "doctor_id": correction.doctor_id,
+            "field": correction.field,
+            "original": correction.original.lower()
+        })
+        
+        if existing:
+            # Increment count and update
+            await voice_corrections_db.update_one(
+                {"_id": existing["_id"]},
+                {
+                    "$set": {
+                        "corrected": correction.corrected,
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    },
+                    "$inc": {"count": 1}
+                }
+            )
+            logger.info(f"Updated voice correction: {correction.original} → {correction.corrected}")
+        else:
+            # Insert new correction
+            correction_dict = correction.dict()
+            correction_dict["created_at"] = datetime.now(timezone.utc).isoformat()
+            correction_dict["updated_at"] = datetime.now(timezone.utc).isoformat()
+            await voice_corrections_db.insert_one(correction_dict)
+            logger.info(f"Saved new voice correction: {correction.original} → {correction.corrected}")
+        
+        return StandardResponse(
+            success=True,
+            message="Voice correction learned successfully"
+        )
+    except Exception as e:
+        logger.error(f"Error saving voice correction: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/voice-corrections")
+async def get_voice_corrections(
+    doctor_id: str,
+    user_id: str = Depends(get_current_user_id)
+):
+    """Get all learned voice corrections for a doctor"""
+    try:
+        corrections = await voice_corrections_db.find({"doctor_id": doctor_id}).to_list(length=None)
+        
+        # Format corrections into a structured dict for frontend
+        formatted = {}
+        for correction in corrections:
+            field = correction["field"]
+            if field not in formatted:
+                formatted[field] = {}
+            formatted[field][correction["original"].lower()] = correction["corrected"]
+        
+        logger.info(f"Retrieved {len(corrections)} voice corrections for doctor {doctor_id}")
+        return formatted
+    except Exception as e:
+        logger.error(f"Error retrieving voice corrections: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
