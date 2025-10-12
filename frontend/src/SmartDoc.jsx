@@ -1817,12 +1817,6 @@ const Shrutapex = () => {
       console.log('Follow-up updated:', followUpText);
     }
     
-    // Extract medications with enhanced parsing from corrected text
-    const extractedMeds = extractMedicationsFromText(correctedText);
-    setMedications(extractedMeds);
-    
-    console.log('Medications extracted from corrected text:', extractedMeds);
-    
     checkInteractions(extractedMeds);
   };
 
