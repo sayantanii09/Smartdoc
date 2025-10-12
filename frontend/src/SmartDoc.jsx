@@ -1427,13 +1427,23 @@ const Shrutapex = () => {
           }
         }
         
-        // Only use transcripts above confidence threshold
-        if (bestAlternativeConfidence >= confidenceThreshold) {
+        // Use more lenient confidence threshold for medical terms
+        const dynamicThreshold = isMedicalTerm(bestTranscript) ? 0.3 : confidenceThreshold;
+        
+        if (bestAlternativeConfidence >= dynamicThreshold) {
           if (result.isFinal) {
             finalTranscript += bestTranscript + ' ';
             bestConfidence = bestAlternativeConfidence;
           } else {
             interimTranscript += bestTranscript + ' ';
+          }
+        } else if (bestAlternativeConfidence > 0.2) {
+          // Include low confidence words but mark them for review
+          const markedTranscript = `[${bestTranscript}?] `;
+          if (result.isFinal) {
+            finalTranscript += markedTranscript;
+          } else {
+            interimTranscript += markedTranscript;
           }
         }
       }
