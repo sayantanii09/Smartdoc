@@ -1524,36 +1524,43 @@ const Shrutapex = () => {
 
     recognitionRef.current.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
+      setIsListening(false);
       
-      let errorMessage = 'Speech Recognition Error: ';
+      let errorMessage = 'Speech recognition error occurred.';
+      let suggestions = '';
       
-      switch(event.error) {
-        case 'not-allowed':
-          errorMessage += 'Microphone access denied. Please allow microphone permissions and try again.';
-          break;
-        case 'network':
-          errorMessage += 'Network connection issue. Check your internet connection.';
-          break;
-        case 'aborted':
-          errorMessage += 'Speech recognition was aborted. This often happens in embedded environments.';
+      switch (event.error) {
+        case 'no-speech':
+          errorMessage = 'No speech detected. Microphone might be muted or too quiet.';
+          suggestions = 'Try speaking louder, closer to microphone, or check microphone settings.';
           break;
         case 'audio-capture':
-          errorMessage += 'No microphone detected. Please check your audio devices.';
+          errorMessage = 'Microphone not accessible. Hardware or driver issue.';
+          suggestions = 'Check if microphone is connected and working in other applications.';
           break;
-        case 'no-speech':
-          errorMessage += 'No speech detected. Please try speaking closer to the microphone.';
+        case 'not-allowed':
+          errorMessage = 'Microphone access denied by browser or system.';
+          suggestions = 'Click the microphone icon in address bar to allow access, or check system privacy settings.';
+          break;
+        case 'network':
+          errorMessage = 'Network error occurred. Speech recognition requires internet.';
+          suggestions = 'Check internet connection and try again. Use Demo Mode if offline.';
           break;
         case 'service-not-allowed':
-          errorMessage += 'Speech service not available. Try using Demo Mode instead.';
+          errorMessage = 'Speech recognition service blocked.';
+          suggestions = 'Try refreshing the page or use a different browser (Chrome recommended).';
           break;
+        case 'aborted':
+          // Don't show error for intentional stops
+          return;
         default:
-          errorMessage += event.error + '. Try adjusting speech settings or use Demo Mode.';
+          errorMessage = `Speech recognition error: ${event.error}`;
+          suggestions = 'Try refreshing the page or use Demo Mode instead.';
       }
       
-      errorMessage += '\n\n💡 Tips:\n• Use Demo Mode for testing\n• Check microphone permissions\n• Adjust language/accent settings\n• Speak clearly in a quiet environment';
-      
-      alert(errorMessage);
-      setIsListening(false);
+      console.log(`🎤 ${errorMessage} | ${suggestions}`);
+      // Show non-intrusive error notification instead of alert
+      setTranscript(prev => prev + `\n\n[🎤 Error: ${errorMessage}]`);
     };
 
     recognitionRef.current.onend = () => {
