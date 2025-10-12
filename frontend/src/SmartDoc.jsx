@@ -5171,6 +5171,31 @@ const Shrutapex = () => {
                       </select>
                     </div>
 
+                    {/* Route of Administration */}
+                    <div>
+                      <label className="block text-blue-200 text-sm font-medium mb-2">Route of Administration *</label>
+                      <select
+                        value={newMedication.route}
+                        onChange={(e) => setNewMedication({...newMedication, route: e.target.value})}
+                        className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="Oral" style={{color: 'black'}}>Oral</option>
+                        <option value="Intravenous (IV)" style={{color: 'black'}}>Intravenous (IV)</option>
+                        <option value="Intramuscular (IM)" style={{color: 'black'}}>Intramuscular (IM)</option>
+                        <option value="Subcutaneous (SC)" style={{color: 'black'}}>Subcutaneous (SC)</option>
+                        <option value="Inhalation" style={{color: 'black'}}>Inhalation</option>
+                        <option value="Nebulization" style={{color: 'black'}}>Nebulization</option>
+                        <option value="Topical" style={{color: 'black'}}>Topical</option>
+                        <option value="Sublingual" style={{color: 'black'}}>Sublingual</option>
+                        <option value="Rectal" style={{color: 'black'}}>Rectal</option>
+                        <option value="Transdermal" style={{color: 'black'}}>Transdermal</option>
+                        <option value="Nasal" style={{color: 'black'}}>Nasal</option>
+                        <option value="Ophthalmic" style={{color: 'black'}}>Ophthalmic</option>
+                        <option value="Otic" style={{color: 'black'}}>Otic</option>
+                        <option value="Vaginal" style={{color: 'black'}}>Vaginal</option>
+                      </select>
+                    </div>
+
                     {/* Frequency */}
                     <div>
                       <label className="block text-blue-200 text-sm font-medium mb-2">Frequency *</label>
