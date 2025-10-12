@@ -1994,8 +1994,12 @@ const Shrutapex = () => {
   };
   
   const appendToCurrentField = (text) => {
-    const step = GUIDED_STEPS[guidedFlowStep];
+    // Use ref to get current step (avoids stale closure)
+    const currentStep = guidedFlowStepRef.current;
+    const step = GUIDED_STEPS[currentStep];
     if (!step) return;
+    
+    console.log(`➕ Appending "${text}" to field: ${step.field} (Step ${currentStep})`);
     
     const fieldSetters = {
       symptoms: (t) => setSymptoms(prev => prev ? `${prev}. ${t}` : t),
