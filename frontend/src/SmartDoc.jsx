@@ -1609,7 +1609,7 @@ const Shrutapex = () => {
       // Look for any word followed by dosage pattern, but be very selective
       const genericMedicationPattern = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
       let match;
-      while ((match = genericMedicationPattern.exec(text)) !== null) {
+      while ((match = genericMedicationPattern.exec(prescriptionText)) !== null) {
         const [fullMatch, drugName, dosage, unit, frequency] = match;
         
         // Strict filtering - only allow if it matches known medications
