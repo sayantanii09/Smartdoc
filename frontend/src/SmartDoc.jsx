@@ -5633,7 +5633,7 @@ const Shrutapex = () => {
 
                   <button
                     onClick={addMedicationToReview}
-                    disabled={!newMedication.name || !newMedication.dosage || !newMedication.form || !newMedication.frequency || !newMedication.duration}
+                    disabled={!newMedication.name || !newMedication.dosage || !newMedication.form || !newMedication.route || !newMedication.frequency || !newMedication.duration}
                     className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed"
                   >
                     Add Medication
