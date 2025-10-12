@@ -394,3 +394,13 @@ class TemplateSaveRequest(BaseModel):
 class TemplateSearchRequest(BaseModel):
     disease_condition: Optional[str] = None
     template_name: Optional[str] = None
+
+# AI Learning - Voice Correction Models
+class VoiceCorrection(BaseModel):
+    field: str = Field(..., description="Field name (e.g., 'symptoms', 'diagnosis')")
+    original: str = Field(..., description="Original voice transcription")
+    corrected: str = Field(..., description="User's corrected text")
+    doctor_id: str = Field(..., description="Doctor who made the correction")
+    count: int = Field(1, description="How many times this correction was made")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
