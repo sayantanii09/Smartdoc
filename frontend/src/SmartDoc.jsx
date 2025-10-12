@@ -2304,9 +2304,70 @@ const Shrutapex = () => {
         
         console.log('📥 FINAL:', correctedTranscript, 'Step:', currentStep, currentStepInfo?.name);
         console.log('✍️ Processing for field:', currentStepInfo?.field);
+        console.log('🔍 INLINE CHECK: guidedFlowStepRef.current =', guidedFlowStepRef.current);
         
-        // Handle guided voice flow
-        handleGuidedVoiceCapture(correctedTranscript);
+        // INLINE LOGIC - Handle guided voice flow directly here to avoid stale closures
+        const lowerTranscript = correctedTranscript.toLowerCase().trim();
+        
+        // Check for NEXT command
+        const words = lowerTranscript.split(' ');
+        const lastWord = words[words.length - 1];
+        if (lowerTranscript === 'skip' || lowerTranscript === 'next' || lastWord === 'next' || lowerTranscript === 'move next') {
+          console.log('⏭️ NEXT command detected - calling moveToNextStep');
+          moveToNextStep();
+        }
+        // Check for PREVIOUS command  
+        else if (lowerTranscript === 'previous' || lowerTranscript === 'back' || lastWord === 'previous' || lastWord === 'back') {
+          console.log('⏮️ PREVIOUS command detected');
+          moveToPreviousStep();
+        }
+        // Check for ADD command
+        else if (lowerTranscript.startsWith('add ')) {
+          console.log('➕ ADD command detected');
+          const textToAdd = correctedTranscript.substring(4).trim();
+          appendToCurrentField(textToAdd);
+        }
+        // Normal capture - inline the field capture logic
+        else if (correctedTranscript && correctedTranscript.trim().length > 0) {
+          const stepToUse = guidedFlowStepRef.current;
+          const stepInfo = GUIDED_STEPS[stepToUse];
+          console.log(`📝 INLINE CAPTURE: Step ${stepToUse}, Field: ${stepInfo?.field}, Text: "${correctedTranscript}"`);
+          
+          // Directly call the appropriate setter based on field
+          if (stepInfo && stepInfo.field === 'symptoms') {
+            setSymptoms(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated symptoms INLINE');
+          } else if (stepInfo && stepInfo.field === 'pastMedicalHistory') {
+            setPastMedicalHistory(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated pastMedicalHistory INLINE');
+          } else if (stepInfo && stepInfo.field === 'familyHistory') {
+            setFamilyHistory(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated familyHistory INLINE');
+          } else if (stepInfo && stepInfo.field === 'pastMedications') {
+            setPastMedications(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated pastMedications INLINE');
+          } else if (stepInfo && stepInfo.field === 'allergies') {
+            setAllergies(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated allergies INLINE');
+          } else if (stepInfo && stepInfo.field === 'diagnosis') {
+            setDiagnosis(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated diagnosis INLINE');
+          } else if (stepInfo && stepInfo.field === 'labTests') {
+            setLabTests(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated labTests INLINE');
+          } else if (stepInfo && stepInfo.field === 'advice') {
+            setAdvice(prev => prev ? `${prev}. ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated advice INLINE');
+          } else if (stepInfo && stepInfo.field === 'referrals') {
+            setReferrals(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated referrals INLINE');
+          } else if (stepInfo && stepInfo.field === 'followUpInstructions') {
+            setFollowUpInstructions(prev => prev ? `${prev}. ${correctedTranscript}` : correctedTranscript);
+            console.log('✅ Updated followUpInstructions INLINE');
+          } else {
+            console.warn('⚠️ INLINE: Unhandled field:', stepInfo?.field);
+          }
+        }
         
         setTranscript(prev => {
           const newTranscript = prev + correctedTranscript + ' ';
