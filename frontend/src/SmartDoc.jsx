@@ -6380,23 +6380,24 @@ const Shrutapex = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-4">
-                <div>
-                  <label className="block text-red-300 font-semibold text-sm mb-2 uppercase tracking-wide flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4" />
-                    ⚠️ Known Allergies
-                  </label>
-                  <textarea 
-                    value={allergies} 
-                    onChange={(e) => setAllergies(e.target.value)} 
-                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
-                    placeholder="e.g., Penicillin, Latex, Shellfish" 
-                    rows="3"
-                  />
-                </div>
-                <div>
-                  <label className="block text-blue-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                    📋 Past Medical History
-                  </label>
+                {/* Past Medical History - Step 1 */}
+                <div id="field-pastMedicalHistory" className={`${guidedFlowStep === 1 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-blue-300 font-semibold text-sm uppercase tracking-wide">
+                      📋 Past Medical History {guidedFlowStep === 1 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    </label>
+                    <button
+                      onClick={() => {
+                        setGuidedFlowStep(1);
+                        setCurrentPrompt(GUIDED_STEPS[1].prompt);
+                        if (!isListening) toggleListening();
+                      }}
+                      className="px-2 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                    >
+                      <Mic className="w-3 h-3" />
+                      Voice
+                    </button>
+                  </div>
                   <textarea 
                     value={pastMedicalHistory} 
                     onChange={(e) => setPastMedicalHistory(e.target.value)} 
@@ -6405,10 +6406,52 @@ const Shrutapex = () => {
                     rows="3"
                   />
                 </div>
-                <div>
-                  <label className="block text-purple-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                    💊 Current Medications
-                  </label>
+
+                {/* Family History - Step 2 */}
+                <div id="field-familyHistory" className={`${guidedFlowStep === 2 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-yellow-300 font-semibold text-sm uppercase tracking-wide">
+                      👥 Family History {guidedFlowStep === 2 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    </label>
+                    <button
+                      onClick={() => {
+                        setGuidedFlowStep(2);
+                        setCurrentPrompt(GUIDED_STEPS[2].prompt);
+                        if (!isListening) toggleListening();
+                      }}
+                      className="px-2 py-1 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                    >
+                      <Mic className="w-3 h-3" />
+                      Voice
+                    </button>
+                  </div>
+                  <textarea 
+                    value={familyHistory} 
+                    onChange={(e) => setFamilyHistory(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm resize-none" 
+                    placeholder="Hereditary conditions, family medical history" 
+                    rows="3"
+                  />
+                </div>
+
+                {/* Current Medications - Step 4 */}
+                <div id="field-pastMedications" className={`${guidedFlowStep === 4 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-purple-300 font-semibold text-sm uppercase tracking-wide">
+                      💊 Current Medications {guidedFlowStep === 4 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    </label>
+                    <button
+                      onClick={() => {
+                        setGuidedFlowStep(4);
+                        setCurrentPrompt(GUIDED_STEPS[4].prompt);
+                        if (!isListening) toggleListening();
+                      }}
+                      className="px-2 py-1 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                    >
+                      <Mic className="w-3 h-3" />
+                      Voice
+                    </button>
+                  </div>
                   <textarea 
                     value={pastMedications} 
                     onChange={(e) => setPastMedications(e.target.value)} 
@@ -6421,15 +6464,78 @@ const Shrutapex = () => {
               
               {/* Right Column */}
               <div className="space-y-4">
-                <div>
-                  <label className="block text-yellow-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                    👥 Family History
-                  </label>
+                {/* Social History - Step 3 */}
+                <div id="field-socialHistory" className={`${guidedFlowStep === 3 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-orange-300 font-semibold text-sm uppercase tracking-wide">
+                      🏠 Social History {guidedFlowStep === 3 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    </label>
+                    <button
+                      onClick={() => {
+                        setGuidedFlowStep(3);
+                        setCurrentPrompt(GUIDED_STEPS[3].prompt);
+                        if (!isListening) toggleListening();
+                      }}
+                      className="px-2 py-1 bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                    >
+                      <Mic className="w-3 h-3" />
+                      Voice
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-orange-200 text-xs mb-1">Smoking</label>
+                      <select 
+                        value={smokingStatus} 
+                        onChange={(e) => setSmokingStatus(e.target.value)} 
+                        className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="">Select</option>
+                        <option value="Non-smoker">Non-smoker</option>
+                        <option value="Current smoker">Current smoker</option>
+                        <option value="Former smoker">Former smoker</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-orange-200 text-xs mb-1">Alcohol</label>
+                      <select 
+                        value={alcoholUse} 
+                        onChange={(e) => setAlcoholUse(e.target.value)} 
+                        className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600/50 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      >
+                        <option value="">Select</option>
+                        <option value="None">None</option>
+                        <option value="Occasional">Occasional</option>
+                        <option value="Regular">Regular</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Allergies - Step 5 */}
+                <div id="field-allergies" className={`${guidedFlowStep === 5 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-red-300 font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      Allergies {guidedFlowStep === 5 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    </label>
+                    <button
+                      onClick={() => {
+                        setGuidedFlowStep(5);
+                        setCurrentPrompt(GUIDED_STEPS[5].prompt);
+                        if (!isListening) toggleListening();
+                      }}
+                      className="px-2 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                    >
+                      <Mic className="w-3 h-3" />
+                      Voice
+                    </button>
+                  </div>
                   <textarea 
-                    value={familyHistory} 
-                    onChange={(e) => setFamilyHistory(e.target.value)} 
-                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm resize-none" 
-                    placeholder="Hereditary conditions, family medical history" 
+                    value={allergies} 
+                    onChange={(e) => setAllergies(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
+                    placeholder="e.g., Penicillin, Latex, Shellfish" 
                     rows="3"
                   />
                 </div>
