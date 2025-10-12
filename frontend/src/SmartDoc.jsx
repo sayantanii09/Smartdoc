@@ -1831,6 +1831,7 @@ const Shrutapex = () => {
       name: '',
       dosage: '',
       form: '',
+      route: 'Oral',
       frequency: '',
       duration: '',
       foodInstruction: 'With or without food',
