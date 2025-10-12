@@ -46,18 +46,8 @@ class MongoDB:
             mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017/smartdoc_pro")
             cls.client = AsyncIOMotorClient(mongo_url)
             
-            # Extract database name from URL (handle query parameters)
-            if '/' in mongo_url:
-                db_part = mongo_url.split('/')[-1]
-                # Remove query parameters if present
-                db_name = db_part.split('?')[0] if '?' in db_part else db_part
-                # Ensure database name is within MongoDB limits (max 63 chars)
-                if len(db_name) > 63:
-                    db_name = db_name[:63]
-                # Fallback to environment variable or default
-                db_name = db_name if db_name else os.getenv("DB_NAME", "smartdoc_pro")
-            else:
-                db_name = os.getenv("DB_NAME", "smartdoc_pro")
+            # Extract database name using robust function
+            db_name = get_database_name_from_url(mongo_url)
             cls.database = cls.client[db_name]
             
             # Test connection
