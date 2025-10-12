@@ -6777,6 +6777,57 @@ const Shrutapex = () => {
         
         {/* Load Disease Template section removed */}
       </div>
+      
+      {/* Live Transcript Box - Bottom Chat Style */}
+      {isListening && (
+        <div className="fixed bottom-4 right-4 w-96 bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-600/50 overflow-hidden z-40">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Mic className="w-4 h-4 text-white animate-pulse" />
+              <span className="text-white font-semibold text-sm">Live Transcript</span>
+            </div>
+            <button
+              onClick={() => setShowFloatingTranscript(!showFloatingTranscript)}
+              className="text-white/80 hover:text-white text-xs"
+            >
+              {floatingTranscriptCollapsed ? '▲' : '▼'}
+            </button>
+          </div>
+          
+          {!floatingTranscriptCollapsed && (
+            <div className="p-4 max-h-48 overflow-y-auto">
+              <div className="mb-3">
+                <p className="text-blue-300 text-xs font-semibold mb-1">Current Field:</p>
+                <p className="text-white text-sm">{GUIDED_STEPS[guidedFlowStep]?.name}</p>
+              </div>
+              
+              <div className="mb-3">
+                <p className="text-emerald-300 text-xs font-semibold mb-1">You said:</p>
+                <div className="bg-slate-900/50 rounded-lg p-3 min-h-[60px]">
+                  <p className="text-white text-sm">
+                    {transcript.split(' ').slice(-20).join(' ') || 'Listening...'}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <button
+                  onClick={() => moveToPreviousStep()}
+                  className="flex-1 px-3 py-2 bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 rounded-lg text-xs font-semibold transition-all border border-orange-500/30"
+                >
+                  ← Previous
+                </button>
+                <button
+                  onClick={() => moveToNextStep()}
+                  className="flex-1 px-3 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 rounded-lg text-xs font-semibold transition-all border border-emerald-500/30"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
