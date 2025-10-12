@@ -1856,32 +1856,12 @@ const Shrutapex = () => {
     }
     setLabTests(extractedLabTests);
     
-    // Extract referrals
-    let extractedReferrals = '';
-    const referralPatterns = [
-      /(?:refer|referral|refer to|see)\s+(?:a\s+)?(?:specialist|consultant|doctor)/gi,
-      /(?:cardiology|cardiologist)/gi,
-      /(?:neurology|neurologist)/gi,
-      /(?:dermatology|dermatologist)/gi,
-      /(?:orthopedic|orthopedist|orthopedics)/gi,
-      /(?:psychiatrist|psychiatry|mental health)/gi,
-      /(?:ENT|otolaryngology)/gi,
-      /(?:ophthalmology|eye doctor|optometrist)/gi,
-      /(?:gastroenterology|GI specialist)/gi
-    ];
-    
-    const referralMatches = [];
-    referralPatterns.forEach(pattern => {
-      const matches = lowerText.match(pattern);
-      if (matches) {
-        referralMatches.push(...matches);
-      }
-    });
-    
-    if (referralMatches.length > 0) {
-      extractedReferrals = [...new Set(referralMatches)].join(', ');
+    // Extract referrals - ONLY if referral keywords are present
+    if (extractedInfo.referrals && extractedInfo.referrals.length > 0) {
+      const referralsText = extractedInfo.referrals.join(', ');
+      setReferrals(prev => prev ? `${prev}, ${referralsText}` : referralsText);
+      console.log('Referrals updated:', referralsText);
     }
-    setReferrals(extractedReferrals);
     
     // Extract follow-up instructions
     let extractedFollowUp = '';
