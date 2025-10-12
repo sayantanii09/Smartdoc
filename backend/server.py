@@ -19,7 +19,8 @@ from models import (
     EHRConfiguration, EHRSubmission, EHRConnectionTest, EHRProvider, EHRConnectionStatus,
     Patient, Visit, SavedPatient, PatientSearchRequest, VisitSearchRequest,
     NewPatientRequest, ExistingPatientVisitRequest, PatientSearchResponse, PatientWithVisitsResponse,
-    MedicationTemplate, TemplateSaveRequest, TemplateSearchRequest
+    MedicationTemplate, TemplateSaveRequest, TemplateSearchRequest,
+    VoiceCorrection
 )
 from database import MongoDB, user_db, prescription_db, drug_db, ehr_db, patient_storage_db, medication_template_db
 from auth import auth_handler, get_current_user, get_current_user_id, validate_password_strength
