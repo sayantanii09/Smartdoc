@@ -3939,7 +3939,8 @@ const Shrutapex = () => {
     'penicillin': ['penicilin', 'penicilen'],
 
     // Pain medications  
-    'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol', 'paracetamol'],
+    'acetaminophen': ['acetamenophen', 'acetaminaphen', 'tylenol'],
+    'paracetamol': ['paracetmol', 'paracetamole', 'paracetamal'], // Keep paracetamol separate
     'ibuprofen': ['ibuprophen', 'ibupropen', 'advil', 'motrin'],
     'naproxen': ['naproxin', 'naproxyn', 'aleve', 'naprosyn'],
     'diclofenac': ['diclofanak', 'diclofenak', 'voltaren'],
