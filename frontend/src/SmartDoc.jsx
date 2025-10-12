@@ -1883,19 +1883,20 @@ const Shrutapex = () => {
     const step = GUIDED_STEPS[guidedFlowStep];
     if (!step) return;
     
+    // APPEND mode - add to existing text, don't replace
     const fieldSetters = {
-      symptoms: setSymptoms,
-      pastMedicalHistory: setPastMedicalHistory,
-      familyHistory: setFamilyHistory,
+      symptoms: (t) => setSymptoms(prev => prev ? `${prev}, ${t}` : t),
+      pastMedicalHistory: (t) => setPastMedicalHistory(prev => prev ? `${prev}, ${t}` : t),
+      familyHistory: (t) => setFamilyHistory(prev => prev ? `${prev}, ${t}` : t),
       socialHistory: () => {}, // Social history handled separately
-      pastMedications: setPastMedications,
-      allergies: setAllergies,
+      pastMedications: (t) => setPastMedications(prev => prev ? `${prev}, ${t}` : t),
+      allergies: (t) => setAllergies(prev => prev ? `${prev}, ${t}` : t),
       vitals: () => {}, // Vitals handled separately  
-      diagnosis: setDiagnosis,
-      labTests: setLabTests,
-      advice: setAdvice,
-      referrals: setReferrals,
-      followUpInstructions: setFollowUpInstructions
+      diagnosis: (t) => setDiagnosis(prev => prev ? `${prev}, ${t}` : t),
+      labTests: (t) => setLabTests(prev => prev ? `${prev}, ${t}` : t),
+      advice: (t) => setAdvice(prev => prev ? `${prev}. ${t}` : t),
+      referrals: (t) => setReferrals(prev => prev ? `${prev}, ${t}` : t),
+      followUpInstructions: (t) => setFollowUpInstructions(prev => prev ? `${prev}. ${t}` : t)
     };
     
     const setter = fieldSetters[step.field];
