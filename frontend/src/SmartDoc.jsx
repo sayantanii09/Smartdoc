@@ -3417,8 +3417,8 @@ const Shrutapex = () => {
         /(?:systolic|diastolic|\d+\/\d+|\d+\s*mmhg|\d+\s*bpm|\d+\s*degrees?):?\s*([^.;,]*)/gi
       ],
       allergies: [
-        /(?:allergies?|allergic to|allergy|adverse reaction):?\s*([^.;,\sand]+(?:\s+and\s+[^.;,\sand]+)*)/gi,
-        /(?:cannot take|avoid|sensitive to):?\s*([^.;,\sand]+)/gi
+        /(?:allergies?|allergic to|allergy|adverse reaction):?\s*([a-z\s]+?)(?:\s+and has|\s+and|\.|\;|\,|$)/gi,
+        /(?:cannot take|avoid|sensitive to):?\s*([a-z\s]+?)(?:\.|\;|\,|$)/gi
       ],
       socialHistory: [
         /(?:social history|smoking|alcohol|drinking|exercise|occupation|job):?\s*([^.;,]+)/gi,
