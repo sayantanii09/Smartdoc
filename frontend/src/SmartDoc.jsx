@@ -6855,6 +6855,39 @@ const Shrutapex = () => {
           </div>
         </div>
 
+        {/* Diagnosis Section - Step 7 */}
+        <div id="field-diagnosis" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 7 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5"></div>
+          <div className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <Activity className="w-7 h-7 text-green-400" />
+                Diagnosis
+                {guidedFlowStep === 7 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
+              </h2>
+              <button
+                onClick={() => {
+                  setGuidedFlowStep(7);
+                  setCurrentPrompt(GUIDED_STEPS[7].prompt);
+                  if (!isListening) toggleListening();
+                }}
+                className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-green-300 rounded-lg text-sm font-semibold transition-all border border-green-500/30 flex items-center gap-2"
+              >
+                <Mic className="w-4 h-4" />
+                Voice Input
+              </button>
+            </div>
+            
+            <textarea 
+              value={diagnosis} 
+              onChange={(e) => setDiagnosis(e.target.value)} 
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm resize-none" 
+              placeholder="e.g., Type 2 Diabetes Mellitus, Essential Hypertension" 
+              rows="2"
+            />
+          </div>
+        </div>
+
         {/* Clinical Documentation Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5"></div>
@@ -6862,57 +6895,89 @@ const Shrutapex = () => {
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
               <FileText className="w-7 h-7 text-teal-400" />
               Clinical Documentation
-              <span className="text-sm font-normal text-slate-400 ml-2">(Auto-populated from voice)</span>
             </h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Lab Tests & Investigations */}
-              <div>
-                <label className="block text-teal-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                  🔬 Lab Tests & Investigations
-                </label>
+              {/* Lab Tests - Step 9 */}
+              <div id="field-labTests" className={`${guidedFlowStep === 9 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-teal-300 font-semibold text-sm uppercase tracking-wide">
+                    🔬 Lab Tests {guidedFlowStep === 9 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  </label>
+                  <button
+                    onClick={() => {
+                      setGuidedFlowStep(9);
+                      setCurrentPrompt(GUIDED_STEPS[9].prompt);
+                      if (!isListening) toggleListening();
+                    }}
+                    className="px-2 py-1 bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                  >
+                    <Mic className="w-3 h-3" />
+                    Voice
+                  </button>
+                </div>
                 <textarea 
                   value={labTests} 
                   onChange={(e) => setLabTests(e.target.value)} 
                   className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm resize-none" 
-                  placeholder="CBC, LFT, RFT, X-ray chest, ECG, etc." 
+                  placeholder="CBC, LFT, RFT, X-ray, ECG" 
                   rows="4"
                 />
               </div>
               
-              {/* Referrals */}
-              <div>
-                <label className="block text-cyan-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                  🏥 Referrals & Consultations
-                </label>
+              {/* Referrals - Step 11 */}
+              <div id="field-referrals" className={`${guidedFlowStep === 11 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-cyan-300 font-semibold text-sm uppercase tracking-wide">
+                    🏥 Referrals {guidedFlowStep === 11 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  </label>
+                  <button
+                    onClick={() => {
+                      setGuidedFlowStep(11);
+                      setCurrentPrompt(GUIDED_STEPS[11].prompt);
+                      if (!isListening) toggleListening();
+                    }}
+                    className="px-2 py-1 bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                  >
+                    <Mic className="w-3 h-3" />
+                    Voice
+                  </button>
+                </div>
                 <textarea 
                   value={referrals} 
                   onChange={(e) => setReferrals(e.target.value)} 
                   className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-sm resize-none" 
-                  placeholder="Cardiology, Neurology, Orthopedics, etc." 
+                  placeholder="Cardiology, Neurology, etc." 
                   rows="4"
                 />
               </div>
               
-              {/* Follow-up Instructions */}
-              <div>
-                <label className="block text-blue-300 font-semibold text-sm mb-2 uppercase tracking-wide">
-                  📅 Follow-up Instructions
-                </label>
+              {/* Follow-up - Step 12 */}
+              <div id="field-followUpInstructions" className={`${guidedFlowStep === 12 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-blue-300 font-semibold text-sm uppercase tracking-wide">
+                    📅 Follow-up {guidedFlowStep === 12 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  </label>
+                  <button
+                    onClick={() => {
+                      setGuidedFlowStep(12);
+                      setCurrentPrompt(GUIDED_STEPS[12].prompt);
+                      if (!isListening) toggleListening();
+                    }}
+                    className="px-2 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                  >
+                    <Mic className="w-3 h-3" />
+                    Voice
+                  </button>
+                </div>
                 <textarea 
                   value={followUpInstructions} 
                   onChange={(e) => setFollowUpInstructions(e.target.value)} 
                   className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
-                  placeholder="Follow-up in 2 weeks, Monitor BP, Return if symptoms worsen, etc." 
+                  placeholder="Follow-up in 2 weeks, Monitor BP" 
                   rows="4"
                 />
               </div>
-            </div>
-            
-            <div className="mt-4 p-3 bg-teal-500/10 rounded-lg border border-teal-500/30">
-              <p className="text-teal-300 text-sm">
-                💡 <strong>Auto-Detection:</strong> These fields are automatically populated from your voice consultation using AI pattern recognition
-              </p>
             </div>
           </div>
         </div>
