@@ -776,11 +776,24 @@ const Shrutapex = () => {
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = speechLanguage;
-        recognitionRef.current.maxAlternatives = 3; // Get multiple alternatives for better accuracy
+        recognitionRef.current.maxAlternatives = 5; // Get more alternatives for better accuracy
         
         // Improve recognition quality based on settings
         if (speechQuality === 'high') {
           recognitionRef.current.serviceURI = undefined; // Use default high-quality service
+        }
+        
+        // Add grammars for medical terms if supported
+        try {
+          if (recognitionRef.current.grammars) {
+            const grammar = '#JSGF V1.0; grammar medications; public <medication> = ' + 
+              Object.keys(MEDICATION_DATABASE).join(' | ') + ';';
+            const speechRecognitionList = new window.webkitSpeechGrammarList();
+            speechRecognitionList.addFromString(grammar, 1);
+            recognitionRef.current.grammars = speechRecognitionList;
+          }
+        } catch (e) {
+          console.log('Grammar not supported, using default recognition');
         }
 
         // Setup event handlers using the new function
