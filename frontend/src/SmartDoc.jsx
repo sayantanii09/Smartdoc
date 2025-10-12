@@ -1389,21 +1389,13 @@ const Shrutapex = () => {
   // Auto-generate UNIQUE MRN for new patients when entering review
   useEffect(() => {
     if (currentView === 'review' && isNewPatient && !currentPatientMRN) {
-      // Generate TRULY UNIQUE MRN using timestamp
-      // Format: MRN-YYYYMMDD-HHMMSSMMM (e.g., MRN-20250125-143052847)
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
-      const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-      
-      // UNIQUE MRN: Date + Time + Milliseconds = guaranteed unique
-      const generatedMRN = `MRN-${year}${month}${day}-${hours}${minutes}${seconds}${milliseconds}`;
+      // Generate TRULY UNIQUE MRN using UUID (crypto.randomUUID)
+      // Format: MRN-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      // UUID is GUARANTEED unique even across multiple doctors/clinics/simultaneous generation
+      const uuid = crypto.randomUUID();
+      const generatedMRN = `MRN-${uuid}`;
       setCurrentPatientMRN(generatedMRN);
-      console.log('✅ Auto-generated UNIQUE MRN for new patient:', generatedMRN);
+      console.log('✅ Auto-generated UNIQUE MRN for new patient (UUID-based):', generatedMRN);
     }
   }, [currentView, isNewPatient, currentPatientMRN]);
 
