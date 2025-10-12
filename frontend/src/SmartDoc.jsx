@@ -4415,8 +4415,15 @@ const Shrutapex = () => {
     await submitPrescriptionToEHR();
   };
 
-  const handleBothActions = () => {
+  const handleBothActions = async () => {
+    // AUTO-SAVE patient details first
+    console.log('💾 Auto-saving patient details before PDF & EHR...');
+    await saveCurrentPatient();
+    
+    // Then print PDF
     handlePrintPDF();
+    
+    // Then submit to EHR if connected
     setTimeout(() => {
       if (isEhrConnected) {
         handleSubmitToEHR();
