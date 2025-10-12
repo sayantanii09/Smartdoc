@@ -2352,7 +2352,7 @@ const Shrutapex = () => {
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
       console.log('Current listening state:', isListening);
-      console.log('Current guided step:', guidedFlowStep);
+      console.log('Current guided step:', guidedFlowStepRef.current);
       
       // ALWAYS restart if still listening (user didn't manually stop)
       if (isListening) {
@@ -2371,21 +2371,6 @@ const Shrutapex = () => {
       } else {
         console.log('User manually stopped - not restarting');
         setIsListening(false);
-      }
-      
-      // Auto-restart if it was supposed to be continuous
-      if (isListening) {
-        console.log('🔄 Auto-restarting speech recognition...');
-        setTimeout(() => {
-          if (isListening) {
-            try {
-              recognitionRef.current.start();
-            } catch (e) {
-              console.error('Auto-restart failed:', e);
-              setIsListening(false);
-            }
-          }
-        }, 100);
       }
     };
   };
