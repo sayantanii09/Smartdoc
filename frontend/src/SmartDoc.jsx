@@ -7032,10 +7032,10 @@ const Shrutapex = () => {
 
                 {/* Frequency */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Frequency *</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Frequency * {guidedFlowStep === 8 && prescriptionSubStep === 4 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
-                    value={newMedication.frequency}
-                    onChange={(e) => setNewMedication({...newMedication, frequency: e.target.value})}
+                    value={currentMedicineData.frequency}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, frequency: e.target.value})}
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="" style={{color: 'black'}}>Select Frequency</option>
