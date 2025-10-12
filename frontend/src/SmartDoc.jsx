@@ -7126,11 +7126,24 @@ const Shrutapex = () => {
           </div>
         </div>
 
-        {/* AI-Extracted Clinical Data section REMOVED - redundant with other fields */}
-
-        {/* Remaining content continues below */}
-        
-        {/* Load Disease Template section removed */}
+        {/* Review & Complete Prescription Button */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-green-600/20 to-emerald-600/20 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-green-500/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10"></div>
+          <div className="relative text-center">
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+              <CheckCircle className="w-8 h-8 text-green-400" />
+              Complete Documentation
+            </h2>
+            <p className="text-slate-300 mb-6">Review all captured information and generate prescription</p>
+            <button
+              onClick={() => setCurrentView('review')}
+              className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-xl font-bold text-lg transition-all shadow-lg hover:shadow-green-500/50 flex items-center gap-3 mx-auto"
+            >
+              <CheckCircle className="w-6 h-6" />
+              Review & Complete Prescription
+            </button>
+          </div>
+        </div>
       </div>
       
       {/* Live Transcript Box - Bottom Chat Style */}
