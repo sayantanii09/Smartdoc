@@ -5564,6 +5564,18 @@ const Shrutapex = () => {
   }
 
   // Review Screen with Enhanced Actions
+  // Auto-generate MRN for new patients when entering review
+  React.useEffect(() => {
+    if (currentView === 'review' && isNewPatient && !currentPatientMRN) {
+      // Generate MRN: Format: MRN-YYYY-XXXXXX (e.g., MRN-2025-000001)
+      const year = new Date().getFullYear();
+      const randomNum = Math.floor(Math.random() * 900000) + 100000; // 6-digit random number
+      const generatedMRN = `MRN-${year}-${randomNum}`;
+      setCurrentPatientMRN(generatedMRN);
+      console.log('✅ Auto-generated MRN for new patient:', generatedMRN);
+    }
+  }, [currentView, isNewPatient, currentPatientMRN]);
+
   if (currentView === 'review') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 md:p-8">
