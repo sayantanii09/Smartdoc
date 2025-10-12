@@ -1852,17 +1852,21 @@ const Shrutapex = () => {
     const lowerTranscript = transcript.toLowerCase().trim();
     
     console.log('🎤 Voice captured:', transcript);
-    console.log('🔍 Checking for commands...');
+    console.log('🔍 Checking for commands... Current step:', GUIDED_STEPS[guidedFlowStep]?.name);
     
-    // Check for voice commands first - STOP if command detected
-    if (lowerTranscript === 'skip' || lowerTranscript === 'next' || lowerTranscript.includes('next')) {
-      console.log('⏭️ NEXT command detected');
+    // STRICT command detection - must be exact match or standalone word
+    const words = lowerTranscript.split(' ');
+    const lastWord = words[words.length - 1];
+    
+    // Check if ONLY the command word (more strict)
+    if (lowerTranscript === 'skip' || lowerTranscript === 'next' || lastWord === 'next' || lowerTranscript === 'move next') {
+      console.log('⏭️ NEXT command detected - moving to next field');
       moveToNextStep();
       return; // STOP - don't capture as text
     }
     
-    if (lowerTranscript === 'previous' || lowerTranscript === 'back' || lowerTranscript.includes('previous')) {
-      console.log('⏮️ PREVIOUS command detected');
+    if (lowerTranscript === 'previous' || lowerTranscript === 'back' || lastWord === 'previous' || lastWord === 'back') {
+      console.log('⏮️ PREVIOUS command detected - moving to previous field');
       moveToPreviousStep();
       return; // STOP - don't capture as text
     }
@@ -1874,14 +1878,21 @@ const Shrutapex = () => {
       return; // STOP - don't capture full text
     }
     
+    // Ignore if empty or just whitespace
+    if (!transcript || transcript.trim().length === 0) {
+      console.log('⚠️ Empty transcript, skipping');
+      return;
+    }
+    
     // Handle prescription sub-flow
     if (guidedFlowStep === 8 && GUIDED_STEPS[8].subFlow) {
+      console.log('💊 Prescription sub-flow active');
       handlePrescriptionSubFlow(transcript);
       return;
     }
     
     // Normal field capture - only if NOT a command
-    console.log('✍️ Capturing to field:', GUIDED_STEPS[guidedFlowStep]?.name);
+    console.log('✍️ Capturing to field:', GUIDED_STEPS[guidedFlowStep]?.name, 'Field key:', GUIDED_STEPS[guidedFlowStep]?.field);
     captureToCurrentField(transcript);
   };
   
