@@ -2684,21 +2684,19 @@ const Shrutapex = () => {
       return;
     }
     
-    // Find differences between original and corrected text
-    const originalWords = liveTranscript.toLowerCase().split(/\s+/);
-    const correctedWords = correctedTranscript.toLowerCase().split(/\s+/);
+    // Enhanced difference detection using fuzzy matching
+    const corrections = findTextDifferences(liveTranscript, correctedTranscript);
     
-    const corrections = [];
+    if (corrections.length === 0) {
+      alert('No significant differences found between original and corrected text');
+      return;
+    }
     
-    // Simple word-by-word comparison
-    for (let i = 0; i < Math.max(originalWords.length, correctedWords.length); i++) {
-      const original = originalWords[i];
-      const corrected = correctedWords[i];
-      
-      if (original && corrected && original !== corrected) {
-        // Check if it's likely a medication name
-        const isMedication = Object.keys(MEDICATION_DATABASE).some(med => 
-          med.includes(corrected) || calculateSimilarity(corrected, med) > 0.7
+    // Process each correction
+    corrections.forEach(correction => {
+      // Check if it's likely a medication name
+      const isMedication = Object.keys(MEDICATION_DATABASE).some(med => 
+        med.includes(correction.corrected) || calculateSimilarity(correction.corrected, med) > 0.7
         );
         
         if (isMedication || corrected.length > 4) { // Only learn significant words
