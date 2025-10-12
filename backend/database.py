@@ -20,8 +20,18 @@ class MongoDB:
             mongo_url = os.getenv("MONGO_URL", "mongodb://localhost:27017/shrutapex")
             cls.client = AsyncIOMotorClient(mongo_url)
             
-            # Extract database name from URL
-            db_name = mongo_url.split('/')[-1] if '/' in mongo_url else "shrutapex"
+            # Extract database name from URL (handle query parameters)
+            if '/' in mongo_url:
+                db_part = mongo_url.split('/')[-1]
+                # Remove query parameters if present
+                db_name = db_part.split('?')[0] if '?' in db_part else db_part
+                # Ensure database name is within MongoDB limits (max 63 chars)
+                if len(db_name) > 63:
+                    db_name = db_name[:63]
+                # Fallback to default if empty
+                db_name = db_name if db_name else "shrutapex"
+            else:
+                db_name = "shrutapex"
             cls.database = cls.client[db_name]
             
             # Test connection
