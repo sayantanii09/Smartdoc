@@ -2358,11 +2358,11 @@ const Shrutapex = () => {
             setAllergies(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
             console.log('✅ Updated allergies INLINE');
           } else if (stepInfo && stepInfo.field === 'socialHistory') {
-            console.log('⚠️ Social History uses dropdowns - auto-skipping to next field');
-            moveToNextStep();
+            console.log('⚠️ Social History uses dropdowns - no voice capture, waiting for manual input or NEXT');
+            // Don't capture, don't skip - user fills manually or says NEXT
           } else if (stepInfo && stepInfo.field === 'vitals') {
-            console.log('⚠️ Vitals use structured fields - auto-skipping to next field');
-            moveToNextStep();
+            console.log('⚠️ Vitals use structured fields - no voice capture, waiting for manual input or NEXT');
+            // Don't capture, don't skip - user fills manually or says NEXT
           } else if (stepInfo && stepInfo.field === 'prescription') {
             console.log('💊 Prescription field - handling sub-flow');
             // Handle prescription: extract medicine name and auto-advance
