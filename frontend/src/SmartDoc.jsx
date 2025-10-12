@@ -2365,12 +2365,33 @@ const Shrutapex = () => {
             console.log('⚠️ Vitals use structured fields - no voice capture, waiting for manual input or NEXT');
             // Don't capture, don't skip - user fills manually or says NEXT
           } else if (stepInfo && stepInfo.field === 'prescription') {
-            console.log('💊 Prescription field - handling sub-flow');
-            // Handle prescription: extract medicine name and auto-advance
-            setCurrentMedicineData(prev => ({ ...prev, name: correctedTranscript }));
-            console.log(`✅ Set medicine name to: ${correctedTranscript}`);
-            // Auto-move to next step after capturing medicine name
-            moveToNextStep();
+            console.log('💊 Prescription sub-flow active');
+            const currentSubStep = prescriptionSubStepRef.current;
+            const subStep = PRESCRIPTION_SUB_STEPS[currentSubStep];
+            
+            if (subStep) {
+              console.log(`💊 Sub-step ${currentSubStep}: ${subStep.field} = "${correctedTranscript}"`);
+              
+              // Update current medicine data with the field
+              setCurrentMedicineData(prev => ({
+                ...prev,
+                [subStep.field]: correctedTranscript
+              }));
+              
+              // Move to next sub-step or finish medicine
+              if (currentSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+                const nextSubStep = currentSubStep + 1;
+                setPrescriptionSubStep(nextSubStep);
+                prescriptionSubStepRef.current = nextSubStep;
+                setCurrentPrompt(PRESCRIPTION_SUB_STEPS[nextSubStep].prompt);
+                console.log(`➡️ Moving to prescription sub-step ${nextSubStep}: ${PRESCRIPTION_SUB_STEPS[nextSubStep].field}`);
+              } else {
+                // Completed all prescription fields - add medicine to list
+                console.log('✅ All prescription fields captured, adding medicine to list');
+                // The user should say "ADD" to add another or "NEXT" to move on
+                setCurrentPrompt('Medicine details captured. Say "ADD" to add another medicine, or say "NEXT" to continue to Lab Tests');
+              }
+            }
           } else if (stepInfo && stepInfo.field === 'diagnosis') {
             setDiagnosis(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
             console.log('✅ Updated diagnosis INLINE');
