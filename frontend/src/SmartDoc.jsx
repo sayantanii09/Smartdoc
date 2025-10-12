@@ -5783,17 +5783,6 @@ const Shrutapex = () => {
                 Final Prescription Review
               </h2>
 
-              {/* PROMINENT MRN DISPLAY */}
-              {currentPatientMRN && (
-                <div className="mb-8 p-6 bg-gradient-to-r from-emerald-600/40 to-green-600/40 rounded-2xl border-2 border-emerald-400 shadow-2xl">
-                  <div className="text-center">
-                    <p className="text-emerald-200 text-sm font-semibold uppercase tracking-widest mb-2">🏥 Medical Record Number</p>
-                    <p className="text-white text-4xl font-bold tracking-wider font-mono">{currentPatientMRN}</p>
-                    <p className="text-emerald-100 text-xs mt-3">✓ Timestamp-based unique identifier • No duplicates possible</p>
-                  </div>
-                </div>
-              )}
-
               {/* Patient Information */}
               <div className="mb-8 p-6 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl border border-blue-500/30 backdrop-blur-sm">
                 <div className="flex items-center gap-3 mb-4">
