@@ -1889,25 +1889,65 @@ const Shrutapex = () => {
     const step = GUIDED_STEPS[guidedFlowStep];
     if (!step) return;
     
+    console.log(`📝 Capturing "${text}" to field: ${step.field}`);
+    
     // APPEND mode - add to existing text, don't replace
     const fieldSetters = {
-      symptoms: (t) => setSymptoms(prev => prev ? `${prev}, ${t}` : t),
-      pastMedicalHistory: (t) => setPastMedicalHistory(prev => prev ? `${prev}, ${t}` : t),
-      familyHistory: (t) => setFamilyHistory(prev => prev ? `${prev}, ${t}` : t),
-      socialHistory: () => {}, // Social history handled separately
-      pastMedications: (t) => setPastMedications(prev => prev ? `${prev}, ${t}` : t),
-      allergies: (t) => setAllergies(prev => prev ? `${prev}, ${t}` : t),
-      vitals: () => {}, // Vitals handled separately  
-      diagnosis: (t) => setDiagnosis(prev => prev ? `${prev}, ${t}` : t),
-      labTests: (t) => setLabTests(prev => prev ? `${prev}, ${t}` : t),
-      advice: (t) => setAdvice(prev => prev ? `${prev}. ${t}` : t),
-      referrals: (t) => setReferrals(prev => prev ? `${prev}, ${t}` : t),
-      followUpInstructions: (t) => setFollowUpInstructions(prev => prev ? `${prev}. ${t}` : t)
+      symptoms: (t) => {
+        setSymptoms(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated symptoms');
+      },
+      pastMedicalHistory: (t) => {
+        setPastMedicalHistory(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated past medical history');
+      },
+      familyHistory: (t) => {
+        setFamilyHistory(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated family history');
+      },
+      socialHistory: (t) => {
+        // For now, we skip social history voice input (it has dropdowns)
+        console.log('⚠️ Social history uses dropdowns - skipping voice');
+      },
+      pastMedications: (t) => {
+        setPastMedications(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated current medications');
+      },
+      allergies: (t) => {
+        setAllergies(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated allergies');
+      },
+      vitals: (t) => {
+        // For now, skip vitals (has structured fields)
+        console.log('⚠️ Vitals use structured fields - skipping voice');
+      },
+      diagnosis: (t) => {
+        setDiagnosis(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated diagnosis');
+      },
+      labTests: (t) => {
+        setLabTests(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated lab tests');
+      },
+      advice: (t) => {
+        setAdvice(prev => prev ? `${prev}. ${t}` : t);
+        console.log('✅ Updated advice');
+      },
+      referrals: (t) => {
+        setReferrals(prev => prev ? `${prev}, ${t}` : t);
+        console.log('✅ Updated referrals');
+      },
+      followUpInstructions: (t) => {
+        setFollowUpInstructions(prev => prev ? `${prev}. ${t}` : t);
+        console.log('✅ Updated follow-up');
+      }
     };
     
     const setter = fieldSetters[step.field];
     if (setter) {
       setter(text);
+    } else {
+      console.error('❌ No setter found for field:', step.field);
     }
   };
   
