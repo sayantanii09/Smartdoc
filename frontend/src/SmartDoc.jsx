@@ -6797,6 +6797,40 @@ const Shrutapex = () => {
           </div>
         </div>
 
+        {/* Diagnosis Section - Step 7 */}
+        <div id="field-diagnosis" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 7 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5"></div>
+          <div className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <Activity className="w-7 h-7 text-green-400" />
+                Diagnosis
+                {guidedFlowStep === 7 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
+              </h2>
+              <button
+                onClick={() => {
+                  setGuidedFlowStep(7);
+                  guidedFlowStepRef.current = 7;
+                  setCurrentPrompt(GUIDED_STEPS[7].prompt);
+                  if (!isListening) toggleListening();
+                }}
+                className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-green-300 rounded-lg text-sm font-semibold transition-all border border-green-500/30 flex items-center gap-2"
+              >
+                <Mic className="w-4 h-4" />
+                Voice Input
+              </button>
+            </div>
+            
+            <textarea 
+              value={diagnosis} 
+              onChange={(e) => setDiagnosis(e.target.value)} 
+              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm resize-none" 
+              placeholder="e.g., Type 2 Diabetes Mellitus, Essential Hypertension" 
+              rows="2"
+            />
+          </div>
+        </div>
+
         {/* Prescription Management Section - Step 8 */}
         <div id="field-prescription" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 8 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
