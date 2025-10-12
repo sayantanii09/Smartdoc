@@ -2056,8 +2056,10 @@ const Shrutapex = () => {
     
     if (guidedFlowStep === 8 && prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
       // In prescription sub-flow
-      setPrescriptionSubStep(prescriptionSubStep + 1);
-      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep + 1].prompt);
+      const nextSubStep = prescriptionSubStep + 1;
+      setPrescriptionSubStep(nextSubStep);
+      prescriptionSubStepRef.current = nextSubStep; // Update ref
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[nextSubStep].prompt);
     } else if (guidedFlowStep < GUIDED_STEPS.length - 1) {
       // Move to next main step
       if (guidedFlowStep === 8 && currentMedicineData.name) {
@@ -2066,11 +2068,14 @@ const Shrutapex = () => {
       
       const nextStep = guidedFlowStep + 1;
       setGuidedFlowStep(nextStep);
+      guidedFlowStepRef.current = nextStep; // Update ref immediately
       setPrescriptionSubStep(0);
+      prescriptionSubStepRef.current = 0; // Reset prescription sub-step ref
       setCurrentPrompt(GUIDED_STEPS[nextStep].prompt);
       
       console.log('✅ Moved to step:', nextStep, GUIDED_STEPS[nextStep].name);
       console.log('🎤 Voice recognition should CONTINUE - no stop!');
+      console.log('📌 Updated guidedFlowStepRef to:', guidedFlowStepRef.current);
       
       // CRITICAL: Keep voice recognition ON - don't stop it
       // It should continue listening for the next field
@@ -2098,13 +2103,18 @@ const Shrutapex = () => {
   const moveToPreviousStep = () => {
     if (guidedFlowStep === 8 && prescriptionSubStep > 0) {
       // Go back in prescription sub-flow
-      setPrescriptionSubStep(prescriptionSubStep - 1);
-      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep - 1].prompt);
+      const prevSubStep = prescriptionSubStep - 1;
+      setPrescriptionSubStep(prevSubStep);
+      prescriptionSubStepRef.current = prevSubStep; // Update ref
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prevSubStep].prompt);
     } else if (guidedFlowStep > 0) {
       // Go back to previous main step
-      setGuidedFlowStep(guidedFlowStep - 1);
+      const prevStep = guidedFlowStep - 1;
+      setGuidedFlowStep(prevStep);
+      guidedFlowStepRef.current = prevStep; // Update ref
       setPrescriptionSubStep(0);
-      setCurrentPrompt(GUIDED_STEPS[guidedFlowStep - 1].prompt);
+      prescriptionSubStepRef.current = 0; // Reset prescription sub-step ref
+      setCurrentPrompt(GUIDED_STEPS[prevStep].prompt);
     }
   };
 
