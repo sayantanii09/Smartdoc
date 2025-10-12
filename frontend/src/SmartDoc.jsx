@@ -1851,22 +1851,27 @@ const Shrutapex = () => {
   const handleGuidedVoiceCapture = (transcript) => {
     const lowerTranscript = transcript.toLowerCase().trim();
     
-    // Check for voice commands first
-    if (lowerTranscript === 'skip') {
+    console.log('🎤 Voice captured:', transcript);
+    console.log('🔍 Checking for commands...');
+    
+    // Check for voice commands first - STOP if command detected
+    if (lowerTranscript === 'skip' || lowerTranscript === 'next' || lowerTranscript.includes('next')) {
+      console.log('⏭️ NEXT command detected');
       moveToNextStep();
-      return;
+      return; // STOP - don't capture as text
     }
     
-    if (lowerTranscript === 'previous') {
+    if (lowerTranscript === 'previous' || lowerTranscript === 'back' || lowerTranscript.includes('previous')) {
+      console.log('⏮️ PREVIOUS command detected');
       moveToPreviousStep();
-      return;
+      return; // STOP - don't capture as text
     }
     
     if (lowerTranscript.startsWith('add ')) {
-      // Append mode - add to existing field
+      console.log('➕ ADD command detected');
       const textToAdd = transcript.substring(4).trim();
       appendToCurrentField(textToAdd);
-      return;
+      return; // STOP - don't capture full text
     }
     
     // Handle prescription sub-flow
@@ -1875,7 +1880,8 @@ const Shrutapex = () => {
       return;
     }
     
-    // Normal field capture
+    // Normal field capture - only if NOT a command
+    console.log('✍️ Capturing to field:', GUIDED_STEPS[guidedFlowStep]?.name);
     captureToCurrentField(transcript);
   };
   
