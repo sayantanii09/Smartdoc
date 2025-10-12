@@ -7137,6 +7137,7 @@ const Shrutapex = () => {
                   <button
                     onClick={() => {
                       setGuidedFlowStep(10);
+                      guidedFlowStepRef.current = 10;
                       setCurrentPrompt(GUIDED_STEPS[10].prompt);
                       if (!isListening) toggleListening();
                     }}
