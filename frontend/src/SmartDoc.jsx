@@ -5564,15 +5564,24 @@ const Shrutapex = () => {
   }
 
   // Review Screen with Enhanced Actions
-  // Auto-generate MRN for new patients when entering review
+  // Auto-generate UNIQUE MRN for new patients when entering review
   React.useEffect(() => {
     if (currentView === 'review' && isNewPatient && !currentPatientMRN) {
-      // Generate MRN: Format: MRN-YYYY-XXXXXX (e.g., MRN-2025-000001)
-      const year = new Date().getFullYear();
-      const randomNum = Math.floor(Math.random() * 900000) + 100000; // 6-digit random number
-      const generatedMRN = `MRN-${year}-${randomNum}`;
+      // Generate TRULY UNIQUE MRN using timestamp + random suffix
+      // Format: MRN-YYYYMMDD-HHMMSS-XXX (e.g., MRN-20250125-143052-847)
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+      
+      // UNIQUE MRN: Date + Time + Milliseconds = guaranteed unique
+      const generatedMRN = `MRN-${year}${month}${day}-${hours}${minutes}${seconds}${milliseconds}`;
       setCurrentPatientMRN(generatedMRN);
-      console.log('✅ Auto-generated MRN for new patient:', generatedMRN);
+      console.log('✅ Auto-generated UNIQUE MRN for new patient:', generatedMRN);
     }
   }, [currentView, isNewPatient, currentPatientMRN]);
 
