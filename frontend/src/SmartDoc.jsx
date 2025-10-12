@@ -1158,8 +1158,10 @@ const Shrutapex = () => {
 
   // Guided Voice Flow State
   const [guidedFlowStep, setGuidedFlowStep] = useState(0); // 0-12 for each step
+  const guidedFlowStepRef = useRef(0); // Ref to always have latest value in speech handlers
   const [currentPrompt, setCurrentPrompt] = useState('');
   const [prescriptionSubStep, setPrescriptionSubStep] = useState(0); // For medicine sub-flow
+  const prescriptionSubStepRef = useRef(0); // Ref for prescription sub-step
   const [currentMedicineData, setCurrentMedicineData] = useState({
     name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
   });
