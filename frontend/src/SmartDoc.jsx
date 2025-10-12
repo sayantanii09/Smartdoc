@@ -1525,7 +1525,7 @@ const Shrutapex = () => {
 
     medicationPatterns.forEach(pattern => {
       let match;
-      while ((match = pattern.exec(text)) !== null) {
+      while ((match = pattern.exec(prescriptionText)) !== null) {
         const [fullMatch, drugName, dosage, unit, formulation, route, frequency, foodInstruction] = match;
         
         // Validate that drugName is actually a medication, not a unit or frequency
