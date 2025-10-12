@@ -7348,10 +7348,35 @@ const Shrutapex = () => {
             <div className="flex items-center gap-2">
               <Mic className={`w-4 h-4 text-white ${isListening ? 'animate-pulse' : 'opacity-50'}`} />
               <span className="text-white font-semibold text-sm">
-                Live Transcript & Debug {!isListening && <span className="text-xs text-white/60">(Paused)</span>}
+                Live Transcript & Debug
               </span>
             </div>
             <div className="flex items-center gap-2">
+              {/* Pause/Resume Button */}
+              <button
+                onClick={() => {
+                  if (isListening) {
+                    // Pause voice
+                    if (recognitionRef.current) {
+                      recognitionRef.current.stop();
+                    }
+                    setIsListening(false);
+                    console.log('⏸️ Voice paused by user');
+                  } else {
+                    // Resume voice
+                    toggleListening();
+                    console.log('▶️ Voice resumed by user');
+                  }
+                }}
+                className={`text-white text-xs px-3 py-1 rounded font-semibold ${
+                  isListening 
+                    ? 'bg-yellow-600 hover:bg-yellow-700' 
+                    : 'bg-green-600 hover:bg-green-700'
+                }`}
+                title={isListening ? 'Pause Voice' : 'Resume Voice'}
+              >
+                {isListening ? '⏸ Pause' : '▶ Resume'}
+              </button>
               <button
                 onClick={() => setFloatingTranscriptCollapsed(!floatingTranscriptCollapsed)}
                 className="text-white/80 hover:text-white text-xs px-2 py-1"
