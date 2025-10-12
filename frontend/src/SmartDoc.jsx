@@ -2429,10 +2429,14 @@ const Shrutapex = () => {
           
           // Directly call the appropriate setter based on field
           if (stepInfo && stepInfo.field === 'symptoms') {
-            setSymptoms(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            const newText = correctedTranscript;
+            setSymptoms(prev => prev ? `${prev}, ${newText}` : newText);
+            setOriginalVoiceText(prev => ({ ...prev, symptoms: newText })); // Track original
             console.log('✅ Updated symptoms INLINE');
           } else if (stepInfo && stepInfo.field === 'pastMedicalHistory') {
-            setPastMedicalHistory(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
+            const newText = correctedTranscript;
+            setPastMedicalHistory(prev => prev ? `${prev}, ${newText}` : newText);
+            setOriginalVoiceText(prev => ({ ...prev, pastMedicalHistory: newText })); // Track original
             console.log('✅ Updated pastMedicalHistory INLINE');
           } else if (stepInfo && stepInfo.field === 'familyHistory') {
             setFamilyHistory(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
