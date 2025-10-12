@@ -7053,11 +7053,11 @@ const Shrutapex = () => {
 
                 {/* Duration */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Duration *</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Duration * {guidedFlowStep === 8 && prescriptionSubStep === 5 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <input
                     type="text"
-                    value={newMedication.duration}
-                    onChange={(e) => setNewMedication({...newMedication, duration: e.target.value})}
+                    value={currentMedicineData.duration}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, duration: e.target.value})}
                     placeholder="e.g., 7 days, 2 weeks, 1 month"
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -7065,10 +7065,10 @@ const Shrutapex = () => {
 
                 {/* Food Instructions */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Food Instructions</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Food Instructions * {guidedFlowStep === 8 && prescriptionSubStep === 6 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
-                    value={newMedication.foodInstruction}
-                    onChange={(e) => setNewMedication({...newMedication, foodInstruction: e.target.value})}
+                    value={currentMedicineData.foodInstruction}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, foodInstruction: e.target.value})}
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="With or without food" style={{color: 'black'}}>With or without food</option>
