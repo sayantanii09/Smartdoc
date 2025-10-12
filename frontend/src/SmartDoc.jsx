@@ -2101,7 +2101,7 @@ const Shrutapex = () => {
   };
 
   const runDemo = () => {
-    const demoText = 'Patient has type 2 diabetes and hypertension. Blood sugar is elevated. Past medical history includes coronary artery disease and previous myocardial infarction in 2020. Patient is allergic to penicillin and has family history of diabetes. Previous medications include aspirin and atorvastatin. Prescribe metformin 40mg tablet oral once daily after breakfast and lisinopril 5mg tablet oral once daily before breakfast. Patient should follow up in two weeks for monitoring blood pressure and glucose levels.';
+    const demoText = 'Patient has type 2 diabetes and hypertension. Blood sugar is elevated. Past medical history includes coronary artery disease and myocardial infarction in 2020. Patient is allergic to penicillin and has family history of diabetes. Currently taking aspirin and atorvastatin. New prescription: metformin 500mg tablet oral twice daily after meals for 30 days and lisinopril 5mg tablet oral once daily before breakfast for 30 days. Lab tests: fasting blood sugar, HbA1c, lipid profile. Follow up in two weeks for monitoring blood pressure and glucose levels.';
     setTranscript(demoText);
     setTimeout(() => processTranscript(demoText), 500);
   };
