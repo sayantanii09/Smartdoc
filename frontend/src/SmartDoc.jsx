@@ -1817,29 +1817,12 @@ const Shrutapex = () => {
       console.log('Follow-up updated:', followUpText);
     }
     
-    // OLD CODE - keeping for reference but not using
-    const followUpPatterns = [
-      /(?:follow.?up|return|come back|revisit)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
-      /(?:next visit|next appointment)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
-      /(?:review|recheck|reassess)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
-      /(?:monitor|watch|observe)\s+(?:for|over)\s+(\d+\s*(?:days?|weeks?|months?))/gi
-    ];
+    // Extract medications with enhanced parsing from corrected text
+    const extractedMeds = extractMedicationsFromText(correctedText);
+    setMedications(extractedMeds);
     
-    const followUpMatches = [];
-    /*followUpPatterns.forEach(pattern => {
-      const matches = lowerText.match(pattern);
-      if (matches) {
-        followUpMatches.push(...matches);
-      }
-    });
+    console.log('Medications extracted from corrected text:', extractedMeds);
     
-    if (followUpMatches.length > 0) {
-      extractedFollowUp = [...new Set(followUpMatches)].join(', ');
-    } else if (lowerText.includes('follow up') || lowerText.includes('return')) {
-      extractedFollowUp = 'Follow-up as needed';
-    }
-    setFollowUpInstructions(extractedFollowUp);
-
     checkInteractions(extractedMeds);
   };
 
