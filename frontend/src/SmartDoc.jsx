@@ -4392,6 +4392,10 @@ const Shrutapex = () => {
       return;
     }
     
+    // AUTO-SAVE patient details first before EHR submission
+    console.log('💾 Auto-saving patient details before EHR submission...');
+    await saveCurrentPatient();
+    
     // If no EHR provider is selected, show selection dialog
     if (!selectedEhrProvider && ehrConfigurations.length > 1) {
       const providerOptions = ehrConfigurations.map((config, index) => 
