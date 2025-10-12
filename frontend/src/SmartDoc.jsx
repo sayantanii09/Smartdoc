@@ -6594,21 +6594,36 @@ const Shrutapex = () => {
           </div>
         </div>
 
-        {/* Prescription Management Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
+        {/* Prescription Management Section - Step 8 */}
+        <div id="field-prescription" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 8 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                 <Pill className="w-7 h-7 text-blue-400" />
                 Prescription Management
+                {guidedFlowStep === 8 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
               </h2>
-              <button
-                onClick={() => setShowMedicationTemplates(true)}
-                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-semibold transition-all"
-              >
-                📋 Load Template
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setGuidedFlowStep(8);
+                    setPrescriptionSubStep(0);
+                    setCurrentPrompt(PRESCRIPTION_SUB_STEPS[0].prompt);
+                    if (!isListening) toggleListening();
+                  }}
+                  className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-lg text-sm font-semibold transition-all border border-blue-500/30 flex items-center gap-2"
+                >
+                  <Mic className="w-4 h-4" />
+                  Voice Input
+                </button>
+                <button
+                  onClick={() => setShowMedicationTemplates(true)}
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-semibold transition-all"
+                >
+                  📋 Load Template
+                </button>
+              </div>
             </div>
 
             {/* Add New Medication Form */}
