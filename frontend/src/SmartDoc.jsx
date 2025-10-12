@@ -3496,7 +3496,8 @@ const Shrutapex = () => {
         /(?:expected to|likely to|should):?\s*([^.;,]+)/gi
       ],
       familyHistory: [
-        /(?:family history|father|mother|parent|sibling|brother|sister|grandfather|grandmother):?\s*([^.;,]+)/gi,
+        /(?:family history)\s+(?:of\s+)?([^.;,\sand]+(?:\s+(?!and\s)[^.;,\sand]+)*)/gi,
+        /(?:father|mother|parent|sibling|brother|sister|grandfather|grandmother)\s+(?:has|had|with)\s+([^.;,]+)/gi,
         /(?:runs in family|genetic|hereditary):?\s*([^.;,]+)/gi
       ],
       referrals: [
