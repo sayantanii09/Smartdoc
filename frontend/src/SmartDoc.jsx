@@ -6370,10 +6370,12 @@ const Shrutapex = () => {
         <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
           <div className="relative">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <FileText className="w-7 h-7 text-purple-400" />
-              Medical History
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <FileText className="w-7 h-7 text-purple-400" />
+                Medical History
+              </h2>
+            </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Column */}
