@@ -2283,12 +2283,11 @@ const Shrutapex = () => {
           }
         }
         
-        console.log('📥 FINAL:', correctedTranscript, 'Step:', guidedFlowStep, GUIDED_STEPS[guidedFlowStep]?.name);
-        
-        // CRITICAL: Call handler IMMEDIATELY with current step
-        const currentStep = guidedFlowStep;
+        // Use ref to get LATEST step (avoids stale closure)
+        const currentStep = guidedFlowStepRef.current;
         const currentStepInfo = GUIDED_STEPS[currentStep];
         
+        console.log('📥 FINAL:', correctedTranscript, 'Step:', currentStep, currentStepInfo?.name);
         console.log('✍️ Processing for field:', currentStepInfo?.field);
         
         // Handle guided voice flow
