@@ -1847,6 +1847,167 @@ const Shrutapex = () => {
     checkInteractions(extractedMeds);
   };
 
+  // Guided voice flow handler
+  const handleGuidedVoiceCapture = (transcript) => {
+    const lowerTranscript = transcript.toLowerCase().trim();
+    
+    // Check for voice commands first
+    if (lowerTranscript === 'skip') {
+      moveToNextStep();
+      return;
+    }
+    
+    if (lowerTranscript === 'previous') {
+      moveToPreviousStep();
+      return;
+    }
+    
+    if (lowerTranscript.startsWith('add ')) {
+      // Append mode - add to existing field
+      const textToAdd = transcript.substring(4).trim();
+      appendToCurrentField(textToAdd);
+      return;
+    }
+    
+    // Handle prescription sub-flow
+    if (guidedFlowStep === 8 && GUIDED_STEPS[8].subFlow) {
+      handlePrescriptionSubFlow(transcript);
+      return;
+    }
+    
+    // Normal field capture
+    captureToCurrentField(transcript);
+  };
+  
+  const captureToCurrentField = (text) => {
+    const step = GUIDED_STEPS[guidedFlowStep];
+    if (!step) return;
+    
+    const fieldSetters = {
+      symptoms: setSymptoms,
+      pastMedicalHistory: setPastMedicalHistory,
+      familyHistory: setFamilyHistory,
+      socialHistory: () => {}, // Social history handled separately
+      pastMedications: setPastMedications,
+      allergies: setAllergies,
+      vitals: () => {}, // Vitals handled separately  
+      diagnosis: setDiagnosis,
+      labTests: setLabTests,
+      advice: setAdvice,
+      referrals: setReferrals,
+      followUpInstructions: setFollowUpInstructions
+    };
+    
+    const setter = fieldSetters[step.field];
+    if (setter) {
+      setter(text);
+    }
+  };
+  
+  const appendToCurrentField = (text) => {
+    const step = GUIDED_STEPS[guidedFlowStep];
+    if (!step) return;
+    
+    const fieldSetters = {
+      symptoms: (t) => setSymptoms(prev => prev ? `${prev}. ${t}` : t),
+      pastMedicalHistory: (t) => setPastMedicalHistory(prev => prev ? `${prev}, ${t}` : t),
+      familyHistory: (t) => setFamilyHistory(prev => prev ? `${prev}, ${t}` : t),
+      pastMedications: (t) => setPastMedications(prev => prev ? `${prev}, ${t}` : t),
+      allergies: (t) => setAllergies(prev => prev ? `${prev}, ${t}` : t),
+      diagnosis: (t) => setDiagnosis(prev => prev ? `${prev}, ${t}` : t),
+      labTests: (t) => setLabTests(prev => prev ? `${prev}, ${t}` : t),
+      advice: (t) => setAdvice(prev => prev ? `${prev}. ${t}` : t),
+      referrals: (t) => setReferrals(prev => prev ? `${prev}, ${t}` : t),
+      followUpInstructions: (t) => setFollowUpInstructions(prev => prev ? `${prev}. ${t}` : t)
+    };
+    
+    const setter = fieldSetters[step.field];
+    if (setter) {
+      setter(text);
+    }
+  };
+  
+  const handlePrescriptionSubFlow = (transcript) => {
+    const lowerTranscript = transcript.toLowerCase().trim();
+    const subStep = PRESCRIPTION_SUB_STEPS[prescriptionSubStep];
+    
+    if (!subStep) return;
+    
+    // Update current medicine data
+    setCurrentMedicineData(prev => ({
+      ...prev,
+      [subStep.field]: transcript
+    }));
+    
+    // Move to next sub-step or finish medicine
+    if (prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+      setPrescriptionSubStep(prescriptionSubStep + 1);
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep + 1].prompt);
+    } else {
+      // Completed all fields for current medicine
+      // Ask if they want to add another
+      setCurrentPrompt('Medicine details captured. Say "Yes" to add another medicine, or say "Next" to continue to lab tests');
+    }
+  };
+  
+  const addCompletedMedicine = () => {
+    if (currentMedicineData.name && currentMedicineData.dosage) {
+      setMedications(prev => [...prev, {
+        name: currentMedicineData.name.toUpperCase(),
+        dosage: currentMedicineData.dosage,
+        formulation: currentMedicineData.form || 'Tablet',
+        route: currentMedicineData.route || 'Oral',
+        frequency: currentMedicineData.frequency || 'Once daily',
+        duration: currentMedicineData.duration || '7 days',
+        foodInstruction: currentMedicineData.foodInstruction || 'With food'
+      }]);
+      
+      // Reset for next medicine
+      setCurrentMedicineData({
+        name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
+      });
+      setPrescriptionSubStep(0);
+    }
+  };
+  
+  const moveToNextStep = () => {
+    if (guidedFlowStep === 8 && prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+      // In prescription sub-flow
+      setPrescriptionSubStep(prescriptionSubStep + 1);
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep + 1].prompt);
+    } else if (guidedFlowStep < GUIDED_STEPS.length - 1) {
+      // Move to next main step
+      if (guidedFlowStep === 8 && currentMedicineData.name) {
+        addCompletedMedicine();
+      }
+      setGuidedFlowStep(guidedFlowStep + 1);
+      setPrescriptionSubStep(0);
+      setCurrentPrompt(GUIDED_STEPS[guidedFlowStep + 1].prompt);
+      
+      // Auto-scroll to next field
+      setTimeout(() => {
+        const nextStep = GUIDED_STEPS[guidedFlowStep + 1];
+        const element = document.getElementById(`field-${nextStep.field}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  };
+  
+  const moveToPreviousStep = () => {
+    if (guidedFlowStep === 8 && prescriptionSubStep > 0) {
+      // Go back in prescription sub-flow
+      setPrescriptionSubStep(prescriptionSubStep - 1);
+      setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prescriptionSubStep - 1].prompt);
+    } else if (guidedFlowStep > 0) {
+      // Go back to previous main step
+      setGuidedFlowStep(guidedFlowStep - 1);
+      setPrescriptionSubStep(0);
+      setCurrentPrompt(GUIDED_STEPS[guidedFlowStep - 1].prompt);
+    }
+  };
+
   const toggleListening = () => {
     if (!recognitionRef.current) {
       alert('Speech recognition not supported in this browser');
