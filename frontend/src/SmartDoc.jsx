@@ -2486,7 +2486,15 @@ const Shrutapex = () => {
           description: '',
           is_public: false
         });
-        setNewMedication({name: '', dosage: '', frequency: ''});
+        setNewMedication({
+          name: '',
+          dosage: '',
+          form: '',
+          frequency: '',
+          duration: '',
+          foodInstruction: 'With or without food',
+          instructions: ''
+        });
         setShowCreateTemplate(false);
         setShowMedicationTemplates(true);
         await fetchMedicationTemplates();
@@ -3938,7 +3946,15 @@ const Shrutapex = () => {
                             ...newTemplate,
                             medications: [...newTemplate.medications, templateMed]
                           });
-                          setNewMedication({name: '', dosage: '', frequency: ''});
+                          setNewMedication({
+          name: '',
+          dosage: '',
+          form: '',
+          frequency: '',
+          duration: '',
+          foodInstruction: 'With or without food',
+          instructions: ''
+        });
                         }
                       }}
                       disabled={!newMedication.name || !newMedication.dosage || !newMedication.frequency}
@@ -4050,7 +4066,15 @@ const Shrutapex = () => {
                       description: '',
                       is_public: false
                     });
-                    setNewMedication({name: '', dosage: '', frequency: ''});
+                    setNewMedication({
+          name: '',
+          dosage: '',
+          form: '',
+          frequency: '',
+          duration: '',
+          foodInstruction: 'With or without food',
+          instructions: ''
+        });
                   }}
                   className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all font-medium"
                 >
