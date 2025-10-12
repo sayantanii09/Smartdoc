@@ -2039,9 +2039,15 @@ const Shrutapex = () => {
           setupSpeechRecognitionHandlers();
         }
         
+        // Initialize guided flow if starting
+        if (guidedFlowStep === 0 && !currentPrompt) {
+          setCurrentPrompt(GUIDED_STEPS[0].prompt);
+        }
+        
         recognitionRef.current.start();
         setIsListening(true);
-        console.log('🎤 Speech recognition started');
+        console.log('🎤 Guided speech recognition started');
+        console.log(`📋 Current step: ${GUIDED_STEPS[guidedFlowStep].name}`);
       } catch (e) {
         console.error('Speech recognition start error:', e);
         alert(`Failed to start speech recognition: ${e.message}\n\nTry refreshing the page or use Demo Mode instead.`);
