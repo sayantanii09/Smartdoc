@@ -711,7 +711,9 @@ const MEDICAL_ABBREVIATIONS = {
   // Food timing abbreviations
   'ac': 'Before meals',
   'before meals': 'Before meals',
-  'pc': 'After meals',
+  'pc': 'After meals'
+};
+
 // Comprehensive Drug Interaction Database (CIMS/MedRA Style)
 const DRUG_INTERACTIONS = {
   // ACE Inhibitors
