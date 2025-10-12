@@ -3258,7 +3258,7 @@ const Shrutapex = () => {
     if (savedSettings) {
       try {
         const settings = JSON.parse(savedSettings);
-        setSpeechLanguage(settings.language || 'en-US');
+        setSpeechLanguage(settings.language || 'en-IN');
         setSpeechQuality(settings.quality || 'high');
         setEnableNoiseReduction(settings.noiseReduction !== false);
         setConfidenceThreshold(settings.confidenceThreshold || 0.7);
