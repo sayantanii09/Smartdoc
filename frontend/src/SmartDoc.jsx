@@ -2357,6 +2357,19 @@ const Shrutapex = () => {
           } else if (stepInfo && stepInfo.field === 'allergies') {
             setAllergies(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
             console.log('✅ Updated allergies INLINE');
+          } else if (stepInfo && stepInfo.field === 'socialHistory') {
+            console.log('⚠️ Social History uses dropdowns - auto-skipping to next field');
+            moveToNextStep();
+          } else if (stepInfo && stepInfo.field === 'vitals') {
+            console.log('⚠️ Vitals use structured fields - auto-skipping to next field');
+            moveToNextStep();
+          } else if (stepInfo && stepInfo.field === 'prescription') {
+            console.log('💊 Prescription field - handling sub-flow');
+            // Handle prescription: extract medicine name and auto-advance
+            setCurrentMedicineData(prev => ({ ...prev, name: correctedTranscript }));
+            console.log(`✅ Set medicine name to: ${correctedTranscript}`);
+            // Auto-move to next step after capturing medicine name
+            moveToNextStep();
           } else if (stepInfo && stepInfo.field === 'diagnosis') {
             setDiagnosis(prev => prev ? `${prev}, ${correctedTranscript}` : correctedTranscript);
             console.log('✅ Updated diagnosis INLINE');
