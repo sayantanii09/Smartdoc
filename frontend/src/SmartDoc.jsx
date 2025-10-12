@@ -1839,8 +1839,14 @@ const Shrutapex = () => {
       console.log('Referrals updated:', referralsText);
     }
     
-    // Extract follow-up instructions
-    let extractedFollowUp = '';
+    // Extract follow-up instructions - ONLY if follow-up keywords are present
+    if (extractedInfo.followUp && extractedInfo.followUp.length > 0) {
+      const followUpText = extractedInfo.followUp.join(', ');
+      setFollowUpInstructions(prev => prev ? `${prev}, ${followUpText}` : followUpText);
+      console.log('Follow-up updated:', followUpText);
+    }
+    
+    // OLD CODE - keeping for reference but not using
     const followUpPatterns = [
       /(?:follow.?up|return|come back|revisit)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
       /(?:next visit|next appointment)\s+(?:in|after)\s+(\d+\s*(?:days?|weeks?|months?))/gi,
@@ -1849,7 +1855,7 @@ const Shrutapex = () => {
     ];
     
     const followUpMatches = [];
-    followUpPatterns.forEach(pattern => {
+    /*followUpPatterns.forEach(pattern => {
       const matches = lowerText.match(pattern);
       if (matches) {
         followUpMatches.push(...matches);
