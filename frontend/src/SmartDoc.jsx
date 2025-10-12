@@ -1195,6 +1195,8 @@ const Shrutapex = () => {
 
   
   // Medical Documentation Fields
+  const [symptoms, setSymptoms] = useState('');
+  const [advice, setAdvice] = useState('');
   const [labTests, setLabTests] = useState('');
   const [referrals, setReferrals] = useState('');
   const [followUpInstructions, setFollowUpInstructions] = useState('');
