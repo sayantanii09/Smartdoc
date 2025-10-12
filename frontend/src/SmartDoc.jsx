@@ -6351,6 +6351,268 @@ const Shrutapex = () => {
             </div>
           </div>
         </div>
+
+        {/* Prescription Management Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
+          <div className="relative">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <Pill className="w-7 h-7 text-blue-400" />
+                Prescription Management
+              </h2>
+              <button
+                onClick={() => setShowMedicationTemplates(true)}
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-semibold transition-all"
+              >
+                📋 Load Template
+              </button>
+            </div>
+
+            {/* Add New Medication Form */}
+            <div className="mb-6 p-6 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-xl border border-blue-500/30">
+              <h4 className="text-blue-300 font-semibold mb-4 flex items-center gap-2">
+                <Plus className="w-5 h-5" />
+                Add Medication
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                {/* Medicine Name */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Medicine Name *</label>
+                  <input
+                    type="text"
+                    value={newMedication.name}
+                    onChange={(e) => setNewMedication({...newMedication, name: e.target.value})}
+                    placeholder="e.g., Paracetamol, Amoxicillin"
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                {/* Dosage */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage *</label>
+                  <input
+                    type="text"
+                    value={newMedication.dosage}
+                    onChange={(e) => setNewMedication({...newMedication, dosage: e.target.value})}
+                    placeholder="e.g., 500mg, 250mg"
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                {/* Dosage Form */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form *</label>
+                  <select
+                    value={newMedication.form}
+                    onChange={(e) => setNewMedication({...newMedication, form: e.target.value})}
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="" style={{color: 'black'}}>Select Form</option>
+                    <option value="Tablet" style={{color: 'black'}}>Tablet</option>
+                    <option value="Capsule" style={{color: 'black'}}>Capsule</option>
+                    <option value="Syrup" style={{color: 'black'}}>Syrup</option>
+                    <option value="Suspension" style={{color: 'black'}}>Suspension</option>
+                    <option value="Injection" style={{color: 'black'}}>Injection</option>
+                    <option value="Cream" style={{color: 'black'}}>Cream</option>
+                    <option value="Ointment" style={{color: 'black'}}>Ointment</option>
+                    <option value="Drops" style={{color: 'black'}}>Drops</option>
+                    <option value="Inhaler" style={{color: 'black'}}>Inhaler</option>
+                  </select>
+                </div>
+
+                {/* Route of Administration */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Route of Administration *</label>
+                  <select
+                    value={newMedication.route}
+                    onChange={(e) => setNewMedication({...newMedication, route: e.target.value})}
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Oral" style={{color: 'black'}}>Oral</option>
+                    <option value="Intravenous (IV)" style={{color: 'black'}}>Intravenous (IV)</option>
+                    <option value="Intramuscular (IM)" style={{color: 'black'}}>Intramuscular (IM)</option>
+                    <option value="Subcutaneous (SC)" style={{color: 'black'}}>Subcutaneous (SC)</option>
+                    <option value="Inhalation" style={{color: 'black'}}>Inhalation</option>
+                    <option value="Nebulization" style={{color: 'black'}}>Nebulization</option>
+                    <option value="Topical" style={{color: 'black'}}>Topical</option>
+                    <option value="Sublingual" style={{color: 'black'}}>Sublingual</option>
+                    <option value="Rectal" style={{color: 'black'}}>Rectal</option>
+                    <option value="Transdermal" style={{color: 'black'}}>Transdermal</option>
+                    <option value="Nasal" style={{color: 'black'}}>Nasal</option>
+                    <option value="Ophthalmic" style={{color: 'black'}}>Ophthalmic</option>
+                    <option value="Otic" style={{color: 'black'}}>Otic</option>
+                    <option value="Vaginal" style={{color: 'black'}}>Vaginal</option>
+                  </select>
+                </div>
+
+                {/* Frequency */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Frequency *</label>
+                  <select
+                    value={newMedication.frequency}
+                    onChange={(e) => setNewMedication({...newMedication, frequency: e.target.value})}
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="" style={{color: 'black'}}>Select Frequency</option>
+                    <option value="Once daily (OD)" style={{color: 'black'}}>Once daily (OD)</option>
+                    <option value="Twice daily (BD)" style={{color: 'black'}}>Twice daily (BD)</option>
+                    <option value="Three times daily (TDS)" style={{color: 'black'}}>Three times daily (TDS)</option>
+                    <option value="Four times daily (QDS)" style={{color: 'black'}}>Four times daily (QDS)</option>
+                    <option value="Every 4 hours" style={{color: 'black'}}>Every 4 hours</option>
+                    <option value="Every 6 hours" style={{color: 'black'}}>Every 6 hours</option>
+                    <option value="Every 8 hours" style={{color: 'black'}}>Every 8 hours</option>
+                    <option value="As needed (PRN)" style={{color: 'black'}}>As needed (PRN)</option>
+                    <option value="At bedtime (HS)" style={{color: 'black'}}>At bedtime (HS)</option>
+                  </select>
+                </div>
+
+                {/* Duration */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Duration *</label>
+                  <input
+                    type="text"
+                    value={newMedication.duration}
+                    onChange={(e) => setNewMedication({...newMedication, duration: e.target.value})}
+                    placeholder="e.g., 7 days, 2 weeks, 1 month"
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                {/* Food Instructions */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Food Instructions</label>
+                  <select
+                    value={newMedication.foodInstruction}
+                    onChange={(e) => setNewMedication({...newMedication, foodInstruction: e.target.value})}
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="With or without food" style={{color: 'black'}}>With or without food</option>
+                    <option value="Before meals" style={{color: 'black'}}>Before meals</option>
+                    <option value="After meals" style={{color: 'black'}}>After meals</option>
+                    <option value="With food" style={{color: 'black'}}>With food</option>
+                    <option value="On empty stomach" style={{color: 'black'}}>On empty stomach</option>
+                    <option value="Before breakfast" style={{color: 'black'}}>Before breakfast</option>
+                    <option value="After breakfast" style={{color: 'black'}}>After breakfast</option>
+                    <option value="Before dinner" style={{color: 'black'}}>Before dinner</option>
+                    <option value="After dinner" style={{color: 'black'}}>After dinner</option>
+                    <option value="With milk" style={{color: 'black'}}>With milk</option>
+                    <option value="Avoid dairy" style={{color: 'black'}}>Avoid dairy</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Special Instructions */}
+              <div className="mb-4">
+                <label className="block text-blue-200 text-sm font-medium mb-2">Special Instructions</label>
+                <textarea
+                  value={newMedication.instructions}
+                  onChange={(e) => setNewMedication({...newMedication, instructions: e.target.value})}
+                  placeholder="Additional instructions, warnings, or precautions..."
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  rows="2"
+                />
+              </div>
+
+              <button
+                onClick={addMedicationToReview}
+                disabled={!newMedication.name || !newMedication.dosage || !newMedication.form || !newMedication.route || !newMedication.frequency || !newMedication.duration}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:from-slate-600 disabled:to-slate-600 text-white rounded-lg font-semibold transition-all disabled:cursor-not-allowed"
+              >
+                Add Medication
+              </button>
+            </div>
+
+            {/* Current Medications List */}
+            <div className="space-y-4">
+              {medications.map((med, i) => (
+                <div key={i} className="p-5 bg-slate-900/50 rounded-xl border border-slate-600/50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+                        <div>
+                          <p className="font-bold text-white text-lg mb-1">{med.name} - {med.dosage}</p>
+                          <p className="text-slate-400 text-sm">{med.formulation || med.form} • {med.route || 'Oral'}</p>
+                        </div>
+                        <div>
+                          <p className="text-white font-medium">{med.frequency}</p>
+                          <p className="text-slate-400 text-sm">{med.foodInstruction} • {med.duration}</p>
+                        </div>
+                      </div>
+                      {med.instructions && (
+                        <div className="mt-2 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                          <p className="text-yellow-200 text-sm">{med.instructions}</p>
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => removeMedication(i)}
+                      className="ml-4 px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition-all"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+              
+              {medications.length === 0 && (
+                <div className="p-8 text-center bg-slate-800/30 border border-slate-600/30 rounded-xl">
+                  <Pill className="w-12 h-12 text-slate-500 mx-auto mb-3" />
+                  <p className="text-slate-400 mb-2">No medications added yet</p>
+                  <p className="text-slate-500 text-sm">Add medications using the form above or load from templates</p>
+                </div>
+              )}
+            </div>
+
+            {/* Drug Interactions Display */}
+            {interactions.length > 0 && (
+              <div className="mt-6 bg-gradient-to-br from-amber-500/10 to-red-500/10 border border-amber-500/30 rounded-xl p-6">
+                <h3 className="font-bold text-amber-300 mb-3 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5" />
+                  Drug Interactions Detected
+                </h3>
+                <div className="space-y-3">
+                  {interactions.map((int, i) => (
+                    <div key={i} className="bg-slate-900/50 rounded-lg p-4 border border-amber-500/20">
+                      {int.type === 'drug-drug' ? (
+                        <div>
+                          <p className="text-amber-200 font-semibold">
+                            🚨 Drug-Drug Interaction: <span className="text-white">{int.drug1}</span> + <span className="text-white">{int.drug2}</span>
+                          </p>
+                          <p className="text-slate-300 text-sm mt-1">Classes: {int.class1} + {int.class2}</p>
+                          <p className="text-amber-300 text-sm mt-2">{int.warning}</p>
+                        </div>
+                      ) : int.type === 'contraindication' ? (
+                        <div>
+                          <p className="text-red-300 font-semibold">
+                            ⛔ Contraindications: <span className="text-white">{int.drug}</span>
+                          </p>
+                          <p className="text-slate-300 text-sm mt-1">Class: {int.class}</p>
+                          <p className="text-red-200 text-sm mt-2">Review: {int.contraindications.join(', ')}</p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-amber-200 font-semibold">
+                            🥗 Drug-Food Interaction: <span className="text-white">{int.drug}</span>
+                          </p>
+                          <p className="text-slate-300 text-sm mt-1">Class: {int.class}</p>
+                          <p className="text-amber-200 text-sm mt-2">Avoid/Monitor: {int.foods.join(', ')}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 p-3 bg-blue-500/10 rounded-lg border border-blue-500/30">
+                  <p className="text-blue-300 text-sm">
+                    💡 <strong>Database:</strong> {Object.keys(COMPREHENSIVE_DRUG_DATABASE).length} drugs with comprehensive interaction data
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* AI-Extracted Clinical Data */}
         {(diagnosis || medications.length > 0) && (
           <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
