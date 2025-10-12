@@ -6729,24 +6729,12 @@ const Shrutapex = () => {
               
               {/* Right Column */}
               <div className="space-y-4">
-                {/* Social History - Step 3 */}
+                {/* Social History - Step 3 (Manual input only - uses dropdowns) */}
                 <div id="field-socialHistory" className={`${guidedFlowStep === 3 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
-                  <div className="flex items-center justify-between mb-2">
+                  <div className="mb-2">
                     <label className="block text-orange-300 font-semibold text-sm uppercase tracking-wide">
-                      🏠 Social History {guidedFlowStep === 3 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                      🏠 Social History {guidedFlowStep === 3 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE - Fill manually or say "NEXT"</span>}
                     </label>
-                    <button
-                      onClick={() => {
-                        setGuidedFlowStep(3);
-                        guidedFlowStepRef.current = 3;
-                        setCurrentPrompt(GUIDED_STEPS[3].prompt);
-                        if (!isListening) toggleListening();
-                      }}
-                      className="px-2 py-1 bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
-                    >
-                      <Mic className="w-3 h-3" />
-                      Voice
-                    </button>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
