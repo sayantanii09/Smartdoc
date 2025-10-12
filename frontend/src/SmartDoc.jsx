@@ -2047,6 +2047,10 @@ const Shrutapex = () => {
       setCurrentPrompt(GUIDED_STEPS[nextStep].prompt);
       
       console.log('✅ Moved to step:', nextStep, GUIDED_STEPS[nextStep].name);
+      console.log('🎤 Voice recognition should CONTINUE - no stop!');
+      
+      // CRITICAL: Keep voice recognition ON - don't stop it
+      // It should continue listening for the next field
       
       // Auto-scroll to next field
       setTimeout(() => {
@@ -2059,7 +2063,12 @@ const Shrutapex = () => {
         }
       }, 100);
     } else {
-      console.log('🏁 Already at last step');
+      console.log('🏁 Already at last step - stopping voice');
+      // Only stop at the very end
+      if (recognitionRef.current && isListening) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      }
     }
   };
   
