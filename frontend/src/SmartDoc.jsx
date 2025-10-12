@@ -1342,11 +1342,11 @@ const Shrutapex = () => {
         setSupportStatus('supported');
         recognitionRef.current = new SpeechRecognition();
         
-        // Enhanced speech recognition configuration
+        // Enhanced speech recognition configuration for Indian accent
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
-        recognitionRef.current.lang = speechLanguage;
-        recognitionRef.current.maxAlternatives = 5; // Get more alternatives for better accuracy
+        recognitionRef.current.lang = 'en-IN'; // Indian English for better accent recognition
+        recognitionRef.current.maxAlternatives = 5; // More alternatives for accent variations
         
         // Improve recognition quality based on settings
         if (speechQuality === 'high') {
