@@ -2224,11 +2224,14 @@ const Shrutapex = () => {
           }
         }
         
+        console.log('📥 Final transcript received:', correctedTranscript);
+        
         // Handle guided voice flow - ONLY on final, complete phrases
         handleGuidedVoiceCapture(correctedTranscript);
         
         setTranscript(prev => {
           const newTranscript = prev + correctedTranscript + ' ';
+          console.log('📝 Full transcript now:', newTranscript.slice(-100)); // Last 100 chars
           return newTranscript;
         });
         
