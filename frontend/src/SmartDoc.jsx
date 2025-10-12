@@ -1235,6 +1235,7 @@ const Shrutapex = () => {
   // AI Learning System - Track user corrections
   const [voiceCorrections, setVoiceCorrections] = useState({}); // Stores {field: {original: corrected}}
   const [learnedCorrections, setLearnedCorrections] = useState({}); // Loaded from backend
+  const [originalVoiceText, setOriginalVoiceText] = useState({}); // Track original voice input per field
   
   // Enhanced template creation state
   const [newTemplate, setNewTemplate] = useState({
