@@ -2069,7 +2069,7 @@ const Shrutapex = () => {
   };
   
   const moveToNextStep = () => {
-    console.log('➡️ Moving to next step from:', guidedFlowStep);
+    console.log('➡️ Moving to next step from:', guidedFlowStep, 'Ref before:', guidedFlowStepRef.current);
     
     if (guidedFlowStep === 8 && prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
       // In prescription sub-flow
@@ -2077,6 +2077,7 @@ const Shrutapex = () => {
       setPrescriptionSubStep(nextSubStep);
       prescriptionSubStepRef.current = nextSubStep; // Update ref
       setCurrentPrompt(PRESCRIPTION_SUB_STEPS[nextSubStep].prompt);
+      console.log('📌 Prescription sub-step ref updated to:', prescriptionSubStepRef.current);
     } else if (guidedFlowStep < GUIDED_STEPS.length - 1) {
       // Move to next main step
       if (guidedFlowStep === 8 && currentMedicineData.name) {
@@ -2092,7 +2093,8 @@ const Shrutapex = () => {
       
       console.log('✅ Moved to step:', nextStep, GUIDED_STEPS[nextStep].name);
       console.log('🎤 Voice recognition should CONTINUE - no stop!');
-      console.log('📌 Updated guidedFlowStepRef to:', guidedFlowStepRef.current);
+      console.log('📌 CRITICAL: guidedFlowStepRef.current NOW =', guidedFlowStepRef.current);
+      console.log('📌 VERIFY: Reading ref again =', guidedFlowStepRef.current);
       
       // CRITICAL: Keep voice recognition ON - don't stop it
       // It should continue listening for the next field
