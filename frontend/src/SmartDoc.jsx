@@ -3374,10 +3374,9 @@ const Shrutapex = () => {
         /(?:patient has|patient is|condition is|condition):?\s*([^.;,]+)/gi
       ],
       pastMedicalHistory: [
-        /(?:past medical history|medical history|history of|previous history|past history):?\s*([^.;,]+)/gi,
-        /(?:previously diagnosed|previous diagnosis|past diagnosis|history includes):?\s*([^.;,]+)/gi,
-        /(?:past conditions|previous conditions|chronic conditions|comorbidities):?\s*([^.;,]+)/gi,
-        /(?:has a history of|history of|previously had|past medical|medical background):?\s*([^.;,]+)/gi
+        /(?:past medical history|medical history)\s+(?:of\s+)?(?:includes|:)?\s*([a-z\s,]+?)(?:\.|\;|patient)/gi,
+        /(?:previously diagnosed with|previous diagnosis of)\s+([a-z\s]+?)(?:\.|\;|\,|in\s+\d{4})/gi,
+        /(?:history of)\s+([a-z\s]+?)(?:\s+(?:in|since)\s+\d{4}|\s+and|\.|\;|\,)/gi
       ],
       pastMedications: [
         /(?:past medications|previous medications|medication history|previously on|past meds):?\s*([^.;,]+)/gi,
