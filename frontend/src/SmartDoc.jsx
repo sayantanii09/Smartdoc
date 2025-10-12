@@ -1232,6 +1232,10 @@ const Shrutapex = () => {
   });
   const [isCreatingTemplate, setIsCreatingTemplate] = useState(false);
   
+  // AI Learning System - Track user corrections
+  const [voiceCorrections, setVoiceCorrections] = useState({}); // Stores {field: {original: corrected}}
+  const [learnedCorrections, setLearnedCorrections] = useState({}); // Loaded from backend
+  
   // Enhanced template creation state
   const [newTemplate, setNewTemplate] = useState({
     name: '',
