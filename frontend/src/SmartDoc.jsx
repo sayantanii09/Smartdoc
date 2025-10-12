@@ -692,7 +692,11 @@ const Shrutapex = () => {
   const [newMedication, setNewMedication] = useState({
     name: '',
     dosage: '',
-    frequency: ''
+    form: '',
+    frequency: '',
+    duration: '',
+    foodInstruction: 'With or without food',
+    instructions: ''
   });
   
   
