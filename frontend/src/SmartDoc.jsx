@@ -1874,8 +1874,11 @@ const Shrutapex = () => {
   const handleGuidedVoiceCapture = (transcript) => {
     const lowerTranscript = transcript.toLowerCase().trim();
     
+    // Use ref to get current step (avoids stale closure)
+    const currentStep = guidedFlowStepRef.current;
+    
     console.log('🎤 Voice captured:', transcript);
-    console.log('🔍 Checking for commands... Current step:', GUIDED_STEPS[guidedFlowStep]?.name);
+    console.log('🔍 Checking for commands... Current step:', GUIDED_STEPS[currentStep]?.name, 'Step #:', currentStep);
     
     // STRICT command detection - must be exact match or standalone word
     const words = lowerTranscript.split(' ');
@@ -1907,15 +1910,15 @@ const Shrutapex = () => {
       return;
     }
     
-    // Handle prescription sub-flow
-    if (guidedFlowStep === 8 && GUIDED_STEPS[8].subFlow) {
+    // Handle prescription sub-flow (use ref)
+    if (currentStep === 8 && GUIDED_STEPS[8].subFlow) {
       console.log('💊 Prescription sub-flow active');
       handlePrescriptionSubFlow(transcript);
       return;
     }
     
-    // Normal field capture - only if NOT a command
-    console.log('✍️ Capturing to field:', GUIDED_STEPS[guidedFlowStep]?.name, 'Field key:', GUIDED_STEPS[guidedFlowStep]?.field);
+    // Normal field capture - only if NOT a command (use ref)
+    console.log('✍️ Capturing to field:', GUIDED_STEPS[currentStep]?.name, 'Field key:', GUIDED_STEPS[currentStep]?.field);
     captureToCurrentField(transcript);
   };
   
