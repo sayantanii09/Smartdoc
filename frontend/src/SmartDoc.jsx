@@ -859,7 +859,6 @@ const FOOD_DRUG_INTERACTIONS = {
   'lisinopril': ['alcohol'],
   'metoprolol': ['alcohol']
 };
-};
 
 // Recent Patients Component
 const RecentPatientsComponent = ({ authToken, onPatientSelect, selectedPatientMRN }) => {
