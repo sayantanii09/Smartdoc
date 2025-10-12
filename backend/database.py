@@ -8,6 +8,32 @@ from typing import Optional, List, Dict, Any
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+def get_database_name_from_url(mongo_url: str) -> str:
+    """Extract database name from MongoDB URL with proper error handling"""
+    try:
+        if '/' in mongo_url:
+            # Extract database part after last slash
+            db_part = mongo_url.split('/')[-1]
+            # Remove query parameters if present  
+            db_name = db_part.split('?')[0] if '?' in db_part else db_part
+            
+            # Ensure database name is within MongoDB limits (max 63 chars)
+            if len(db_name) > 63:
+                logger.warning(f"Database name '{db_name}' exceeds 63 chars, truncating")
+                db_name = db_name[:63]
+            
+            # Return extracted name if valid
+            if db_name and db_name != "":
+                return db_name
+        
+        # Fallback to environment variable or default
+        fallback_name = os.getenv("DB_NAME", "smartdoc_pro") 
+        logger.info(f"Using fallback database name: {fallback_name}")
+        return fallback_name
+        
+    except Exception as e:
+        logger.error(f"Error extracting database name from URL: {e}")
+        return os.getenv("DB_NAME", "smartdoc_pro")
 
 class MongoDB:
     client: AsyncIOMotorClient = None
