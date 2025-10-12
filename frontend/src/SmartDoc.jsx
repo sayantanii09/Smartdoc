@@ -7293,8 +7293,10 @@ const Shrutapex = () => {
         <div className="fixed bottom-4 right-4 w-96 bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-600/50 overflow-hidden z-40">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Mic className={`w-4 h-4 text-white ${isListening ? 'animate-pulse' : ''}`} />
-              <span className="text-white font-semibold text-sm">Live Transcript & Debug</span>
+              <Mic className={`w-4 h-4 text-white ${isListening ? 'animate-pulse' : 'opacity-50'}`} />
+              <span className="text-white font-semibold text-sm">
+                Live Transcript & Debug {!isListening && <span className="text-xs text-white/60">(Paused)</span>}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <button
