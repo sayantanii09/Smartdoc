@@ -5611,6 +5611,11 @@ const Shrutapex = () => {
                 <div className="flex items-center gap-3 mb-4">
                   <UserCircle2 className="w-6 h-6 text-blue-400" />
                   <p className="text-sm text-blue-300 font-semibold uppercase tracking-wide">Patient Information</p>
+                  {currentPatientMRN && (
+                    <span className="ml-auto px-4 py-2 bg-emerald-500/20 border border-emerald-500/50 rounded-lg">
+                      <span className="text-xs text-emerald-300 font-semibold">MRN: {currentPatientMRN}</span>
+                    </span>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div><p className="text-sm text-slate-400 mb-1">Name</p><p className="text-xl font-bold text-white">{patientName || 'Not specified'}</p></div>
