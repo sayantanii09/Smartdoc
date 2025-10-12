@@ -1438,7 +1438,8 @@ const Shrutapex = () => {
       setIsLoggedIn(true);
       setCurrentView('input');
       
-      alert(`Welcome, ${response.user.name}!`);
+      // Removed popup - direct login without extra step
+      console.log(`Welcome, ${response.user.name}!`);
       
       // Clear login form
       setLoginCredentials({ username: '', password: '' });
