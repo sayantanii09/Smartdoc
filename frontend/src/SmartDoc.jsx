@@ -1747,51 +1747,22 @@ const Shrutapex = () => {
       });
     }
 
-    // Extract medications with enhanced trigger word processing
-    if (extractedInfo.medications.length > 0) {
+    // DISABLED: Extract medications from trigger words - causes false positives
+    // Medications are now ONLY extracted by extractMedicationsFromText function
+    // which has better context filtering (line 1812)
+    /*if (extractedInfo.medications.length > 0) {
       const medicationTexts = extractedInfo.medications;
       const extractedMeds = [];
       
       medicationTexts.forEach(medText => {
-        // Enhanced medication parsing from trigger word context
-        const medPatterns = [
-          /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(once|twice|three times|four times)?\s*(daily|od|bd|tds|qds)?/gi,
-          /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)/gi
-        ];
-        
-        medPatterns.forEach(pattern => {
-          let match;
-          while ((match = pattern.exec(medText)) !== null) {
-            const [fullMatch, drugName, dosage, unit, frequency1, frequency2] = match;
-            
-            // Validate it's a real medication
-            const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
-              medName.toLowerCase() === drugName.toLowerCase() || 
-              calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.7
-            );
-            
-            if (isValidMedication || drugName.length > 6) {
-              const frequency = frequency1 || frequency2 || 'once daily';
-              extractedMeds.push({
-                name: drugName.charAt(0).toUpperCase() + drugName.slice(1),
-                dosage: `${dosage}${unit}`,
-                formulation: 'Tablet',
-                route: 'Oral',
-                frequency: expandAbbreviation(frequency),
-                foodInstruction: 'With food',
-                duration: '30 days'
-              });
-              
-              console.log(`Trigger-extracted medication: ${drugName} ${dosage}${unit} ${frequency}`);
-            }
-          }
-        });
+        // This was extracting "once daily" and "after meals" as medicines
+        // Disabled in favor of extractMedicationsFromText
       });
       
       if (extractedMeds.length > 0) {
         setMedications(prev => [...prev, ...extractedMeds]);
       }
-    }
+    }*/
     
     // Extract diagnosis (fallback to original pattern matching)
     let extractedDiagnosis = '';
