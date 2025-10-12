@@ -6962,11 +6962,11 @@ const Shrutapex = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 {/* Medicine Name */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Medicine Name *</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Medicine Name * {guidedFlowStep === 8 && prescriptionSubStep === 0 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <input
                     type="text"
-                    value={newMedication.name}
-                    onChange={(e) => setNewMedication({...newMedication, name: e.target.value})}
+                    value={currentMedicineData.name}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, name: e.target.value})}
                     placeholder="e.g., Paracetamol, Amoxicillin"
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -6974,11 +6974,11 @@ const Shrutapex = () => {
 
                 {/* Dosage */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage *</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage * {guidedFlowStep === 8 && prescriptionSubStep === 2 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <input
                     type="text"
-                    value={newMedication.dosage}
-                    onChange={(e) => setNewMedication({...newMedication, dosage: e.target.value})}
+                    value={currentMedicineData.dosage}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, dosage: e.target.value})}
                     placeholder="e.g., 500mg, 250mg"
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -6986,10 +6986,10 @@ const Shrutapex = () => {
 
                 {/* Dosage Form */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form *</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form * {guidedFlowStep === 8 && prescriptionSubStep === 1 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
-                    value={newMedication.form}
-                    onChange={(e) => setNewMedication({...newMedication, form: e.target.value})}
+                    value={currentMedicineData.form}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, form: e.target.value})}
                     className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="" style={{color: 'black'}}>Select Form</option>
