@@ -2255,9 +2255,13 @@ const Shrutapex = () => {
         }
         
         console.log('📥 Final transcript received:', correctedTranscript);
+        console.log('🎯 Current guided step:', guidedFlowStep, GUIDED_STEPS[guidedFlowStep]?.name);
+        console.log('🎤 About to call handleGuidedVoiceCapture...');
         
         // Handle guided voice flow - ONLY on final, complete phrases
         handleGuidedVoiceCapture(correctedTranscript);
+        
+        console.log('✅ handleGuidedVoiceCapture completed');
         
         setTranscript(prev => {
           const newTranscript = prev + correctedTranscript + ' ';
