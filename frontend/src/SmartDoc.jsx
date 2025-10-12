@@ -1764,20 +1764,8 @@ const Shrutapex = () => {
       }
     }*/
     
-    // Extract diagnosis (fallback to original pattern matching)
-    let extractedDiagnosis = '';
-    if (lowerText.includes('diabetes') || lowerText.includes('diabetic')) {
-      extractedDiagnosis = 'Type 2 Diabetes Mellitus';
-    } else if (lowerText.includes('hypertension') || lowerText.includes('high blood pressure')) {
-      extractedDiagnosis = 'Essential Hypertension';
-    } else if (lowerText.includes('infection') || lowerText.includes('fever')) {
-      extractedDiagnosis = 'Upper Respiratory Tract Infection';
-    } else if (lowerText.includes('asthma')) {
-      extractedDiagnosis = 'Bronchial Asthma';
-    } else {
-      extractedDiagnosis = 'Clinical assessment pending';
-    }
-    setDiagnosis(extractedDiagnosis);
+    // Diagnosis is already extracted by extractInformationByTriggers above (line 1677)
+    // No fallback needed - removed to prevent overwriting
 
     // Extract medications with enhanced parsing from corrected text
     const extractedMeds = extractMedicationsFromText(correctedText);
