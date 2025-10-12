@@ -6784,56 +6784,6 @@ const Shrutapex = () => {
                     rows="3"
                   />
                 </div>
-                
-                {/* Social History Section */}
-                <div className="bg-slate-900/30 rounded-xl p-4 border border-slate-600/50">
-                  <p className="text-purple-300 font-semibold text-sm mb-3 uppercase tracking-wide">Social History</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    <select 
-                      value={smokingStatus} 
-                      onChange={(e) => setSmokingStatus(e.target.value)} 
-                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                      style={{color: 'white'}}
-                    >
-                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Smoking Status</option>
-                      <option value="Never smoker" style={{color: 'black', backgroundColor: 'white'}}>Never smoker</option>
-                      <option value="Current smoker" style={{color: 'black', backgroundColor: 'white'}}>Current smoker</option>
-                      <option value="Former smoker" style={{color: 'black', backgroundColor: 'white'}}>Former smoker</option>
-                      <option value="Social smoker" style={{color: 'black', backgroundColor: 'white'}}>Social smoker</option>
-                    </select>
-                    <select 
-                      value={alcoholUse} 
-                      onChange={(e) => setAlcoholUse(e.target.value)} 
-                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                      style={{color: 'white'}}
-                    >
-                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Alcohol Use</option>
-                      <option value="None" style={{color: 'black', backgroundColor: 'white'}}>None</option>
-                      <option value="Occasional" style={{color: 'black', backgroundColor: 'white'}}>Occasional</option>
-                      <option value="Moderate" style={{color: 'black', backgroundColor: 'white'}}>Moderate</option>
-                      <option value="Heavy" style={{color: 'black', backgroundColor: 'white'}}>Heavy</option>
-                    </select>
-                    <select 
-                      value={exerciseLevel} 
-                      onChange={(e) => setExerciseLevel(e.target.value)} 
-                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
-                      style={{color: 'white'}}
-                    >
-                      <option value="" style={{color: 'black', backgroundColor: 'white'}}>Exercise Level</option>
-                      <option value="Sedentary" style={{color: 'black', backgroundColor: 'white'}}>Sedentary</option>
-                      <option value="Light activity" style={{color: 'black', backgroundColor: 'white'}}>Light activity</option>
-                      <option value="Moderate activity" style={{color: 'black', backgroundColor: 'white'}}>Moderate activity</option>
-                      <option value="Very active" style={{color: 'black', backgroundColor: 'white'}}>Very active</option>
-                    </select>
-                    <input 
-                      type="text" 
-                      value={drugUse} 
-                      onChange={(e) => setDrugUse(e.target.value)} 
-                      className="px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm" 
-                      placeholder="Recreational drugs" 
-                    />
-                  </div>
-                </div>
               </div>
             </div>
           </div>
