@@ -6203,38 +6203,59 @@ const Shrutapex = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Left Column */}
               <div className="space-y-4">
-                <textarea 
-                  value={allergies} 
-                  onChange={(e) => setAllergies(e.target.value)} 
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
-                  placeholder="⚠️ Known Allergies (e.g., Penicillin, Latex, Shellfish)" 
-                  rows="3"
-                />
-                <textarea 
-                  value={pastMedicalHistory} 
-                  onChange={(e) => setPastMedicalHistory(e.target.value)} 
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
-                  placeholder="📋 Past Medical History (Previous diagnoses, surgeries, hospitalizations)" 
-                  rows="3"
-                />
-                <textarea 
-                  value={pastMedications} 
-                  onChange={(e) => setPastMedications(e.target.value)} 
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
-                  placeholder="💊 Current Medications (Name, dosage, frequency)" 
-                  rows="3"
-                />
+                <div>
+                  <label className="block text-red-300 font-semibold text-sm mb-2 uppercase tracking-wide flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4" />
+                    ⚠️ Known Allergies
+                  </label>
+                  <textarea 
+                    value={allergies} 
+                    onChange={(e) => setAllergies(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
+                    placeholder="e.g., Penicillin, Latex, Shellfish" 
+                    rows="3"
+                  />
+                </div>
+                <div>
+                  <label className="block text-blue-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                    📋 Past Medical History
+                  </label>
+                  <textarea 
+                    value={pastMedicalHistory} 
+                    onChange={(e) => setPastMedicalHistory(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
+                    placeholder="Previous diagnoses, surgeries, hospitalizations" 
+                    rows="3"
+                  />
+                </div>
+                <div>
+                  <label className="block text-purple-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                    💊 Current Medications
+                  </label>
+                  <textarea 
+                    value={pastMedications} 
+                    onChange={(e) => setPastMedications(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm resize-none" 
+                    placeholder="Name, dosage, frequency" 
+                    rows="3"
+                  />
+                </div>
               </div>
               
               {/* Right Column */}
               <div className="space-y-4">
-                <textarea 
-                  value={familyHistory} 
-                  onChange={(e) => setFamilyHistory(e.target.value)} 
-                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none" 
-                  placeholder="👥 Family History (Hereditary conditions, family medical history)" 
-                  rows="3"
-                />
+                <div>
+                  <label className="block text-yellow-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                    👥 Family History
+                  </label>
+                  <textarea 
+                    value={familyHistory} 
+                    onChange={(e) => setFamilyHistory(e.target.value)} 
+                    className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 text-sm resize-none" 
+                    placeholder="Hereditary conditions, family medical history" 
+                    rows="3"
+                  />
+                </div>
                 
                 {/* Social History Section */}
                 <div className="bg-slate-900/30 rounded-xl p-4 border border-slate-600/50">
