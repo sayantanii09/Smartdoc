@@ -1165,7 +1165,7 @@ const Shrutapex = () => {
   const [currentMedicineData, setCurrentMedicineData] = useState({
     name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
   });
-  const [showFloatingTranscript, setShowFloatingTranscript] = useState(true);
+  const [showFloatingTranscript, setShowFloatingTranscript] = useState(true); // Controls visibility
   const [floatingTranscriptCollapsed, setFloatingTranscriptCollapsed] = useState(false);
   
   // Guided flow steps definition
