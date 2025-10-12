@@ -2136,20 +2136,25 @@ const Shrutapex = () => {
   };
   
   const moveToPreviousStep = () => {
-    if (guidedFlowStep === 8 && prescriptionSubStep > 0) {
+    // USE REF NOT STATE! State is stale in closures
+    const currentStep = guidedFlowStepRef.current;
+    const currentSubStep = prescriptionSubStepRef.current;
+    
+    if (currentStep === 8 && currentSubStep > 0) {
       // Go back in prescription sub-flow
-      const prevSubStep = prescriptionSubStep - 1;
+      const prevSubStep = currentSubStep - 1;
       setPrescriptionSubStep(prevSubStep);
       prescriptionSubStepRef.current = prevSubStep; // Update ref
       setCurrentPrompt(PRESCRIPTION_SUB_STEPS[prevSubStep].prompt);
-    } else if (guidedFlowStep > 0) {
+    } else if (currentStep > 0) {
       // Go back to previous main step
-      const prevStep = guidedFlowStep - 1;
+      const prevStep = currentStep - 1;
       setGuidedFlowStep(prevStep);
       guidedFlowStepRef.current = prevStep; // Update ref
       setPrescriptionSubStep(0);
       prescriptionSubStepRef.current = 0; // Reset prescription sub-step ref
       setCurrentPrompt(GUIDED_STEPS[prevStep].prompt);
+      console.log('⏮️ Moved back to step:', prevStep, GUIDED_STEPS[prevStep].name);
     }
   };
 
