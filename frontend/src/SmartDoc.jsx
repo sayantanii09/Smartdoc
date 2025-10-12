@@ -3518,8 +3518,8 @@ const Shrutapex = () => {
         /(?:systolic|diastolic|\d+\/\d+|\d+\s*mmhg|\d+\s*bpm|\d+\s*degrees?):?\s*([^.;,]*)/gi
       ],
       allergies: [
-        /(?:allergies?|allergic to|allergy|adverse reaction):?\s*([^.;,]+)/gi,
-        /(?:cannot take|avoid|sensitive to):?\s*([^.;,]+)/gi
+        /(?:allergies?|allergic to|allergy|adverse reaction):?\s*([^.;,\sand]+(?:\s+and\s+[^.;,\sand]+)*)/gi,
+        /(?:cannot take|avoid|sensitive to):?\s*([^.;,\sand]+)/gi
       ],
       socialHistory: [
         /(?:social history|smoking|alcohol|drinking|exercise|occupation|job):?\s*([^.;,]+)/gi,
