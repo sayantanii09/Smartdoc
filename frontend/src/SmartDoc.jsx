@@ -3670,88 +3670,29 @@ const Shrutapex = () => {
   };
 
   const correctMedicalTermsWithDynamicDB = (text) => {
-    let corrected = text.toLowerCase();
+    let corrected = text;
     
-    // First pass: Direct replacements using dynamic database (includes user corrections)
+    // ONLY perform direct replacements using AI Learning System's trained data
+    // NO fuzzy matching, NO auto-corrections except for exact matches in learned corrections
     Object.entries(dynamicMedicationDB).forEach(([correct, variants]) => {
       variants.forEach(variant => {
-        const regex = new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
-        corrected = corrected.replace(regex, correct);
+        // Only replace if variant is actually a misspelling (not a number, unit, or medical term)
+        // Skip if variant looks like: numbers (5mg, 10), units (mg, ml), or common medical words
+        const skipPatterns = /^\d+$|^\d+mg$|^\d+mcg$|^mg$|^mcg$|^ml$|^oral$|^tablet$|^capsule$|^once$|^twice$|^daily$/i;
+        
+        if (!skipPatterns.test(variant)) {
+          const regex = new RegExp(`\\b${variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+          corrected = corrected.replace(regex, correct);
+        }
       });
     });
 
-    // Second pass: Fuzzy matching for unmatched words
-    // Define words that should NEVER be corrected (medical context words)
-    const doNotCorrectWords = [
-      // Disease names
-      'diabetes', 'hypertension', 'asthma', 'copd', 'pneumonia', 'bronchitis', 'arthritis', 'migraine', 
-      'depression', 'anxiety', 'insomnia', 'epilepsy', 'fever', 'cold', 'flu', 'headache', 'pain',
-      'infection', 'allergy', 'cancer', 'tumor', 'fracture', 'wound', 'injury', 'bleeding',
-      
-      // Dosage forms
-      'tablet', 'tablets', 'capsule', 'capsules', 'syrup', 'suspension', 'injection', 'injections',
-      'cream', 'ointment', 'drops', 'inhaler', 'patch', 'gel', 'lotion', 'powder',
-      
-      // Frequencies
-      'once', 'twice', 'thrice', 'daily', 'weekly', 'monthly', 'hourly', 'morning', 'evening',
-      'night', 'bedtime', 'before', 'after', 'with', 'without', 'needed', 'required',
-      
-      // Routes
-      'oral', 'topical', 'nasal', 'rectal', 'vaginal', 'sublingual', 'buccal',
-      
-      // Units and measurements
-      'milligrams', 'micrograms', 'grams', 'milliliters', 'liters', 'units', 'doses',
-      
-      // Common medical verbs/words
-      'prescribe', 'prescribed', 'give', 'take', 'administer', 'continue', 'stop', 'start',
-      'patient', 'doctor', 'nurse', 'pharmacy', 'hospital', 'clinic', 'treatment',
-      
-      // Body parts and vitals
-      'blood', 'pressure', 'sugar', 'glucose', 'heart', 'rate', 'temperature', 'weight',
-      'height', 'pulse', 'oxygen', 'saturation', 'level', 'count'
-    ];
+    // NO FUZZY MATCHING - Completely removed
+    // Auto-correction should ONLY happen for:
+    // 1. Exact matches in dynamicMedicationDB (user-learned corrections)
+    // 2. Exact matches in MEDICATION_CORRECTIONS (known common misspellings)
     
-    const words = corrected.split(' ');
-    const correctedWords = words.map(word => {
-      const cleanWord = word.replace(/[^a-zA-Z]/g, '');
-      if (cleanWord.length < 5) return word; // Skip short words (increased from 4 to 5)
-      
-      // Don't correct if it's in the exclusion list
-      if (doNotCorrectWords.includes(cleanWord.toLowerCase())) {
-        return word;
-      }
-      
-      // Check if word might be a medication name
-      let bestMatch = null;
-      let bestScore = 0.85; // Increased minimum similarity threshold from 0.6 to 0.85 (more strict)
-      
-      Object.keys(dynamicMedicationDB).forEach(medication => {
-        const similarity = calculateSimilarity(cleanWord, medication);
-        if (similarity > bestScore) {
-          bestScore = similarity;
-          bestMatch = medication;
-        }
-        
-        // Also check variants
-        dynamicMedicationDB[medication].forEach(variant => {
-          const variantSimilarity = calculateSimilarity(cleanWord, variant);
-          if (variantSimilarity > bestScore) {
-            bestScore = variantSimilarity;
-            bestMatch = medication;
-          }
-        });
-      });
-      
-      // Only correct if similarity is very high (>90%) to avoid false corrections
-      if (bestMatch && bestScore > 0.90) {
-        console.log(`Corrected "${cleanWord}" to "${bestMatch}" (similarity: ${(bestScore * 100).toFixed(1)}%)`);
-        return word.replace(cleanWord, bestMatch);
-      }
-      
-      return word;
-    });
-    
-    return correctedWords.join(' ');
+    return corrected;
   };
 
   // Levenshtein distance for fuzzy matching
