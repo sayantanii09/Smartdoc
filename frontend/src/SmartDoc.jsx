@@ -1546,7 +1546,7 @@ const Shrutapex = () => {
           
           if (isValidMedication || drugName.length > 6) { // Allow longer words that might be medications
             medications.push({
-              name: drugName.charAt(0).toUpperCase() + drugName.slice(1).toLowerCase(),
+              name: drugName.toUpperCase(), // CAPITALIZE medicine names
               dosage: `${dosage}${unit}`,
               formulation: formulation ? (formulation.charAt(0).toUpperCase() + formulation.slice(1).toLowerCase()) : 'Tablet',
               route: expandAbbreviation(route || 'oral'),
