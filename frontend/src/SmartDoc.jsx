@@ -6703,10 +6703,11 @@ const Shrutapex = () => {
               </label>
               <textarea 
                 value={symptoms} 
-                onChange={(e) => setSymptoms(e.target.value)} 
+                onChange={(e) => handleSmartChange('symptoms', e.target.value, setSymptoms)} 
                 className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
                 placeholder="e.g., Fever for 3 days, cough with sputum, body ache" 
                 rows="4"
+                title="🧠 AI Learning: Edits here will improve future voice recognition"
               />
             </div>
           </div>
