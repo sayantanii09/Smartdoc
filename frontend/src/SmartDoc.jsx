@@ -2029,6 +2029,8 @@ const Shrutapex = () => {
   };
   
   const moveToNextStep = () => {
+    console.log('➡️ Moving to next step from:', guidedFlowStep);
+    
     if (guidedFlowStep === 8 && prescriptionSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
       // In prescription sub-flow
       setPrescriptionSubStep(prescriptionSubStep + 1);
@@ -2038,18 +2040,26 @@ const Shrutapex = () => {
       if (guidedFlowStep === 8 && currentMedicineData.name) {
         addCompletedMedicine();
       }
-      setGuidedFlowStep(guidedFlowStep + 1);
+      
+      const nextStep = guidedFlowStep + 1;
+      setGuidedFlowStep(nextStep);
       setPrescriptionSubStep(0);
-      setCurrentPrompt(GUIDED_STEPS[guidedFlowStep + 1].prompt);
+      setCurrentPrompt(GUIDED_STEPS[nextStep].prompt);
+      
+      console.log('✅ Moved to step:', nextStep, GUIDED_STEPS[nextStep].name);
       
       // Auto-scroll to next field
       setTimeout(() => {
-        const nextStep = GUIDED_STEPS[guidedFlowStep + 1];
-        const element = document.getElementById(`field-${nextStep.field}`);
+        const element = document.getElementById(`field-${GUIDED_STEPS[nextStep].field}`);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          console.log('📍 Scrolled to:', GUIDED_STEPS[nextStep].name);
+        } else {
+          console.warn('⚠️ Could not find element for field:', GUIDED_STEPS[nextStep].field);
         }
       }, 100);
+    } else {
+      console.log('🏁 Already at last step');
     }
   };
   
