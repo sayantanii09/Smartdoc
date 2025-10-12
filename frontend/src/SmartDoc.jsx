@@ -2208,6 +2208,13 @@ const Shrutapex = () => {
         
         recognitionRef.current.start();
         setIsListening(true);
+        
+        // Show Live Transcript box when voice is started for the first time
+        if (!hasStartedVoice) {
+          setHasStartedVoice(true);
+          setShowFloatingTranscript(true);
+        }
+        
         console.log('🎤 Guided speech recognition started');
         console.log(`📋 Current step: ${GUIDED_STEPS[guidedFlowStep].name}`);
       } catch (e) {
