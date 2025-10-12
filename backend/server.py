@@ -1289,6 +1289,9 @@ async def save_voice_correction(
 ):
     """Save a voice transcription correction for AI learning"""
     try:
+        # Access voice_corrections collection
+        voice_corrections_db = MongoDB.database.voice_corrections
+        
         # Check if this correction already exists
         existing = await voice_corrections_db.find_one({
             "doctor_id": correction.doctor_id,
