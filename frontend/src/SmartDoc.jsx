@@ -1404,7 +1404,8 @@ const Shrutapex = () => {
 
     recognitionRef.current.onstart = () => {
       console.log('Enhanced speech recognition started');
-      setTranscript(''); // Clear previous transcript when starting new session
+      // DON'T clear transcript on restart - preserve existing content
+      console.log('🎤 Speech recognition session started');
     };
 
     recognitionRef.current.onresult = (event) => {
