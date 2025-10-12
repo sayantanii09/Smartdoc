@@ -31,6 +31,67 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+# Demo accounts for development and testing
+DEMO_DOCTORS = [
+    {
+        "username": "drsmith",
+        "password": "password123",
+        "name": "Dr. John Smith",
+        "email": "john.smith@hospital.com",
+        "phone": "+1-555-0101",
+        "degree": "MBBS, MD (Internal Medicine)",
+        "registration_number": "MED12345",
+        "organization": "City General Hospital",
+        "specialization": "Internal Medicine"
+    },
+    {
+        "username": "drjohnson", 
+        "password": "password123",
+        "name": "Dr. Sarah Johnson",
+        "email": "sarah.johnson@medcenter.com",
+        "phone": "+1-555-0102",
+        "degree": "MBBS, MS (Surgery)",
+        "registration_number": "MED67890",
+        "organization": "Metropolitan Medical Center",
+        "specialization": "General Surgery"
+    }
+]
+
+async def create_demo_accounts():
+    """Create demo accounts if they don't exist in the database"""
+    try:
+        for demo_doctor in DEMO_DOCTORS:
+            # Check if user already exists
+            existing_user = await user_db.get_user_by_username(demo_doctor["username"])
+            
+            if not existing_user:
+                # Hash the password
+                hashed_password = auth_handler.get_password_hash(demo_doctor["password"])
+                
+                # Create user document
+                user_doc = {
+                    "username": demo_doctor["username"],
+                    "password_hash": hashed_password,
+                    "name": demo_doctor["name"],
+                    "email": demo_doctor["email"],
+                    "phone": demo_doctor["phone"],
+                    "degree": demo_doctor["degree"],
+                    "registration_number": demo_doctor["registration_number"],
+                    "organization": demo_doctor["organization"],
+                    "specialization": demo_doctor["specialization"],
+                    "is_active": True,
+                    "created_at": datetime.now(timezone.utc),
+                    "last_login": None
+                }
+                
+                # Insert into database
+                result = await user_db.create_user(user_doc)
+                logger.info(f"✅ Demo account created: {demo_doctor['username']}")
+            else:
+                logger.info(f"Demo account already exists: {demo_doctor['username']}")
+                
+    except Exception as e:
+        logger.error(f"Error creating demo accounts: {e}")
 
 # Database lifecycle management
 @asynccontextmanager
