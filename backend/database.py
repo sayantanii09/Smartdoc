@@ -28,10 +28,10 @@ class MongoDB:
                 # Ensure database name is within MongoDB limits (max 63 chars)
                 if len(db_name) > 63:
                     db_name = db_name[:63]
-                # Fallback to default if empty
-                db_name = db_name if db_name else "shrutapex"
+                # Fallback to environment variable or default
+                db_name = db_name if db_name else os.getenv("DB_NAME", "smartdoc_pro")
             else:
-                db_name = "shrutapex"
+                db_name = os.getenv("DB_NAME", "smartdoc_pro")
             cls.database = cls.client[db_name]
             
             # Test connection
