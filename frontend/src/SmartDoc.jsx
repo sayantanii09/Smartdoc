@@ -1139,7 +1139,7 @@ const Shrutapex = () => {
   const [speechLanguage, setSpeechLanguage] = useState('en-IN');
   const [speechQuality, setSpeechQuality] = useState('high');
   const [enableNoiseReduction, setEnableNoiseReduction] = useState(true);
-  const [confidenceThreshold, setConfidenceThreshold] = useState(0.7);
+  const [confidenceThreshold, setConfidenceThreshold] = useState(0.5); // Lower threshold for accent variations
   const [showSpeechSettings, setShowSpeechSettings] = useState(false);
   
   // Medication recognition feedback
