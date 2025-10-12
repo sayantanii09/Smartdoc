@@ -1156,6 +1156,43 @@ const Shrutapex = () => {
   const [showTrainingPanel, setShowTrainingPanel] = useState(false);
   const [dynamicMedicationDB, setDynamicMedicationDB] = useState({});
 
+  // Guided Voice Flow State
+  const [guidedFlowStep, setGuidedFlowStep] = useState(0); // 0-12 for each step
+  const [currentPrompt, setCurrentPrompt] = useState('');
+  const [prescriptionSubStep, setPrescriptionSubStep] = useState(0); // For medicine sub-flow
+  const [currentMedicineData, setCurrentMedicineData] = useState({
+    name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
+  });
+  const [showFloatingTranscript, setShowFloatingTranscript] = useState(true);
+  const [floatingTranscriptCollapsed, setFloatingTranscriptCollapsed] = useState(false);
+  
+  // Guided flow steps definition
+  const GUIDED_STEPS = [
+    { id: 0, name: 'Symptoms', field: 'symptoms', prompt: 'Please describe the patient\'s symptoms' },
+    { id: 1, name: 'Past Medical History', field: 'pastMedicalHistory', prompt: 'State the patient\'s past medical history' },
+    { id: 2, name: 'Family History', field: 'familyHistory', prompt: 'State the family history' },
+    { id: 3, name: 'Social History', field: 'socialHistory', prompt: 'State the social history' },
+    { id: 4, name: 'Current Medication', field: 'pastMedications', prompt: 'List current medications the patient is taking' },
+    { id: 5, name: 'Allergies', field: 'allergies', prompt: 'State any known allergies' },
+    { id: 6, name: 'Vitals', field: 'vitals', prompt: 'State the patient\'s vital signs - blood pressure, temperature, pulse' },
+    { id: 7, name: 'Diagnosis', field: 'diagnosis', prompt: 'State your diagnosis' },
+    { id: 8, name: 'Prescription', field: 'prescription', prompt: 'State medicine name', subFlow: true },
+    { id: 9, name: 'Lab Tests', field: 'labTests', prompt: 'State required laboratory tests' },
+    { id: 10, name: 'Advice', field: 'advice', prompt: 'State advice and instructions for the patient' },
+    { id: 11, name: 'Referrals', field: 'referrals', prompt: 'State any referrals needed' },
+    { id: 12, name: 'Follow Up', field: 'followUpInstructions', prompt: 'State follow-up plan' }
+  ];
+
+  const PRESCRIPTION_SUB_STEPS = [
+    { id: 0, field: 'name', prompt: 'State medicine name' },
+    { id: 1, field: 'form', prompt: 'State dosage form - tablet, capsule, syrup, or injection' },
+    { id: 2, field: 'dosage', prompt: 'State dose - for example 500 mg' },
+    { id: 3, field: 'route', prompt: 'State route of administration - oral, IV, IM, or SC' },
+    { id: 4, field: 'frequency', prompt: 'State frequency - once daily, twice daily, or three times daily' },
+    { id: 5, field: 'duration', prompt: 'State duration - for example 7 days or 2 weeks' },
+    { id: 6, field: 'foodInstruction', prompt: 'State food instructions - before meals, after meals, or with food' }
+  ];
+
   
   // Medical Documentation Fields
   const [labTests, setLabTests] = useState('');
