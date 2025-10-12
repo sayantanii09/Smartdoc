@@ -1375,7 +1375,7 @@ const Shrutapex = () => {
         console.log('Speech recognition not available in this browser');
       }
     }
-  }, [isListening]);
+  }, [isListening, guidedFlowStep]); // Re-setup handlers when step changes
 
   // Auto-generate UNIQUE MRN for new patients when entering review
   useEffect(() => {
