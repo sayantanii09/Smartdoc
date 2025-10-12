@@ -1932,6 +1932,7 @@ const Shrutapex = () => {
       return;
     }
     
+    console.log(`📝 CAPTURE CALLED: guidedFlowStepRef.current = ${guidedFlowStepRef.current}`);
     console.log(`📝 Capturing "${text}" to field: ${step.field} (Step ${currentStep})`);
     
     // APPEND mode - add to existing text, don't replace
