@@ -2330,11 +2330,21 @@ const Shrutapex = () => {
           console.log('⏮️ PREVIOUS command detected');
           moveToPreviousStep();
         }
-        // Check for ADD command
-        else if (lowerTranscript.startsWith('add ')) {
-          console.log('➕ ADD command detected');
-          const textToAdd = correctedTranscript.substring(4).trim();
-          appendToCurrentField(textToAdd);
+        // Check for ADD command (for adding another medicine)
+        else if (lowerTranscript === 'add' || lowerTranscript === 'add another' || lowerTranscript === 'add medicine') {
+          console.log('➕ ADD command detected - adding medicine to list');
+          // If in prescription mode and medicine is complete, add it
+          if (currentStep === 8 && currentMedicineData.name) {
+            addCompletedMedicine();
+            // Reset to first sub-step for new medicine
+            setPrescriptionSubStep(0);
+            prescriptionSubStepRef.current = 0;
+            setCurrentPrompt(PRESCRIPTION_SUB_STEPS[0].prompt);
+            setCurrentMedicineData({
+              name: '', form: '', dosage: '', route: '', frequency: '', duration: '', foodInstruction: ''
+            });
+            console.log('✅ Medicine added, ready for next medicine');
+          }
         }
         // Normal capture - inline the field capture logic
         else if (correctedTranscript && correctedTranscript.trim().length > 0) {
