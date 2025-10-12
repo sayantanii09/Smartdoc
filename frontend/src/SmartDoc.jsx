@@ -6328,13 +6328,51 @@ const Shrutapex = () => {
           </div>
         </div>
 
+        {/* Symptoms Section - FIRST in guided flow */}
+        <div id="field-symptoms" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 0 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
+          <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5"></div>
+          <div className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <AlertTriangle className="w-7 h-7 text-red-400" />
+                Symptoms
+                {guidedFlowStep === 0 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
+              </h2>
+              <button
+                onClick={() => {
+                  setGuidedFlowStep(0);
+                  setCurrentPrompt(GUIDED_STEPS[0].prompt);
+                  if (!isListening) toggleListening();
+                }}
+                className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-300 rounded-lg text-sm font-semibold transition-all border border-red-500/30 flex items-center gap-2"
+              >
+                <Mic className="w-4 h-4" />
+                Voice Input
+              </button>
+            </div>
+            
+            <div>
+              <label className="block text-red-300 font-semibold text-sm mb-2 uppercase tracking-wide">
+                Chief Complaints & Present Symptoms
+              </label>
+              <textarea 
+                value={symptoms} 
+                onChange={(e) => setSymptoms(e.target.value)} 
+                className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none" 
+                placeholder="e.g., Fever for 3 days, cough with sputum, body ache" 
+                rows="4"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Enhanced Medical History Section */}
         <div className="relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border border-slate-700/50">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
           <div className="relative">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
               <FileText className="w-7 h-7 text-purple-400" />
-              Comprehensive Medical History
+              Medical History
             </h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
