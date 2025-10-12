@@ -1592,7 +1592,7 @@ const Shrutapex = () => {
           const routeMatch = routePattern.exec(prescriptionText);
           
           medications.push({
-            name: medName.charAt(0).toUpperCase() + medName.slice(1),
+            name: medName.toUpperCase(), // CAPITALIZE medicine names
             dosage: dosageMatch ? `${dosageMatch[1]}${dosageMatch[2]}` : '25mg',
             formulation: 'Tablet',
             route: expandAbbreviation(routeMatch ? routeMatch[1] : 'oral'),
