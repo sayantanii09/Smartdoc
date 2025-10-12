@@ -2636,6 +2636,94 @@ const Shrutapex = () => {
       // Update dynamic medication database
       if (type === 'medication') {
         const updatedDB = {...dynamicMedicationDB};
+  // Enhanced text difference detection
+  const findTextDifferences = (original, corrected) => {
+    const corrections = [];
+    
+    // Split into sentences for better context
+    const originalSentences = original.split(/[.!?]+/).filter(s => s.trim());
+    const correctedSentences = corrected.split(/[.!?]+/).filter(s => s.trim());
+    
+    // Process each sentence pair
+    for (let i = 0; i < Math.max(originalSentences.length, correctedSentences.length); i++) {
+      const origSentence = originalSentences[i] ? originalSentences[i].trim() : '';
+      const corrSentence = correctedSentences[i] ? correctedSentences[i].trim() : '';
+      
+      if (origSentence && corrSentence && origSentence !== corrSentence) {
+        // Find word-level differences within sentences
+        const origWords = origSentence.toLowerCase().split(/\s+/);
+        const corrWords = corrSentence.toLowerCase().split(/\s+/);
+        
+        // Use edit distance algorithm for better matching
+        const wordCorrections = findWordCorrections(origWords, corrWords);
+        corrections.push(...wordCorrections);
+      }
+    }
+    
+    return corrections;
+  };
+  
+  // Advanced word-level correction detection
+  const findWordCorrections = (originalWords, correctedWords) => {
+    const corrections = [];
+    let i = 0, j = 0;
+    
+    while (i < originalWords.length && j < correctedWords.length) {
+      const origWord = originalWords[i];
+      const corrWord = correctedWords[j];
+      
+      if (origWord === corrWord) {
+        // Words match, move to next
+        i++; j++;
+      } else {
+        // Look for substitution, insertion, or deletion
+        const similarity = calculateSimilarity(origWord, corrWord);
+        
+        if (similarity > 0.4) {
+          // Likely substitution
+          corrections.push({
+            original: origWord,
+            corrected: corrWord,
+            type: 'substitution',
+            confidence: similarity
+          });
+          i++; j++;
+        } else {
+          // Check if it's an insertion in corrected text
+          if (j + 1 < correctedWords.length && 
+              calculateSimilarity(origWord, correctedWords[j + 1]) > 0.7) {
+            corrections.push({
+              original: '',
+              corrected: corrWord,
+              type: 'insertion',
+              confidence: 0.8
+            });
+            j++;
+          } else if (i + 1 < originalWords.length && 
+                     calculateSimilarity(originalWords[i + 1], corrWord) > 0.7) {
+            corrections.push({
+              original: origWord,
+              corrected: '',
+              type: 'deletion',
+              confidence: 0.8
+            });
+            i++;
+          } else {
+            // Default substitution
+            corrections.push({
+              original: origWord,
+              corrected: corrWord,
+              type: 'substitution',
+              confidence: similarity
+            });
+            i++; j++;
+          }
+        }
+      }
+    }
+    
+    return corrections;
+  };
         if (!updatedDB[correction.corrected]) {
           updatedDB[correction.corrected] = [];
         }
