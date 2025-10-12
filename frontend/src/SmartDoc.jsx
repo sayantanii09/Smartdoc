@@ -2788,21 +2788,25 @@ const Shrutapex = () => {
     }
     
     // Process each correction
+    const validCorrections = [];
+    
     corrections.forEach(correction => {
-      // Check if it's likely a medication name
+      // Check if it's likely a medication name or significant word
       const isMedication = Object.keys(MEDICATION_DATABASE).some(med => 
         med.includes(correction.corrected) || calculateSimilarity(correction.corrected, med) > 0.7
-        );
-        
-        if (isMedication || corrected.length > 4) { // Only learn significant words
-          corrections.push({original, corrected});
-        }
+      );
+      
+      // Only learn significant corrections
+      if (isMedication || 
+          correction.corrected.length > 3 || 
+          correction.type === 'substitution' && correction.confidence > 0.5) {
+        validCorrections.push(correction);
       }
-    }
+    });
     
-    if (corrections.length > 0) {
-      corrections.forEach(correction => {
-        saveUserCorrection(correction.original, correction.corrected, 'medication', liveTranscript);
+    if (validCorrections.length > 0) {
+      validCorrections.forEach(correction => {
+        saveUserCorrection(correction.original, correction.corrected, 'medical_term', liveTranscript);
       });
       
       // Update the transcript with corrections and process it
