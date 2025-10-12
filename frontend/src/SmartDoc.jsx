@@ -7269,19 +7269,29 @@ const Shrutapex = () => {
       </div>
       
       {/* Live Transcript Box with DEBUG INFO - Bottom Chat Style */}
-      {isListening && (
+      {showFloatingTranscript && isListening && (
         <div className="fixed bottom-4 right-4 w-96 bg-slate-800/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-600/50 overflow-hidden z-40">
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Mic className="w-4 h-4 text-white animate-pulse" />
+              <Mic className={`w-4 h-4 text-white ${isListening ? 'animate-pulse' : ''}`} />
               <span className="text-white font-semibold text-sm">Live Transcript & Debug</span>
             </div>
-            <button
-              onClick={() => setFloatingTranscriptCollapsed(!floatingTranscriptCollapsed)}
-              className="text-white/80 hover:text-white text-xs"
-            >
-              {floatingTranscriptCollapsed ? '▲' : '▼'}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setFloatingTranscriptCollapsed(!floatingTranscriptCollapsed)}
+                className="text-white/80 hover:text-white text-xs px-2 py-1"
+                title={floatingTranscriptCollapsed ? 'Expand' : 'Collapse'}
+              >
+                {floatingTranscriptCollapsed ? '▲' : '▼'}
+              </button>
+              <button
+                onClick={() => setShowFloatingTranscript(false)}
+                className="text-white/80 hover:text-white text-xs px-2 py-1 hover:bg-white/10 rounded"
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
           </div>
           
           {!floatingTranscriptCollapsed && (
