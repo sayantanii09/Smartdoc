@@ -36,7 +36,9 @@ class MongoDB:
             
             # Test connection
             await cls.client.admin.command('ping')
-            logger.info(f"Successfully connected to MongoDB: {db_name}")
+            logger.info(f"Successfully connected to MongoDB")
+            logger.info(f"Database name: '{db_name}' (length: {len(db_name)} chars)")
+            logger.info(f"MONGO_URL pattern: {mongo_url[:50]}...")
             
             # Create indexes for better performance and data integrity
             await cls.create_indexes()
