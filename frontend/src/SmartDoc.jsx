@@ -6923,7 +6923,7 @@ const Shrutapex = () => {
               Clinical Documentation
             </h2>
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Lab Tests - Step 9 */}
               <div id="field-labTests" className={`${guidedFlowStep === 9 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
                 <div className="flex items-center justify-between mb-2">
@@ -6947,6 +6947,33 @@ const Shrutapex = () => {
                   onChange={(e) => setLabTests(e.target.value)} 
                   className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm resize-none" 
                   placeholder="CBC, LFT, RFT, X-ray, ECG" 
+                  rows="4"
+                />
+              </div>
+
+              {/* Advice - Step 10 */}
+              <div id="field-advice" className={`${guidedFlowStep === 10 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-indigo-300 font-semibold text-sm uppercase tracking-wide">
+                    💡 Advice & Instructions {guidedFlowStep === 10 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  </label>
+                  <button
+                    onClick={() => {
+                      setGuidedFlowStep(10);
+                      setCurrentPrompt(GUIDED_STEPS[10].prompt);
+                      if (!isListening) toggleListening();
+                    }}
+                    className="px-2 py-1 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
+                  >
+                    <Mic className="w-3 h-3" />
+                    Voice
+                  </button>
+                </div>
+                <textarea 
+                  value={advice} 
+                  onChange={(e) => setAdvice(e.target.value)} 
+                  className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm resize-none" 
+                  placeholder="Rest, hydration, diet instructions" 
                   rows="4"
                 />
               </div>
