@@ -2620,53 +2620,38 @@ const Shrutapex = () => {
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
       console.log('Current listening state (ref):', isListeningRef.current);
-      console.log('Is already starting:', isStartingRef.current);
-      console.log('Current guided step:', guidedFlowStepRef.current);
       
-      // Check cooldown to prevent restart loops (minimum 2 seconds between restarts)
-      const now = Date.now();
-      const timeSinceLastRestart = now - lastRestartTimeRef.current;
-      const COOLDOWN_MS = 2000; // 2 second cooldown
-      
-      // Only restart if:
-      // 1. User wants to keep listening (isListeningRef is true)
-      // 2. Not already starting
-      // 3. Cooldown period has passed (prevents loops)
+      // If user wants to keep listening (didn't manually pause), silently restart
+      // WITHOUT changing UI state - this prevents visible pause/resume flicker
       if (isListeningRef.current && !isStartingRef.current) {
-        if (timeSinceLastRestart < COOLDOWN_MS) {
-          console.log(`⏸️ Cooldown active (${Math.round(timeSinceLastRestart/1000)}s since last restart) - NOT restarting to prevent loop`);
-          console.log('💡 If recognition keeps stopping, the browser may be ending it due to no speech detected');
-          // Don't restart - this prevents the loop
-          return;
-        }
-        
-        console.log('🔄 Auto-restarting speech recognition...');
+        console.log('🔄 Silently restarting speech recognition (browser auto-stopped after silence)...');
         isStartingRef.current = true;
-        lastRestartTimeRef.current = now; // Update restart timestamp
         
+        // Restart immediately without changing isListening state
+        // This keeps the UI showing "Pause" button throughout
         setTimeout(() => {
           try {
             if (recognitionRef.current && isListeningRef.current) {
               recognitionRef.current.start();
-              setIsListening(true);
-              console.log('✅ Successfully restarted recognition');
+              console.log('✅ Silently restarted - no UI change');
             }
           } catch (error) {
             console.error('❌ Error restarting recognition:', error);
+            // Only stop if there's a real error (not "already started")
             if (!error.message.includes('already')) {
+              console.error('⚠️ Failed to restart - stopping recognition');
               setIsListening(false);
               isListeningRef.current = false;
-            } else {
-              setIsListening(true);
             }
           } finally {
             isStartingRef.current = false;
           }
-        }, 300); // Slightly longer delay before restart
+        }, 100);
       } else if (isStartingRef.current) {
-        console.log('⏭️ Skip auto-restart - already starting');
+        console.log('⏭️ Skip restart - already starting');
       } else {
-        console.log('User manually stopped - not restarting');
+        // User manually clicked pause - stop and update UI
+        console.log('✋ User manually stopped - updating UI to show Resume button');
         setIsListening(false);
         isListeningRef.current = false;
       }
