@@ -7020,20 +7020,25 @@ const Shrutapex = () => {
         </div>
 
         {/* Prescription Management Section - Step 8 */}
-        <div id="field-prescription" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 8 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5"></div>
+        <div id="field-prescription" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 7 && isListening ? 'border-emerald-400 ring-8 ring-emerald-400/70 shadow-emerald-500/50 shadow-2xl' : 'border-slate-700/50'} transition-all duration-300`}>
+          <div className={`absolute inset-0 ${guidedFlowStep === 7 && isListening ? 'bg-gradient-to-br from-emerald-500/15 to-green-500/15' : 'bg-gradient-to-br from-blue-500/5 to-indigo-500/5'}`}></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                 <Pill className="w-7 h-7 text-blue-400" />
                 Prescription Management
-                {guidedFlowStep === 8 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
+                {guidedFlowStep === 7 && isListening && (
+                  <span className="ml-3 flex items-center gap-2 text-sm bg-emerald-500 text-white px-4 py-2 rounded-full shadow-lg shadow-emerald-500/50">
+                    <Mic className="w-4 h-4" />
+                    <span className="font-bold">LISTENING NOW</span>
+                  </span>
+                )}
               </h2>
               <div className="flex gap-2">
                 <button
                   onClick={() => {
-                    setGuidedFlowStep(8);
-                    guidedFlowStepRef.current = 8;
+                    setGuidedFlowStep(7);
+                    guidedFlowStepRef.current = 7;
                     setPrescriptionSubStep(0);
                     prescriptionSubStepRef.current = 0;
                     setCurrentPrompt(PRESCRIPTION_SUB_STEPS[0].prompt);
