@@ -6998,9 +6998,9 @@ const Shrutapex = () => {
               </h2>
               <button
                 onClick={() => {
-                  setGuidedFlowStep(7);
-                  guidedFlowStepRef.current = 7;
-                  setCurrentPrompt(GUIDED_STEPS[7].prompt);
+                  setGuidedFlowStep(6);
+                  guidedFlowStepRef.current = 6;
+                  setCurrentPrompt(GUIDED_STEPS[6].prompt);
                   if (!isListening) toggleListening();
                 }}
                 className="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-green-300 rounded-lg text-sm font-semibold transition-all border border-green-500/30 flex items-center gap-2"
