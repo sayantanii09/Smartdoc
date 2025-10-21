@@ -2332,9 +2332,13 @@ const Shrutapex = () => {
           }
         }, 500);
         
-        recognitionRef.current.start();
+        // CRITICAL: Set ref BEFORE starting to handle synchronous onend events
+        isListeningRef.current = true;
         setIsListening(true);
-        isListeningRef.current = true; // Update ref
+        
+        // Now start recognition
+        recognitionRef.current.start();
+        console.log('✅ Recognition started with ref and state set to true');
         
         // Show Live Transcript box when voice is started for the first time
         if (!hasStartedVoice) {
