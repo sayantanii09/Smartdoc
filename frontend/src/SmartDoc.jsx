@@ -2620,12 +2620,15 @@ const Shrutapex = () => {
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
       console.log('Current listening state (ref):', isListeningRef.current);
+      console.log('Is already starting:', isStartingRef.current);
       console.log('Current guided step:', guidedFlowStepRef.current);
       
       // ALWAYS restart if still listening (user didn't manually stop)
       // Use REF not STATE to avoid stale closure issues
-      if (isListeningRef.current) {
+      // But skip if already in the process of starting
+      if (isListeningRef.current && !isStartingRef.current) {
         console.log('🔄 Auto-restarting speech recognition...');
+        isStartingRef.current = true; // Set flag to prevent double-start
         setTimeout(() => {
           try {
             if (recognitionRef.current && isListeningRef.current) {
@@ -2634,10 +2637,17 @@ const Shrutapex = () => {
             }
           } catch (error) {
             console.error('❌ Error restarting recognition:', error);
-            setIsListening(false);
-            isListeningRef.current = false;
+            // Don't set listening to false on "already started" error
+            if (!error.message.includes('already')) {
+              setIsListening(false);
+              isListeningRef.current = false;
+            }
+          } finally {
+            isStartingRef.current = false; // Reset flag
           }
         }, 100); // Small delay before restart
+      } else if (isStartingRef.current) {
+        console.log('⏭️ Skip auto-restart - already starting');
       } else {
         console.log('User manually stopped - not restarting');
         setIsListening(false);
