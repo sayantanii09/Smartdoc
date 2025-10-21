@@ -2619,41 +2619,41 @@ const Shrutapex = () => {
 
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
-      console.log('Current listening state (ref):', isListeningRef.current);
+      console.log('isListeningRef:', isListeningRef.current);
+      console.log('isStartingRef:', isStartingRef.current);
       
-      // If user wants to keep listening (didn't manually pause), silently restart
-      // WITHOUT changing UI state - this prevents visible pause/resume flicker
-      if (isListeningRef.current && !isStartingRef.current) {
-        console.log('🔄 Silently restarting speech recognition (browser auto-stopped after silence)...');
-        isStartingRef.current = true;
-        
-        // Restart immediately without changing isListening state
-        // This keeps the UI showing "Pause" button throughout
-        setTimeout(() => {
-          try {
-            if (recognitionRef.current && isListeningRef.current) {
-              recognitionRef.current.start();
-              console.log('✅ Silently restarted - no UI change');
-            }
-          } catch (error) {
-            console.error('❌ Error restarting recognition:', error);
-            // Only stop if there's a real error (not "already started")
-            if (!error.message.includes('already')) {
-              console.error('⚠️ Failed to restart - stopping recognition');
-              setIsListening(false);
-              isListeningRef.current = false;
-            }
-          } finally {
-            isStartingRef.current = false;
-          }
-        }, 100);
-      } else if (isStartingRef.current) {
-        console.log('⏭️ Skip restart - already starting');
-      } else {
-        // User manually clicked pause - stop and update UI
-        console.log('✋ User manually stopped - updating UI to show Resume button');
-        setIsListening(false);
-        isListeningRef.current = false;
+      // CRITICAL: Only restart if user wants to keep listening
+      // isListeningRef = false means user clicked Pause - DON'T restart
+      // isListeningRef = true means browser stopped it - DO restart silently
+      
+      if (!isListeningRef.current) {
+        // User manually paused - do NOT restart
+        console.log('✋ User paused - NOT restarting');
+        return;
+      }
+      
+      // User wants to keep listening - restart silently
+      if (isStartingRef.current) {
+        console.log('⏭️ Already starting - skip duplicate restart');
+        return;
+      }
+      
+      console.log('🔄 Browser stopped recognition - restarting silently...');
+      isStartingRef.current = true;
+      
+      // NO setTimeout - restart immediately for seamless experience
+      try {
+        if (recognitionRef.current) {
+          recognitionRef.current.start();
+          console.log('✅ Restarted - UI state unchanged (still showing Pause)');
+        }
+      } catch (error) {
+        console.error('❌ Restart error:', error.message);
+        // NEVER change isListening to false here - keep button as Pause
+        // Let user manually click Stop if they want to stop
+      } finally {
+        // Reset flag immediately
+        isStartingRef.current = false;
       }
     };
   };
