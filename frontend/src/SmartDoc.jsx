@@ -6990,8 +6990,8 @@ const Shrutapex = () => {
                 <Activity className="w-7 h-7 text-green-400" />
                 Diagnosis
                 {guidedFlowStep === 6 && isListening && (
-                  <span className="ml-3 flex items-center gap-2 text-sm bg-emerald-500 text-white px-4 py-2 rounded-full animate-pulse shadow-lg shadow-emerald-500/50">
-                    <Mic className="w-4 h-4 animate-pulse" />
+                  <span className="ml-3 flex items-center gap-2 text-sm bg-emerald-500 text-white px-4 py-2 rounded-full shadow-lg shadow-emerald-500/50">
+                    <Mic className="w-4 h-4" />
                     <span className="font-bold">LISTENING NOW</span>
                   </span>
                 )}
