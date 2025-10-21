@@ -7414,6 +7414,7 @@ const Shrutapex = () => {
                       recognitionRef.current.stop();
                     }
                     setIsListening(false);
+                    isListeningRef.current = false; // Update ref
                     console.log('⏸️ Voice paused by user');
                   } else {
                     // Resume voice - explicitly restart
@@ -7431,17 +7432,21 @@ const Shrutapex = () => {
                         setupSpeechRecognitionHandlers();
                       }
                       
+                      // Update state and ref BEFORE starting recognition
+                      setIsListening(true);
+                      isListeningRef.current = true; // Critical: Set ref before .start()
+                      
                       // Start recognition
                       recognitionRef.current.start();
-                      setIsListening(true);
                       console.log('✅ Voice resumed successfully');
                     } catch (error) {
                       console.error('❌ Failed to resume voice:', error);
-                      // If error is "already started", just set state
+                      // If error is "already started", just keep state as true
                       if (error.message.includes('already')) {
-                        setIsListening(true);
-                        console.log('✅ Voice was already running, updated state');
+                        console.log('✅ Voice was already running, state already updated');
                       } else {
+                        setIsListening(false);
+                        isListeningRef.current = false;
                         alert('Failed to resume voice. Please refresh the page.');
                       }
                     }
