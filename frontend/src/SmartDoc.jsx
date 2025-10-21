@@ -2215,7 +2215,7 @@ const Shrutapex = () => {
     
     console.log('➡️ Moving to next step from REF:', currentStep, 'State is:', guidedFlowStep);
     
-    if (currentStep === 8 && currentSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
+    if (currentStep === 7 && currentSubStep < PRESCRIPTION_SUB_STEPS.length - 1) {
       // In prescription sub-flow
       const nextSubStep = currentSubStep + 1;
       setPrescriptionSubStep(nextSubStep);
