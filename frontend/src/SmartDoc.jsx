@@ -6737,7 +6737,7 @@ const Shrutapex = () => {
 
         {/* Symptoms Section - FIRST in guided flow */}
         <div id="field-symptoms" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 0 && isListening ? 'border-emerald-400 ring-8 ring-emerald-400/70 shadow-emerald-500/50 shadow-2xl' : 'border-slate-700/50'} transition-all duration-300`}>
-          <div className={`absolute inset-0 ${guidedFlowStep === 0 && isListening ? 'bg-gradient-to-br from-emerald-500/15 to-green-500/15 animate-pulse' : 'bg-gradient-to-br from-red-500/5 to-orange-500/5'}`}></div>
+          <div className={`absolute inset-0 ${guidedFlowStep === 0 && isListening ? 'bg-gradient-to-br from-emerald-500/15 to-green-500/15' : 'bg-gradient-to-br from-red-500/5 to-orange-500/5'}`}></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
