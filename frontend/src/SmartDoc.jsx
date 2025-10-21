@@ -6829,10 +6829,16 @@ const Shrutapex = () => {
                 </div>
 
                 {/* Family History - Step 2 */}
-                <div id="field-familyHistory" className={`${guidedFlowStep === 2 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+                <div id="field-familyHistory" className={`${guidedFlowStep === 2 && isListening ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 animate-pulse shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="block text-yellow-300 font-semibold text-sm uppercase tracking-wide">
-                      👥 Family History {guidedFlowStep === 2 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                    <label className="block text-yellow-300 font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
+                      👥 Family History 
+                      {guidedFlowStep === 2 && isListening && (
+                        <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                          <Mic className="w-3 h-3 animate-pulse" />
+                          <span className="font-bold">LISTENING</span>
+                        </span>
+                      )}
                     </label>
                     <button
                       onClick={() => {
