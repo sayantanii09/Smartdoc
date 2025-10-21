@@ -7491,13 +7491,15 @@ const Shrutapex = () => {
               <button
                 onClick={async () => {
                   if (isListening) {
-                    // Pause voice
+                    // Pause voice - MUST set refs BEFORE stopping to prevent auto-restart
+                    console.log('⏸️ User clicked Pause - stopping voice recognition');
+                    setIsListening(false);
+                    isListeningRef.current = false; // CRITICAL: Set this BEFORE .stop()
+                    
                     if (recognitionRef.current) {
                       recognitionRef.current.stop();
+                      console.log('✅ Recognition stopped - will NOT auto-restart');
                     }
-                    setIsListening(false);
-                    isListeningRef.current = false; // Update ref
-                    console.log('⏸️ Voice paused by user');
                   } else {
                     // Resume voice - explicitly restart
                     console.log('▶️ Resuming voice...');
