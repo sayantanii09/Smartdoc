@@ -1583,6 +1583,9 @@ const Shrutapex = () => {
     }
     
     // Enhanced pattern matching for medications with all details
+    // Track already extracted medications to prevent duplicates
+    const extractedMedNames = new Set();
+    
     const medicationPatterns = [
       // Pattern: drug name dosage unit formulation route frequency food_instruction
       /(?:prescribe|give|start|administer|needs?|prescribed?|new prescription:|treatment plan:)\s*(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
@@ -1607,6 +1610,13 @@ const Shrutapex = () => {
         ];
         
         if (drugName && !excludeWords.includes(drugName.toLowerCase())) {
+          // Skip if already extracted
+          const drugNameLower = drugName.toLowerCase();
+          if (extractedMedNames.has(drugNameLower)) {
+            console.log(`Skipping duplicate: ${drugName}`);
+            continue;
+          }
+          
           // Check if it's a real medication name
           const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
             medName.toLowerCase() === drugName.toLowerCase() || 
@@ -1614,6 +1624,7 @@ const Shrutapex = () => {
           );
           
           if (isValidMedication || drugName.length > 6) { // Allow longer words that might be medications
+            extractedMedNames.add(drugNameLower);
             medications.push({
               name: drugName.toUpperCase(), // CAPITALIZE medicine names
               dosage: `${dosage}${unit}`,
