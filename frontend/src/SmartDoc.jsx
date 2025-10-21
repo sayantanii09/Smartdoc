@@ -7087,7 +7087,7 @@ const Shrutapex = () => {
 
                 {/* Dosage Form */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form * {guidedFlowStep === 8 && prescriptionSubStep === 1 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form * {guidedFlowStep === 7 && prescriptionSubStep === 1 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
                     value={currentMedicineData.form}
                     onChange={(e) => setCurrentMedicineData({...currentMedicineData, form: e.target.value})}
