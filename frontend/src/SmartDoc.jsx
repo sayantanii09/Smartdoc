@@ -6801,7 +6801,7 @@ const Shrutapex = () => {
                       📋 Past Medical History 
                       {guidedFlowStep === 1 && isListening && (
                         <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
-                          <Mic className="w-3 h-3 animate-pulse" />
+                          <Mic className="w-3 h-3" />
                           <span className="font-bold">LISTENING</span>
                         </span>
                       )}
@@ -6835,7 +6835,7 @@ const Shrutapex = () => {
                       👥 Family History 
                       {guidedFlowStep === 2 && isListening && (
                         <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
-                          <Mic className="w-3 h-3 animate-pulse" />
+                          <Mic className="w-3 h-3" />
                           <span className="font-bold">LISTENING</span>
                         </span>
                       )}
@@ -6869,7 +6869,7 @@ const Shrutapex = () => {
                       💊 Current Medications 
                       {guidedFlowStep === 4 && isListening && (
                         <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
-                          <Mic className="w-3 h-3 animate-pulse" />
+                          <Mic className="w-3 h-3" />
                           <span className="font-bold">LISTENING</span>
                         </span>
                       )}
@@ -6950,7 +6950,7 @@ const Shrutapex = () => {
                       Allergies 
                       {guidedFlowStep === 5 && isListening && (
                         <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
-                          <Mic className="w-3 h-3 animate-pulse" />
+                          <Mic className="w-3 h-3" />
                           <span className="font-bold">LISTENING</span>
                         </span>
                       )}
