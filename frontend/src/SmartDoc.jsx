@@ -2620,7 +2620,6 @@ const Shrutapex = () => {
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
       console.log('isListeningRef:', isListeningRef.current);
-      console.log('isListening state:', isListening);
       console.log('isStartingRef:', isStartingRef.current);
       
       // CRITICAL: Only restart if user wants to keep listening
@@ -2630,8 +2629,6 @@ const Shrutapex = () => {
       if (!isListeningRef.current) {
         // User manually paused - do NOT restart
         console.log('✋ User paused - NOT restarting');
-        // Ensure UI state matches
-        setIsListening(false);
         return;
       }
       
@@ -2641,30 +2638,23 @@ const Shrutapex = () => {
         return;
       }
       
-      console.log('🔄 Browser stopped recognition - restarting silently...');
+      console.log('🔄 Browser auto-stopped - restarting silently (NO UI changes)...');
       isStartingRef.current = true;
       
-      // CRITICAL: Ensure BOTH ref AND state are true before restarting
-      if (!isListening) {
-        console.log('⚠️ State was false, syncing to true');
-        setIsListening(true);
-      }
+      // CRITICAL: DO NOT CALL setIsListening() HERE
+      // Any setState call causes re-render and visible flicker
+      // Just restart recognition silently using only refs
       
-      // NO setTimeout - restart immediately for seamless experience
       try {
         if (recognitionRef.current) {
           recognitionRef.current.start();
-          console.log('✅ Restarted - state and ref synced');
+          console.log('✅ Silently restarted - UI unchanged');
         }
       } catch (error) {
         console.error('❌ Restart error:', error.message);
-        // Even on error, keep state as true if ref is true
-        if (isListeningRef.current && !isListening) {
-          setIsListening(true);
-          console.log('🔧 Synced state to true despite error');
-        }
+        // DO NOT change state here - no setIsListening() calls
+        // If it fails, it fails silently
       } finally {
-        // Reset flag immediately
         isStartingRef.current = false;
       }
     };
