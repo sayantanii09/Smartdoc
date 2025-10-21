@@ -1586,8 +1586,8 @@ const Shrutapex = () => {
     // Track already extracted medications to prevent duplicates
     const extractedMedNames = new Set();
     
-    // Pattern 1: drug name dosage unit tablet/formulation route frequency food_instruction
-    const pattern1 = /(?:prescribe|give|start|administer|needs?|prescribed?|new prescription:|treatment plan:)\s*(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:tablet|capsule|injection|syrup|drops?)\s+(\w+)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi;
+    // Pattern 1: drug dosage unit tablet route frequency (matches: metformin 500mg tablet oral twice daily)
+    const pattern1 = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:tablet|capsule|injection|syrup|drops?)\s+(\w+)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
     
     let match1;
     while ((match1 = pattern1.exec(prescriptionText)) !== null) {
@@ -1623,7 +1623,7 @@ const Shrutapex = () => {
       }
     }
     
-    // Pattern 2: Simpler pattern: drug dosage frequency (no explicit formulation)
+    // Pattern 2: Simpler pattern: drug dosage frequency (no explicit formulation, no route)
     const pattern2 = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
     
     let match2;
