@@ -7133,7 +7133,7 @@ const Shrutapex = () => {
 
                 {/* Frequency */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Frequency * {guidedFlowStep === 8 && prescriptionSubStep === 4 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Frequency * {guidedFlowStep === 7 && prescriptionSubStep === 4 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
                     value={currentMedicineData.frequency}
                     onChange={(e) => setCurrentMedicineData({...currentMedicineData, frequency: e.target.value})}
