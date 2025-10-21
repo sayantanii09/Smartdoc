@@ -7443,15 +7443,22 @@ const Shrutapex = () => {
                         setupSpeechRecognitionHandlers();
                       }
                       
-                      // Update state and ref BEFORE starting recognition
+                      // Update state and refs BEFORE starting recognition
                       setIsListening(true);
                       isListeningRef.current = true; // Critical: Set ref before .start()
+                      isStartingRef.current = true; // Prevent auto-restart collision
                       
                       // Start recognition
                       recognitionRef.current.start();
                       console.log('✅ Voice resumed successfully');
+                      
+                      // Reset starting flag after a delay
+                      setTimeout(() => {
+                        isStartingRef.current = false;
+                      }, 500);
                     } catch (error) {
                       console.error('❌ Failed to resume voice:', error);
+                      isStartingRef.current = false; // Reset flag on error
                       // If error is "already started", just keep state as true
                       if (error.message.includes('already')) {
                         console.log('✅ Voice was already running, state already updated');
