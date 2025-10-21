@@ -6863,7 +6863,7 @@ const Shrutapex = () => {
                 </div>
 
                 {/* Current Medications - Step 4 */}
-                <div id="field-pastMedications" className={`${guidedFlowStep === 4 && isListening ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 animate-pulse shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
+                <div id="field-pastMedications" className={`${guidedFlowStep === 4 && isListening ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-purple-300 font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
                       💊 Current Medications 
