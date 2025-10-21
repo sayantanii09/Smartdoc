@@ -2623,33 +2623,46 @@ const Shrutapex = () => {
       console.log('Is already starting:', isStartingRef.current);
       console.log('Current guided step:', guidedFlowStepRef.current);
       
-      // ALWAYS restart if still listening (user didn't manually stop)
-      // Use REF not STATE to avoid stale closure issues
-      // But skip if already in the process of starting
+      // Check cooldown to prevent restart loops (minimum 2 seconds between restarts)
+      const now = Date.now();
+      const timeSinceLastRestart = now - lastRestartTimeRef.current;
+      const COOLDOWN_MS = 2000; // 2 second cooldown
+      
+      // Only restart if:
+      // 1. User wants to keep listening (isListeningRef is true)
+      // 2. Not already starting
+      // 3. Cooldown period has passed (prevents loops)
       if (isListeningRef.current && !isStartingRef.current) {
+        if (timeSinceLastRestart < COOLDOWN_MS) {
+          console.log(`⏸️ Cooldown active (${Math.round(timeSinceLastRestart/1000)}s since last restart) - NOT restarting to prevent loop`);
+          console.log('💡 If recognition keeps stopping, the browser may be ending it due to no speech detected');
+          // Don't restart - this prevents the loop
+          return;
+        }
+        
         console.log('🔄 Auto-restarting speech recognition...');
-        isStartingRef.current = true; // Set flag to prevent double-start
+        isStartingRef.current = true;
+        lastRestartTimeRef.current = now; // Update restart timestamp
+        
         setTimeout(() => {
           try {
             if (recognitionRef.current && isListeningRef.current) {
               recognitionRef.current.start();
-              setIsListening(true); // CRITICAL: Update UI state to match
+              setIsListening(true);
               console.log('✅ Successfully restarted recognition');
             }
           } catch (error) {
             console.error('❌ Error restarting recognition:', error);
-            // Don't set listening to false on "already started" error
             if (!error.message.includes('already')) {
               setIsListening(false);
               isListeningRef.current = false;
             } else {
-              // If already started, ensure state is true
               setIsListening(true);
             }
           } finally {
-            isStartingRef.current = false; // Reset flag
+            isStartingRef.current = false;
           }
-        }, 100); // Small delay before restart
+        }, 300); // Slightly longer delay before restart
       } else if (isStartingRef.current) {
         console.log('⏭️ Skip auto-restart - already starting');
       } else {
