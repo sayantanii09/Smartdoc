@@ -7415,17 +7415,23 @@ const Shrutapex = () => {
                 />
               </div>
               
-              {/* Follow-up - Step 12 */}
-              <div id="field-followUpInstructions" className={`${guidedFlowStep === 12 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+              {/* Follow-up - Step 11 */}
+              <div id="field-followUpInstructions" className={`${guidedFlowStep === 11 && isListening ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 animate-pulse shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-blue-300 font-semibold text-sm uppercase tracking-wide">
-                    📅 Follow-up {guidedFlowStep === 12 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  <label className="block text-blue-300 font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
+                    📅 Follow-up 
+                    {guidedFlowStep === 11 && isListening && (
+                      <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                        <Mic className="w-3 h-3 animate-pulse" />
+                        <span className="font-bold">LISTENING</span>
+                      </span>
+                    )}
                   </label>
                   <button
                     onClick={() => {
-                      setGuidedFlowStep(12);
-                      guidedFlowStepRef.current = 12;
-                      setCurrentPrompt(GUIDED_STEPS[12].prompt);
+                      setGuidedFlowStep(11);
+                      guidedFlowStepRef.current = 11;
+                      setCurrentPrompt(GUIDED_STEPS[11].prompt);
                       if (!isListening) toggleListening();
                     }}
                     className="px-2 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
