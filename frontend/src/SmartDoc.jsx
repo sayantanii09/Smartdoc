@@ -2618,26 +2618,29 @@ const Shrutapex = () => {
 
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
-      console.log('Current listening state:', isListening);
+      console.log('Current listening state (ref):', isListeningRef.current);
       console.log('Current guided step:', guidedFlowStepRef.current);
       
       // ALWAYS restart if still listening (user didn't manually stop)
-      if (isListening) {
+      // Use REF not STATE to avoid stale closure issues
+      if (isListeningRef.current) {
         console.log('🔄 Auto-restarting speech recognition...');
         setTimeout(() => {
           try {
-            if (recognitionRef.current) {
+            if (recognitionRef.current && isListeningRef.current) {
               recognitionRef.current.start();
               console.log('✅ Successfully restarted recognition');
             }
           } catch (error) {
             console.error('❌ Error restarting recognition:', error);
             setIsListening(false);
+            isListeningRef.current = false;
           }
         }, 100); // Small delay before restart
       } else {
         console.log('User manually stopped - not restarting');
         setIsListening(false);
+        isListeningRef.current = false;
       }
     };
   };
