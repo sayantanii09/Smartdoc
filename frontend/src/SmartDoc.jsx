@@ -2294,6 +2294,7 @@ const Shrutapex = () => {
       // Stop listening
       recognitionRef.current.stop();
       setIsListening(false);
+      isListeningRef.current = false; // Update ref
       console.log('🛑 Speech recognition stopped');
     } else {
       try {
@@ -2332,6 +2333,7 @@ const Shrutapex = () => {
         
         recognitionRef.current.start();
         setIsListening(true);
+        isListeningRef.current = true; // Update ref
         
         // Show Live Transcript box when voice is started for the first time
         if (!hasStartedVoice) {
