@@ -2632,6 +2632,7 @@ const Shrutapex = () => {
           try {
             if (recognitionRef.current && isListeningRef.current) {
               recognitionRef.current.start();
+              setIsListening(true); // CRITICAL: Update UI state to match
               console.log('✅ Successfully restarted recognition');
             }
           } catch (error) {
@@ -2640,6 +2641,9 @@ const Shrutapex = () => {
             if (!error.message.includes('already')) {
               setIsListening(false);
               isListeningRef.current = false;
+            } else {
+              // If already started, ensure state is true
+              setIsListening(true);
             }
           } finally {
             isStartingRef.current = false; // Reset flag
