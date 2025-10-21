@@ -1586,62 +1586,79 @@ const Shrutapex = () => {
     // Track already extracted medications to prevent duplicates
     const extractedMedNames = new Set();
     
-    const medicationPatterns = [
-      // Pattern: drug name dosage unit formulation route frequency food_instruction
-      /(?:prescribe|give|start|administer|needs?|prescribed?|new prescription:|treatment plan:)\s*(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:as\s+)?(\w+)?\s*(?:via\s+|through\s+|by\s+)?(\w+)?\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn|q\d+h|every \d+ hours)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi,
-      // Pattern with tablet/capsule between dosage and route
-      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(?:tablet|capsule|injection|syrup|drops?)\s+(\w+)\s+(once daily|twice daily|three times daily|four times daily|od|bd|tds|qds|as needed|prn)/gi,
-      // Simpler pattern: drug dosage frequency
-      /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi
-    ];
-
-    medicationPatterns.forEach(pattern => {
-      let match;
-      while ((match = pattern.exec(prescriptionText)) !== null) {
-        const [fullMatch, drugName, dosage, unit, formulation, route, frequency, foodInstruction] = match;
+    // Pattern 1: drug name dosage unit tablet/formulation route frequency food_instruction
+    const pattern1 = /(?:prescribe|give|start|administer|needs?|prescribed?|new prescription:|treatment plan:)\s*(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?|iu)\s+(?:tablet|capsule|injection|syrup|drops?)\s+(\w+)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)\s*(?:ac|pc|before meals|after meals|with food|without food|on empty stomach)?/gi;
+    
+    let match1;
+    while ((match1 = pattern1.exec(prescriptionText)) !== null) {
+      const [fullMatch, drugName, dosage, unit, route, frequency] = match1;
+      
+      const excludeWords = ['milligrams', 'mg', 'mcg', 'grams', 'ml', 'units', 'iu', 'once', 'twice', 'daily', 'od', 'bd', 'tds', 'qds', 'tablet', 'capsule', 'injection', 'syrup', 'drops', 'oral', 'before', 'after', 'with', 'without', 'food', 'prescribed', 'prescribe', 'give', 'take', 'patient'];
+      
+      if (drugName && !excludeWords.includes(drugName.toLowerCase())) {
+        const drugNameLower = drugName.toLowerCase();
+        if (extractedMedNames.has(drugNameLower)) {
+          console.log(`Skipping duplicate: ${drugName}`);
+          continue;
+        }
         
-        // Validate that drugName is actually a medication, not a unit or frequency
-        const excludeWords = [
-          'milligrams', 'mg', 'mcg', 'grams', 'ml', 'units', 'iu',
-          'once', 'twice', 'daily', 'od', 'bd', 'tds', 'qds',
-          'tablet', 'capsule', 'injection', 'syrup', 'drops',
-          'oral', 'before', 'after', 'with', 'without', 'food',
-          'prescribed', 'prescribe', 'give', 'take', 'patient'
-        ];
+        const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
+          medName.toLowerCase() === drugName.toLowerCase() || 
+          calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.8
+        );
         
-        if (drugName && !excludeWords.includes(drugName.toLowerCase())) {
-          // Skip if already extracted
-          const drugNameLower = drugName.toLowerCase();
-          if (extractedMedNames.has(drugNameLower)) {
-            console.log(`Skipping duplicate: ${drugName}`);
-            continue;
-          }
-          
-          // Check if it's a real medication name
-          const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
-            medName.toLowerCase() === drugName.toLowerCase() || 
-            calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.8
-          );
-          
-          if (isValidMedication || drugName.length > 6) { // Allow longer words that might be medications
-            extractedMedNames.add(drugNameLower);
-            medications.push({
-              name: drugName.toUpperCase(), // CAPITALIZE medicine names
-              dosage: `${dosage}${unit}`,
-              formulation: formulation ? (formulation.charAt(0).toUpperCase() + formulation.slice(1).toLowerCase()) : 'Tablet',
-              route: expandAbbreviation(route || 'oral'),
-              frequency: expandAbbreviation(frequency),
-              foodInstruction: expandAbbreviation(foodInstruction || 'with food'),
-              duration: '30 days' // Default duration
-            });
-            
-            console.log(`Valid medication extracted: ${drugName}`);
-          } else {
-            console.log(`Rejected non-medication word: ${drugName}`);
-          }
+        if (isValidMedication || drugName.length > 6) {
+          extractedMedNames.add(drugNameLower);
+          medications.push({
+            name: drugName.toUpperCase(),
+            dosage: `${dosage}${unit}`,
+            formulation: 'Tablet', // Pattern explicitly has tablet/capsule
+            route: expandAbbreviation(route || 'oral'),
+            frequency: expandAbbreviation(frequency),
+            foodInstruction: 'With food',
+            duration: '30 days'
+          });
+          console.log(`Valid medication extracted (pattern 1): ${drugName}`);
         }
       }
-    });
+    }
+    
+    // Pattern 2: Simpler pattern: drug dosage frequency (no explicit formulation)
+    const pattern2 = /(\w+)\s+(\d+\.?\d*)\s?(mg|mcg|g|ml|units?)\s+(od|bd|tds|qds|once daily|twice daily|three times daily|four times daily|as needed|prn)/gi;
+    
+    let match2;
+    while ((match2 = pattern2.exec(prescriptionText)) !== null) {
+      const [fullMatch, drugName, dosage, unit, frequency] = match2;
+      
+      const excludeWords = ['milligrams', 'mg', 'mcg', 'grams', 'ml', 'units', 'iu', 'once', 'twice', 'daily', 'od', 'bd', 'tds', 'qds', 'tablet', 'capsule', 'injection', 'syrup', 'drops', 'oral', 'before', 'after', 'with', 'without', 'food', 'prescribed', 'prescribe', 'give', 'take', 'patient'];
+      
+      if (drugName && !excludeWords.includes(drugName.toLowerCase())) {
+        const drugNameLower = drugName.toLowerCase();
+        if (extractedMedNames.has(drugNameLower)) {
+          console.log(`Skipping duplicate: ${drugName}`);
+          continue;
+        }
+        
+        const isValidMedication = Object.keys(dynamicMedicationDB).some(medName => 
+          medName.toLowerCase() === drugName.toLowerCase() || 
+          calculateSimilarity(drugName.toLowerCase(), medName.toLowerCase()) > 0.8
+        );
+        
+        if (isValidMedication || drugName.length > 6) {
+          extractedMedNames.add(drugNameLower);
+          medications.push({
+            name: drugName.toUpperCase(),
+            dosage: `${dosage}${unit}`,
+            formulation: 'Tablet', // Default formulation
+            route: 'Oral', // Default route
+            frequency: expandAbbreviation(frequency),
+            foodInstruction: 'With food',
+            duration: '30 days'
+          });
+          console.log(`Valid medication extracted (pattern 2): ${drugName}`);
+        }
+      }
+    }
 
     // Enhanced fallback using comprehensive medication database with proper filtering
     if (medications.length === 0) {
