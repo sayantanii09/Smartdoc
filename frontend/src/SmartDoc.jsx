@@ -7154,7 +7154,7 @@ const Shrutapex = () => {
 
                 {/* Duration */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Duration * {guidedFlowStep === 8 && prescriptionSubStep === 5 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Duration * {guidedFlowStep === 7 && prescriptionSubStep === 5 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <input
                     type="text"
                     value={currentMedicineData.duration}
