@@ -7067,8 +7067,16 @@ const Shrutapex = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 {/* Medicine Name - Step 0 */}
-                <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Medicine Name * {guidedFlowStep === 7 && prescriptionSubStep === 0 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                <div className={`${guidedFlowStep === 7 && prescriptionSubStep === 0 ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
+                  <label className="block text-blue-200 text-sm font-medium mb-2 flex items-center gap-2">
+                    Medicine Name * 
+                    {guidedFlowStep === 7 && prescriptionSubStep === 0 && (
+                      <span className="flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                        <Mic className="w-3 h-3" />
+                        <span className="font-bold">LISTENING</span>
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="text"
                     value={currentMedicineData.name}
@@ -7079,8 +7087,16 @@ const Shrutapex = () => {
                 </div>
 
                 {/* Dosage Form - Step 1 (MOVED UP to match guided flow) */}
-                <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form * {guidedFlowStep === 7 && prescriptionSubStep === 1 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                <div className={`${guidedFlowStep === 7 && prescriptionSubStep === 1 ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
+                  <label className="block text-blue-200 text-sm font-medium mb-2 flex items-center gap-2">
+                    Dosage Form * 
+                    {guidedFlowStep === 7 && prescriptionSubStep === 1 && (
+                      <span className="flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                        <Mic className="w-3 h-3" />
+                        <span className="font-bold">LISTENING</span>
+                      </span>
+                    )}
+                  </label>
                   <select
                     value={currentMedicineData.form}
                     onChange={(e) => setCurrentMedicineData({...currentMedicineData, form: e.target.value})}
@@ -7100,8 +7116,16 @@ const Shrutapex = () => {
                 </div>
 
                 {/* Dosage - Step 2 (MOVED DOWN to match guided flow) */}
-                <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage * {guidedFlowStep === 7 && prescriptionSubStep === 2 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                <div className={`${guidedFlowStep === 7 && prescriptionSubStep === 2 ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
+                  <label className="block text-blue-200 text-sm font-medium mb-2 flex items-center gap-2">
+                    Dosage * 
+                    {guidedFlowStep === 7 && prescriptionSubStep === 2 && (
+                      <span className="flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                        <Mic className="w-3 h-3" />
+                        <span className="font-bold">LISTENING</span>
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="text"
                     value={currentMedicineData.dosage}
