@@ -6736,14 +6736,19 @@ const Shrutapex = () => {
         </div>
 
         {/* Symptoms Section - FIRST in guided flow */}
-        <div id="field-symptoms" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 0 && isListening ? 'border-emerald-500 ring-4 ring-emerald-500/50' : 'border-slate-700/50'}`}>
-          <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5"></div>
+        <div id="field-symptoms" className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl rounded-2xl shadow-2xl p-8 mb-6 border ${guidedFlowStep === 0 && isListening ? 'border-emerald-400 ring-8 ring-emerald-400/70 shadow-emerald-500/50 shadow-2xl' : 'border-slate-700/50'} transition-all duration-300`}>
+          <div className={`absolute inset-0 ${guidedFlowStep === 0 && isListening ? 'bg-gradient-to-br from-emerald-500/15 to-green-500/15 animate-pulse' : 'bg-gradient-to-br from-red-500/5 to-orange-500/5'}`}></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
                 <AlertTriangle className="w-7 h-7 text-red-400" />
                 Symptoms
-                {guidedFlowStep === 0 && isListening && <span className="ml-3 text-sm bg-emerald-500 text-white px-3 py-1 rounded-full animate-pulse">ACTIVE</span>}
+                {guidedFlowStep === 0 && isListening && (
+                  <span className="ml-3 flex items-center gap-2 text-sm bg-emerald-500 text-white px-4 py-2 rounded-full animate-pulse shadow-lg shadow-emerald-500/50">
+                    <Mic className="w-4 h-4 animate-pulse" />
+                    <span className="font-bold">LISTENING NOW</span>
+                  </span>
+                )}
               </h2>
               <button
                 onClick={() => {
