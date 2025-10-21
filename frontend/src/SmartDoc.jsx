@@ -1075,6 +1075,7 @@ const Shrutapex = () => {
   const [isListening, setIsListening] = useState(false);
   const isListeningRef = useRef(false); // Ref to track listening state for speech recognition events
   const isStartingRef = useRef(false); // Ref to prevent double-start issues
+  const lastRestartTimeRef = useRef(0); // Track last restart time to prevent loops
   const [transcript, setTranscript] = useState('');
   const [diagnosis, setDiagnosis] = useState('');
   const [medications, setMedications] = useState([]);
