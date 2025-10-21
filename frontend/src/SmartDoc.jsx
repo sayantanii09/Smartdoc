@@ -1708,6 +1708,13 @@ const Shrutapex = () => {
         const commonWords = ['patient', 'prescribed', 'give', 'take', 'before', 'after', 'with', 'without'];
         
         if (possibleMed && !commonWords.includes(drugName.toLowerCase())) {
+          // Skip if already extracted
+          if (extractedMedNames.has(possibleMed.toLowerCase())) {
+            console.log(`Skipping duplicate in smart detection: ${possibleMed}`);
+            continue;
+          }
+          
+          extractedMedNames.add(possibleMed.toLowerCase());
           medications.push({
             name: possibleMed.toUpperCase(), // CAPITALIZE medicine names
             dosage: `${dosage}${unit}`,
