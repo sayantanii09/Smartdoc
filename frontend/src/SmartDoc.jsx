@@ -7166,7 +7166,7 @@ const Shrutapex = () => {
 
                 {/* Food Instructions */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Food Instructions * {guidedFlowStep === 8 && prescriptionSubStep === 6 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Food Instructions * {guidedFlowStep === 7 && prescriptionSubStep === 6 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
                     value={currentMedicineData.foodInstruction}
                     onChange={(e) => setCurrentMedicineData({...currentMedicineData, foodInstruction: e.target.value})}
