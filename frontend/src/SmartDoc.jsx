@@ -1659,6 +1659,12 @@ const Shrutapex = () => {
       const lowerPrescriptionText = prescriptionText.toLowerCase();
       
       Object.keys(dynamicMedicationDB).forEach(medName => {
+        // Skip if already extracted
+        if (extractedMedNames.has(medName.toLowerCase())) {
+          console.log(`Skipping duplicate in fallback: ${medName}`);
+          return;
+        }
+        
         if (lowerPrescriptionText.includes(medName) && !excludeWords.includes(medName.toLowerCase())) {
           console.log(`Found valid medication: ${medName} in prescription text`);
           
@@ -1671,6 +1677,7 @@ const Shrutapex = () => {
           const frequencyMatch = frequencyPattern.exec(prescriptionText);
           const routeMatch = routePattern.exec(prescriptionText);
           
+          extractedMedNames.add(medName.toLowerCase());
           medications.push({
             name: medName.toUpperCase(), // CAPITALIZE medicine names
             dosage: dosageMatch ? `${dosageMatch[1]}${dosageMatch[2]}` : '25mg',
