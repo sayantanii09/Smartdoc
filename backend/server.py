@@ -142,7 +142,7 @@ app = FastAPI(
 # CORS configuration
 allowed_origins = [
     "http://localhost:3000",
-    "https://medvoice-assist.preview.emergentagent.com",
+    "https://meditranscribe.preview.emergentagent.com",
     os.getenv("FRONTEND_URL", "http://localhost:3000")
 ]
 
@@ -152,7 +152,7 @@ if app_name:
     allowed_origins.extend([
         f"https://{app_name}.emergent.host",
         f"https://{app_name}-prod.emergent.host",
-        f"https://medvoice-assist.preview.emergentagent.com"
+        f"https://meditranscribe.preview.emergentagent.com"
     ])
 
 # Get additional origins from environment
