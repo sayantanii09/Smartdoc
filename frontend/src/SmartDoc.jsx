@@ -7514,25 +7514,32 @@ const Shrutapex = () => {
                         setupSpeechRecognitionHandlers();
                       }
                       
-                      // Update state and refs BEFORE starting recognition
-                      setIsListening(true);
-                      isListeningRef.current = true; // Critical: Set ref before .start()
-                      isStartingRef.current = true; // Prevent auto-restart collision
+                      // Update refs FIRST - critical for onend handler
+                      isListeningRef.current = true;
                       
-                      // Start recognition
+                      // Start recognition BEFORE setting isStartingRef
+                      // This ensures if it fails immediately, we can handle it
                       recognitionRef.current.start();
+                      
+                      // Now set isStartingRef to prevent collision during initial startup
+                      isStartingRef.current = true;
+                      
+                      // Update UI state
+                      setIsListening(true);
                       console.log('✅ Voice resumed successfully');
                       
-                      // Reset starting flag after a delay
+                      // Reset starting flag quickly
                       setTimeout(() => {
                         isStartingRef.current = false;
-                      }, 500);
+                        console.log('🔓 Starting flag cleared - auto-restart now enabled');
+                      }, 200);
                     } catch (error) {
                       console.error('❌ Failed to resume voice:', error);
-                      isStartingRef.current = false; // Reset flag on error
+                      isStartingRef.current = false;
                       // If error is "already started", just keep state as true
                       if (error.message.includes('already')) {
-                        console.log('✅ Voice was already running, state already updated');
+                        console.log('✅ Voice was already running, keeping state as true');
+                        setIsListening(true);
                       } else {
                         setIsListening(false);
                         isListeningRef.current = false;
