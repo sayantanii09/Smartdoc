@@ -2620,6 +2620,7 @@ const Shrutapex = () => {
     recognitionRef.current.onend = () => {
       console.log('🛑 Speech recognition ended');
       console.log('isListeningRef:', isListeningRef.current);
+      console.log('isListening state:', isListening);
       console.log('isStartingRef:', isStartingRef.current);
       
       // CRITICAL: Only restart if user wants to keep listening
@@ -2629,6 +2630,8 @@ const Shrutapex = () => {
       if (!isListeningRef.current) {
         // User manually paused - do NOT restart
         console.log('✋ User paused - NOT restarting');
+        // Ensure UI state matches
+        setIsListening(false);
         return;
       }
       
@@ -2641,16 +2644,25 @@ const Shrutapex = () => {
       console.log('🔄 Browser stopped recognition - restarting silently...');
       isStartingRef.current = true;
       
+      // CRITICAL: Ensure BOTH ref AND state are true before restarting
+      if (!isListening) {
+        console.log('⚠️ State was false, syncing to true');
+        setIsListening(true);
+      }
+      
       // NO setTimeout - restart immediately for seamless experience
       try {
         if (recognitionRef.current) {
           recognitionRef.current.start();
-          console.log('✅ Restarted - UI state unchanged (still showing Pause)');
+          console.log('✅ Restarted - state and ref synced');
         }
       } catch (error) {
         console.error('❌ Restart error:', error.message);
-        // NEVER change isListening to false here - keep button as Pause
-        // Let user manually click Stop if they want to stop
+        // Even on error, keep state as true if ref is true
+        if (isListeningRef.current && !isListening) {
+          setIsListening(true);
+          console.log('🔧 Synced state to true despite error');
+        }
       } finally {
         // Reset flag immediately
         isStartingRef.current = false;
