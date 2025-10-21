@@ -2582,7 +2582,16 @@ const Shrutapex = () => {
 
     recognitionRef.current.onerror = (event) => {
       console.error('Speech recognition error:', event.error);
-      setIsListening(false);
+      console.error('Error details:', event);
+      
+      // DO NOT automatically stop on all errors
+      // Some errors like 'aborted' happen during normal restarts
+      // Only stop on critical errors if user actually wants to stop
+      if (!isListeningRef.current) {
+        // User already stopped - OK to set state to false
+        setIsListening(false);
+      }
+      // Otherwise, keep state as-is and let auto-restart handle it
       
       let errorMessage = 'Speech recognition error occurred.';
       let suggestions = '';
