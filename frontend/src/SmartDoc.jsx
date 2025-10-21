@@ -7381,17 +7381,23 @@ const Shrutapex = () => {
                 />
               </div>
               
-              {/* Referrals - Step 11 */}
-              <div id="field-referrals" className={`${guidedFlowStep === 11 && isListening ? 'ring-2 ring-emerald-500/50 rounded-xl p-3 -m-3 bg-emerald-500/5' : ''}`}>
+              {/* Referrals - Step 10 */}
+              <div id="field-referrals" className={`${guidedFlowStep === 10 && isListening ? 'ring-8 ring-emerald-400/70 rounded-xl p-3 -m-3 bg-emerald-500/15 animate-pulse shadow-2xl shadow-emerald-500/50' : ''} transition-all duration-300`}>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="block text-cyan-300 font-semibold text-sm uppercase tracking-wide">
-                    🏥 Referrals {guidedFlowStep === 11 && isListening && <span className="ml-2 text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full">ACTIVE</span>}
+                  <label className="block text-cyan-300 font-semibold text-sm uppercase tracking-wide flex items-center gap-2">
+                    🏥 Referrals 
+                    {guidedFlowStep === 10 && isListening && (
+                      <span className="ml-2 flex items-center gap-1.5 text-xs bg-emerald-500 text-white px-3 py-1 rounded-full shadow-lg shadow-emerald-500/50">
+                        <Mic className="w-3 h-3 animate-pulse" />
+                        <span className="font-bold">LISTENING</span>
+                      </span>
+                    )}
                   </label>
                   <button
                     onClick={() => {
-                      setGuidedFlowStep(11);
-                      guidedFlowStepRef.current = 11;
-                      setCurrentPrompt(GUIDED_STEPS[11].prompt);
+                      setGuidedFlowStep(10);
+                      guidedFlowStepRef.current = 10;
+                      setCurrentPrompt(GUIDED_STEPS[10].prompt);
                       if (!isListening) toggleListening();
                     }}
                     className="px-2 py-1 bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 rounded text-xs font-semibold transition-all flex items-center gap-1"
