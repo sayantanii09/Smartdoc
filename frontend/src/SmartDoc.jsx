@@ -1171,21 +1171,20 @@ const Shrutapex = () => {
   const [hasStartedVoice, setHasStartedVoice] = useState(false); // Track if voice has been started
   const [floatingTranscriptCollapsed, setFloatingTranscriptCollapsed] = useState(false);
   
-  // Guided flow steps definition
+  // Guided flow steps definition - Following proper clinical workflow (Vitals are captured manually)
   const GUIDED_STEPS = [
-    { id: 0, name: 'Symptoms', field: 'symptoms', prompt: 'Please describe the patient\'s symptoms' },
+    { id: 0, name: 'Symptoms', field: 'symptoms', prompt: 'Please describe the patient\'s chief complaints and symptoms' },
     { id: 1, name: 'Past Medical History', field: 'pastMedicalHistory', prompt: 'State the patient\'s past medical history' },
     { id: 2, name: 'Family History', field: 'familyHistory', prompt: 'State the family history' },
-    { id: 3, name: 'Social History', field: 'socialHistory', prompt: 'State the social history' },
-    { id: 4, name: 'Current Medication', field: 'pastMedications', prompt: 'List current medications the patient is taking' },
+    { id: 3, name: 'Social History', field: 'socialHistory', prompt: 'State the social history - smoking, alcohol, occupation' },
+    { id: 4, name: 'Current Medications', field: 'pastMedications', prompt: 'List current medications the patient is taking' },
     { id: 5, name: 'Allergies', field: 'allergies', prompt: 'State any known allergies' },
-    { id: 6, name: 'Vitals', field: 'vitals', prompt: 'State the patient\'s vital signs - blood pressure, temperature, pulse' },
-    { id: 7, name: 'Diagnosis', field: 'diagnosis', prompt: 'State your diagnosis' },
-    { id: 8, name: 'Prescription', field: 'prescription', prompt: 'State medicine name', subFlow: true },
-    { id: 9, name: 'Lab Tests', field: 'labTests', prompt: 'State required laboratory tests' },
-    { id: 10, name: 'Advice', field: 'advice', prompt: 'State advice and instructions for the patient' },
-    { id: 11, name: 'Referrals', field: 'referrals', prompt: 'State any referrals needed' },
-    { id: 12, name: 'Follow Up', field: 'followUpInstructions', prompt: 'State follow-up plan' }
+    { id: 6, name: 'Diagnosis', field: 'diagnosis', prompt: 'State your diagnosis' },
+    { id: 7, name: 'Prescription', field: 'prescription', prompt: 'State medicine name', subFlow: true },
+    { id: 8, name: 'Lab Tests', field: 'labTests', prompt: 'State required laboratory tests' },
+    { id: 9, name: 'Advice', field: 'advice', prompt: 'State advice and instructions for the patient' },
+    { id: 10, name: 'Referrals', field: 'referrals', prompt: 'State any referrals needed' },
+    { id: 11, name: 'Follow Up', field: 'followUpInstructions', prompt: 'State follow-up plan and next visit' }
   ];
 
   const PRESCRIPTION_SUB_STEPS = [
