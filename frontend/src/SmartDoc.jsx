@@ -7558,11 +7558,12 @@ const Shrutapex = () => {
                     }
                   } else {
                     // Resume voice - explicitly restart
-                    console.log('▶️ Resuming voice...');
+                    console.log('▶️ USER CLICKED RESUME');
+                    
                     try {
+                      // Recreate recognition object if needed
                       if (!recognitionRef.current) {
-                        console.error('❌ No recognition object found');
-                        // Reinitialize
+                        console.log('🔧 Recreating recognition object...');
                         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                         recognitionRef.current = new SpeechRecognition();
                         recognitionRef.current.continuous = true;
@@ -7572,36 +7573,37 @@ const Shrutapex = () => {
                         setupSpeechRecognitionHandlers();
                       }
                       
-                      // Update refs FIRST - critical for onend handler
+                      // CRITICAL ORDER:
+                      // 1. Set refs FIRST (before starting)
                       isListeningRef.current = true;
-                      
-                      // Start recognition BEFORE setting isStartingRef
-                      // This ensures if it fails immediately, we can handle it
-                      recognitionRef.current.start();
-                      
-                      // Now set isStartingRef to prevent collision during initial startup
                       isStartingRef.current = true;
                       
-                      // Update UI state
+                      // 2. Update UI immediately
                       setIsListening(true);
-                      console.log('✅ Voice resumed successfully');
                       
-                      // Reset starting flag quickly
+                      // 3. Start recognition
+                      recognitionRef.current.start();
+                      console.log('✅ Recognition started - button should show PAUSE now');
+                      
+                      // 4. Clear starting flag after brief delay
                       setTimeout(() => {
                         isStartingRef.current = false;
-                        console.log('🔓 Starting flag cleared - auto-restart now enabled');
-                      }, 200);
+                      }, 300);
+                      
                     } catch (error) {
-                      console.error('❌ Failed to resume voice:', error);
+                      console.error('❌ Resume failed:', error.message);
                       isStartingRef.current = false;
-                      // If error is "already started", just keep state as true
+                      
+                      // If already started, that's OK - just ensure state is correct
                       if (error.message.includes('already')) {
-                        console.log('✅ Voice was already running, keeping state as true');
-                        setIsListening(true);
+                        console.log('✅ Already running - state correct');
+                        // Keep isListening as true, isListeningRef as true
                       } else {
+                        // Real error - update states
+                        console.error('⚠️ Real error - resetting states');
                         setIsListening(false);
                         isListeningRef.current = false;
-                        alert('Failed to resume voice. Please refresh the page.');
+                        alert('Failed to start voice recognition. Please refresh the page.');
                       }
                     }
                   }
