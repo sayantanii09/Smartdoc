@@ -7066,7 +7066,7 @@ const Shrutapex = () => {
               </h4>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                {/* Medicine Name */}
+                {/* Medicine Name - Step 0 */}
                 <div>
                   <label className="block text-blue-200 text-sm font-medium mb-2">Medicine Name * {guidedFlowStep === 7 && prescriptionSubStep === 0 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <input
@@ -7078,19 +7078,7 @@ const Shrutapex = () => {
                   />
                 </div>
 
-                {/* Dosage */}
-                <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage * {guidedFlowStep === 7 && prescriptionSubStep === 2 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
-                  <input
-                    type="text"
-                    value={currentMedicineData.dosage}
-                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, dosage: e.target.value})}
-                    placeholder="e.g., 500mg, 250mg"
-                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Dosage Form */}
+                {/* Dosage Form - Step 1 (MOVED UP to match guided flow) */}
                 <div>
                   <label className="block text-blue-200 text-sm font-medium mb-2">Dosage Form * {guidedFlowStep === 7 && prescriptionSubStep === 1 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
@@ -7109,6 +7097,18 @@ const Shrutapex = () => {
                     <option value="Drops" style={{color: 'black'}}>Drops</option>
                     <option value="Inhaler" style={{color: 'black'}}>Inhaler</option>
                   </select>
+                </div>
+
+                {/* Dosage - Step 2 (MOVED DOWN to match guided flow) */}
+                <div>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Dosage * {guidedFlowStep === 7 && prescriptionSubStep === 2 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <input
+                    type="text"
+                    value={currentMedicineData.dosage}
+                    onChange={(e) => setCurrentMedicineData({...currentMedicineData, dosage: e.target.value})}
+                    placeholder="e.g., 500mg, 250mg"
+                    className="w-full px-4 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
                 </div>
 
                 {/* Route of Administration */}
