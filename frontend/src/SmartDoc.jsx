@@ -7108,7 +7108,7 @@ const Shrutapex = () => {
 
                 {/* Route of Administration */}
                 <div>
-                  <label className="block text-blue-200 text-sm font-medium mb-2">Route of Administration * {guidedFlowStep === 8 && prescriptionSubStep === 3 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
+                  <label className="block text-blue-200 text-sm font-medium mb-2">Route of Administration * {guidedFlowStep === 7 && prescriptionSubStep === 3 && <span className="text-emerald-400 text-xs">← Voice Active</span>}</label>
                   <select
                     value={currentMedicineData.route}
                     onChange={(e) => setCurrentMedicineData({...currentMedicineData, route: e.target.value})}
