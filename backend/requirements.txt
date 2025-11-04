@@ -13,3 +13,4 @@ cryptography==41.0.7
 cors==1.0.1
 fastapi-cors==0.0.6
 aiohttp==3.9.1
+PyJWT==2.8.0
