@@ -138,7 +138,13 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
     lifespan=lifespan
 )
+@app.get("/", tags=["health"])
+async def root():
+    return {"status": "ok", "app": "Shrutapex"}
 
+@app.get("/health", tags=["health"])
+async def health():
+    return {"status": "healthy"}
 # CORS configuration
 allowed_origins = [
     "http://localhost:3000",
